@@ -1,1 +1,3 @@
 # semiProject
+
+mid-degree project

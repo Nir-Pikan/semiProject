@@ -1,0 +1,33 @@
+#menu {
+-fx-background-color:#95AFA2;
+}
+
+
+.header{
+-fx-background-color:#22373A;	
+}
+
+
+
+#body{
+	-fx-background-color:#1C2729;
+	
+}
+
+#body .label{
+	-fx-text-fill: white;
+}
+
+#body .button{
+-fx-background-color:#83C1D0;
+-fx-background-radius: 7px;
+-fx-background-insets:1px;
+-fx-text-fill: white;
+-fx-border-color: #1C2729;
+-fx-border-radius: 7px;
+
+}
+#body .button:hover{
+-fx-background-color:#9ddceb;
+
+}

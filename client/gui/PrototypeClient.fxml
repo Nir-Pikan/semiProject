@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+
+<GridPane prefHeight="290.0" prefWidth="340.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.PrototypeClientGuiController">
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+      <RowConstraints minHeight="10.0" prefHeight="42.0" />
+   </rowConstraints>
+   <columnConstraints>
+      <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints minWidth="10.0" prefWidth="200.0" />
+   </columnConstraints>
+   <children>
+      <Label text="Client" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label text="Visitor ID:" GridPane.rowIndex="1" />
+      <Label text="First Name:" GridPane.rowIndex="3" />
+      <Label text="Surname:" GridPane.rowIndex="4" />
+      <Label text="Email:" GridPane.rowIndex="5" />
+      <Label text="Phone Number:" GridPane.rowIndex="6" />
+      <Button mnemonicParsing="false" onAction="#exit" style="-fx-background-color: red;" text="exit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+      <Button mnemonicParsing="false" onAction="#UpdateVisitor" text="Update Email" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+      <Button mnemonicParsing="false" onAction="#getVisitor" text="Get Visitor" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+      <TextField fx:id="id" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="email" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextField fx:id="sName" disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <TextField fx:id="fName" disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <TextField fx:id="phone" disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</GridPane>

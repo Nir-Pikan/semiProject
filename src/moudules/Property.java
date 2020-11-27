@@ -48,5 +48,11 @@ public class Property<T> {
 	public void clearAllListeners() {
 		listeners.clear();
 	}
-
+	
+	/**call all the listeners with the current value*/
+	public void emitChange() {
+		for (PropertyListener<T> list : listeners) {
+			list.onChange(this.val, this.val);
+		}
+	}
 }

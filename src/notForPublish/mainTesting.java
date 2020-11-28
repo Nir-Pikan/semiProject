@@ -20,7 +20,7 @@ public class mainTesting extends Application{
 			Scene scene = new Scene(root);
 			MainScreenController cont = loader.getController();
 			primaryStage.setScene(scene);
-			cont.InitMockup(3);
+			cont.InitMockup(1);
 			primaryStage.show(); 
 		} catch(Exception e) {
 			e.printStackTrace();

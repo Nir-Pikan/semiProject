@@ -29,7 +29,6 @@ public class MainServer extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("server");
 			primaryStage.show(); 
-			
 
 			//prevent window close
 			
@@ -40,6 +39,7 @@ public class MainServer extends Application {
 			        event.consume();
 			    }
 			});
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

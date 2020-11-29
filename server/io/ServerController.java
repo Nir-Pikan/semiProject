@@ -68,7 +68,7 @@ public class ServerController extends AbstractServer{
 		super.clientConnected(client);
 		System.out.println("new client connected: "+client);
 		//TODO prototype only code
-		gui.setConnected(client.toString());
+		gui.setConnected(client.getInetAddress().getHostAddress(),client.getInetAddress().getHostName());
 		
 	}
 	

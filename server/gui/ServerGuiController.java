@@ -4,16 +4,21 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import io.ServerController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.AccessibleAttribute;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import util.UIupdate;
 
 public class ServerGuiController {
 
-	/**main window wont close if this is true*/
+	/** main window wont close if this is true */
 	public static boolean isServerRunning = false;
+
 	private ServerController sc;
 	@FXML
 	private Label txtIp;
@@ -65,18 +70,22 @@ public class ServerGuiController {
 		}
 	}
 
-	public void setConnected(String client) {
-
-		txtIp.setText(client);
-		txtHost.setText(client);
-		connectionStatus.setText("Connected");
-
+	public void setConnected(String address,String hostname) {
+		UIupdate.update(() -> {
+			txtIp.setText(address);
+			txtHost.setText(hostname);
+			connectionStatus.setText("Connected");
+		});
+		
 	}
 
 	public void setDisconnected() {
-		txtIp.setText("not Connected");
-		txtHost.setText("not Connected");
-		connectionStatus.setText("not Connected");
+		UIupdate.update(() -> {
+			txtIp.setText("not Connected");
+			txtHost.setText("not Connected");
+			connectionStatus.setText("not Connected");
+		});
+		
 
 	}
 

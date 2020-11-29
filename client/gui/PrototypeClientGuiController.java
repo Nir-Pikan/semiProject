@@ -45,7 +45,7 @@ public class PrototypeClientGuiController {
 	void exit(ActionEvent event) {
 try {
 	clientController.client.closeConnection();
-	System.exit(0);
+	//System.exit(0);
 } catch (IOException e) {
 	e.printStackTrace();
 }
@@ -60,6 +60,9 @@ try {
 		String respons = clientController.consumeResponse();
 		if (respons.equals("not Found")) {
 			fName.setText("not Found");
+			sName.setText("");
+			email.setText("");
+			phone.setText("");
 			return;
 		}
 		Visitor v = ServerRequest.gson.fromJson(respons, Visitor.class);

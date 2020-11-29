@@ -76,7 +76,11 @@ public class VisitController implements IController {
 			return "Unknown request";
 		switch (request.job) {
 		case "getVisitor":
-			return ServerRequest.gson.toJson(getVisitor(request.data));
+			Visitor v = getVisitor(request.data);
+			if(v!=null)
+				return ServerRequest.gson.toJson(v);
+			else
+				return "not Found";
 		case "changeVisitorEmail":
 			String[] data = request.data.split(" ");
 			String id = data[0];

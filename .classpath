@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="server"/>
+	<classpathentry kind="src" path="client"/>
+	<classpathentry kind="src" path="commonMoudules"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="ocsf.jar"/>
+	<classpathentry kind="lib" path="mysql-connector-java-8.0.13.jar"/>
+	<classpathentry kind="lib" path="gson-2.8.6.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/semiProject/gson-2.8.6-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

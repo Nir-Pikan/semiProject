@@ -45,7 +45,7 @@ public class PrototypeClientGuiController {
 	void exit(ActionEvent event) {
 try {
 	clientController.client.closeConnection();
-	//System.exit(0);
+	System.exit(0);
 } catch (IOException e) {
 	e.printStackTrace();
 }

@@ -58,7 +58,7 @@ try {
 		ServerRequest sr = new ServerRequest(Manager.Visitors, "getVisitor", strId);
 		clientController.client.sendRequest(sr);
 		String respons = clientController.consumeResponse();
-		if (respons.equals("not Found")) {
+		if (respons.equals("not Found")|| respons.equals("")) {
 			fName.setText("not Found");
 			sName.setText("");
 			email.setText("");

@@ -65,10 +65,18 @@ public class ServerController extends AbstractServer{
 	/**called when client connects*/
 	@Override
 	protected void clientConnected(ConnectionToClient client) {
-		super.clientConnected(client);
 		System.out.println("new client connected: "+client);
 		//TODO prototype only code
 		gui.setConnected(client.getInetAddress().getHostAddress(),client.getInetAddress().getHostName());
+		//wait for the client to die and call clientDisconnected
+		new Thread(()-> {
+				while(client.isAlive()) {
+					try {
+						client.join();
+					} catch (InterruptedException e) {}
+				}
+				clientDisconnected(client);
+		}).start();
 		
 	}
 	
@@ -108,7 +116,6 @@ public class ServerController extends AbstractServer{
 	private void initControllers() throws SQLException {
 		DbController.init();
 		gui.dbConnected();
-		db = DbController.getInstance();//TODO check if needed here
 		visit = new VisitController();
 	}
 

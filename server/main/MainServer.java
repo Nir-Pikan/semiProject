@@ -36,7 +36,7 @@ public class MainServer extends Application {
 			    @Override
 			    public void handle(WindowEvent event) {
 			    	if(ServerGuiController.isServerRunning == true)//if the server is running do not close window
-			        event.consume();
+			    		event.consume();
 			    }
 			});
 			

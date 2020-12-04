@@ -34,6 +34,8 @@ public class VisitController implements IController {
 	 */
 	public Visitor getVisitor(String id) {
 		ResultSet rs = db.sendQuery("select * from visitor where id=" + id + ";");
+		if(rs==null)
+			return null;
 		Visitor v = null;
 		try {
 			if (rs.next()) {
@@ -84,7 +86,7 @@ public class VisitController implements IController {
 		case "changeVisitorEmail":
 			String[] data = request.data.split(" ");
 			String id = data[0];
-			if (changeVisitorEmail(id, data[1]))
+			if (getVisitor(id)!= null &&changeVisitorEmail(id, data[1]))
 				return "the email of " + id + " changed successfully";
 			return "error";
 		default:

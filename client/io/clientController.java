@@ -26,8 +26,8 @@ public class clientController extends AbstractClient {
 
 	@Override
 	protected void handleMessageFromServer(Object msg) {
-		System.out.println("message received");
 		response = (String)msg;
+		System.out.println("message received : " + response);
 		awaitResponse = false;
 	}
 	
@@ -39,7 +39,7 @@ public class clientController extends AbstractClient {
 	       	awaitResponse = true;
 	    	sendToServer(ServerRequest.toJson(request));
 			// wait for response
-			while (awaitResponse) {
+			while (awaitResponse && this.isConnected()) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {

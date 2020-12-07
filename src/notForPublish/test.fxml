@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.StackedBarChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+
+<HBox prefHeight="565.0" prefWidth="857.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane id="body" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="565.0" prefWidth="859.0">
+         <children>
+            <Button layoutX="19.0" layoutY="110.0" mnemonicParsing="false" text="Button" />
+            <CheckBox layoutX="26.0" layoutY="145.0" mnemonicParsing="false" text="CheckBox" />
+            <DatePicker layoutX="172.0" layoutY="111.0" />
+            <Label layoutX="21.0" layoutY="14.0" text="Label" />
+            <RadioButton layoutX="138.0" layoutY="145.0" mnemonicParsing="false" text="RadioButton" />
+            <TextField layoutX="195.0" layoutY="36.0" text="ok" />
+            <TextField layoutX="193.0" layoutY="67.0" styleClass="error" text="error">
+               <tooltip>
+                  <Tooltip text="dsfsdfsdf" />
+               </tooltip>
+            </TextField>
+            <Slider layoutX="138.0" layoutY="172.0" showTickLabels="true" showTickMarks="true" />
+            <ToggleButton layoutX="407.0" layoutY="35.0" mnemonicParsing="false" selected="true" text="ToggleButton">
+               <toggleGroup>
+                  <ToggleGroup fx:id="g1" />
+               </toggleGroup>
+            </ToggleButton>
+            <ToggleButton layoutX="410.0" layoutY="68.0" mnemonicParsing="false" text="ToggleButton" toggleGroup="$g1" />
+            <TableView layoutX="625.0" layoutY="24.0" prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <ComboBox layoutX="17.0" layoutY="36.0" prefWidth="150.0" />
+            <ChoiceBox layoutX="16.0" layoutY="69.0" prefWidth="150.0" />
+            <ToggleButton layoutX="17.0" layoutY="177.0" mnemonicParsing="false" text="ToggleButton" />
+            <BarChart barGap="1.0" categoryGap="1.0" layoutX="625.0" layoutY="264.0" prefHeight="192.0" prefWidth="223.0">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </BarChart>
+            <PieChart animated="false" layoutY="209.0" prefHeight="323.0" prefWidth="457.0" />
+            <Label layoutX="472.0" layoutY="352.0" text="Label" />
+            <StackedBarChart animated="false" layoutX="410.0" layoutY="201.0" prefHeight="339.0" prefWidth="162.0" title="fbvc">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="TOP" />
+              </yAxis>
+            </StackedBarChart>
+            <Spinner layoutX="204.0" layoutY="231.0" />
+         </children>
+      </Pane>
+   </children>
+</HBox>

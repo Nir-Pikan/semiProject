@@ -10,12 +10,17 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane id="body" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" stylesheets="@mainScreen.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="common.MainScreenController">
+<BorderPane id="body" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainScreenController">
    <bottom>
-      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" styleClass="header" text="©All rights reserved to Group 1, winter 2020" BorderPane.alignment="CENTER" />
+      <HBox alignment="CENTER" styleClass="header" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btnReturn" mnemonicParsing="false" onAction="#back" text="back" />
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="514.0" text="©All rights reserved to Group 1, winter 2020" />
+         </children>
+      </HBox>
    </bottom>
    <left>
-      <VBox id="menu" fx:id="menu" prefHeight="200.0" prefWidth="200.0" spacing="5.0" stylesheets="@mainScreen.css" BorderPane.alignment="CENTER">
+      <VBox id="menu" fx:id="menu" prefHeight="200.0" prefWidth="200.0" spacing="5.0" BorderPane.alignment="CENTER">
          <padding>
             <Insets bottom="10.0" left="15.0" right="5.0" top="10.0" />
          </padding>
@@ -37,7 +42,7 @@
          <left>
             <ImageView fitHeight="87.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true" smooth="false" BorderPane.alignment="CENTER">
                <image>
-                  <Image url="@../assets/logo.png" />
+                  <Image url="@../../src/assets/logo.png" />
                </image></ImageView>
          </left>
          <padding>

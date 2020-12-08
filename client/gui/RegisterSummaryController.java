@@ -4,8 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import module.GuiController;
 
-public class RegisterSummaryController {
+public class RegisterSummaryController implements GuiController{
 
     @FXML
     private Label LastNameLabel;

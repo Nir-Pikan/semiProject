@@ -9,8 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import module.GuiController;
 
-public class ReportExportController {
+public class ReportExportController implements GuiController{
 
     @FXML
     private Label labelDateToday;

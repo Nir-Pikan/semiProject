@@ -11,8 +11,9 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import module.GuiController;
 
-public class VisitorsReportController {
+public class VisitorsReportController implements GuiController{
 
     @FXML
     private Label labelDateToaday;

@@ -8,8 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import module.GuiController;
 
-public class ParkManagerParametersUpdateController {
+public class ParkManagerParametersUpdateController implements GuiController{
 
     @FXML
     private Label labelDateToday;

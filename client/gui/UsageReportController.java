@@ -10,8 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import module.GuiController;
 
-public class UsageReportController {
+public class UsageReportController implements GuiController{
 
     @FXML
     private Label labelDateToday;

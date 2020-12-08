@@ -1,5 +1,6 @@
-package gui;
+package module;
 
+import gui.LoginController;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
@@ -31,7 +32,7 @@ public class PopUp extends Alert {
 
 	/**set the styles to the popup*/
 	private void init() {
-		this.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toString());
+		this.getDialogPane().getStylesheets().add(LoginController.class.getResource("style.css").toString());
 		((Stage) this.getDialogPane().getScene().getWindow()).initStyle(StageStyle.UNDECORATED);
 		((Stage) this.getDialogPane().getScene().getWindow()).setOnCloseRequest((event)->{
 			event.consume();

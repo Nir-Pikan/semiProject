@@ -11,10 +11,15 @@
 .label{	-fx-text-fill: white;}
 
 /* controls */
+.red {
+	-fx-text-fill: red;
+}
 
-.text-field.error{
+.text-field.error , .combo-box.error{
 	-fx-border-color: red;
 	-fx-border-width: 2px;
+	-fx-border-radius: 3px, 2px;
+	
 }
 
 .button ,.toggle-button{
@@ -26,6 +31,7 @@
 -fx-border-radius: 7px;
 
 }
+
 .button:hover,.toggle-button:selected{
 -fx-background-color:#538996;
 -fx-font-weight:bold;

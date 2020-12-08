@@ -23,10 +23,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-
 <HBox prefHeight="565.0" prefWidth="857.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane id="body" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="565.0" prefWidth="859.0">
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="565.0" prefWidth="859.0">
          <children>
             <Button layoutX="19.0" layoutY="110.0" mnemonicParsing="false" text="Button" />
             <CheckBox layoutX="26.0" layoutY="145.0" mnemonicParsing="false" text="CheckBox" />

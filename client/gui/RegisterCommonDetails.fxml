@@ -55,28 +55,28 @@
       <TextField fx:id="IDTextField" onAction="#SetID" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <TextField fx:id="PhoneNumberTextField" onAction="#SetPhoneNumber" GridPane.columnIndex="1" GridPane.rowIndex="7" />
       <TextField fx:id="EmailTextField" onAction="#SetEmail" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <Label fx:id="RequiredLabel" text="* Required" textFill="RED" GridPane.rowIndex="3" />
-      <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4">
+      <Label fx:id="RequiredLabel" styleClass="red" text="* Required" textFill="RED" GridPane.rowIndex="3" />
+      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="5">
+      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="5">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="6">
+      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="7">
+      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="7">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="8">
+      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="8">
          <padding>
             <Insets left="10.0" />
          </padding>

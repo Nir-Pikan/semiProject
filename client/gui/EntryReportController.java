@@ -9,8 +9,9 @@ import javafx.scene.chart.StackedBarChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import module.GuiController;
 
-public class EntryReportController {
+public class EntryReportController implements GuiController{
 
     @FXML
     private Label labelDateToaday;

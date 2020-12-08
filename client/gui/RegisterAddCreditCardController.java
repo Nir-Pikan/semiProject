@@ -7,8 +7,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import module.GuiController;
+import modules.ServerRequest;
 
-public class RegisterAddCreditCardController {
+public class RegisterAddCreditCardController implements GuiController{
 
     @FXML
     private Label NameOnCardLabel;
@@ -59,7 +61,7 @@ public class RegisterAddCreditCardController {
     private Label SummaryTimelineLabel;
 
     @FXML
-    private ComboBox<?> CardTypeComboBox;
+    private ComboBox<String> CardTypeComboBox;
 
     @FXML
     private Hyperlink CVVHyperLink;
@@ -114,5 +116,13 @@ public class RegisterAddCreditCardController {
     void SetOnwerID(ActionEvent event) {
 
     }
+
+	@Override
+	public void init() {
+		CardTypeComboBox.getItems().clear();
+		CardTypeComboBox.getItems().addAll("Visa","Master Card","American Experss");
+	}
+    
+    
 
 }

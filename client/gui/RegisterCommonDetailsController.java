@@ -9,8 +9,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
+import module.GuiController;
 
-public class RegisterCommonDetailsController {
+public class RegisterCommonDetailsController implements GuiController{
 
     @FXML
     private Label LastNameLabel;

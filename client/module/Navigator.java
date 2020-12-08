@@ -1,8 +1,9 @@
-package gui;
+package module;
 
 import java.io.IOException;
 import java.util.Stack;
 
+import gui.MainScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -61,7 +62,7 @@ public class Navigator {
 			history.push(current);
 		
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(this.getClass().getResource(fxmlName));
+		loader.setLocation(MainScreenController.class.getResource(fxmlName));
 		try {
 			current = new Tab();
 			current.node = loader.load();

@@ -2,7 +2,6 @@ package main;
 
 import java.io.IOException;
 
-import gui.PrototypeClientGuiController;
 import io.clientController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +13,7 @@ public class MainClient extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		try {
+		/*try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(PrototypeClientGuiController.class.getResource("PrototypeClient.fxml"));
 			GridPane root = loader.load();
@@ -25,7 +24,7 @@ public class MainClient extends Application{
 			primaryStage.show(); 
 		} catch(Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	public static void main(String[] args) {

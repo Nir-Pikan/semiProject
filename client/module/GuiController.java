@@ -1,4 +1,4 @@
-package gui;
+package module;
 
 /**<pre>interface for GUI to save them in the navigator,
  * the init() function is called on load in the navigator</pre>*/

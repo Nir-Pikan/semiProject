@@ -7,8 +7,9 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import module.GuiController;
 
-public class CancelReportController {
+public class CancelReportController implements GuiController{
 
     @FXML
     private Label labelDateToday;

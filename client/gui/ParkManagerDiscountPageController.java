@@ -1,10 +1,11 @@
-package controllers;
+package gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import module.GuiController;
 
-public class ParkManagerDiscountPageController {
+public class ParkManagerDiscountPageController implements GuiController{
 
     @FXML
     private TableColumn<?, ?> discountInPercentage;

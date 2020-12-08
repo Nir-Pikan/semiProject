@@ -1,11 +1,12 @@
-package controllers;
+package gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import module.GuiController;
 
-public class ParksDdetailsPageController {
+public class ParksDetailsPageController implements GuiController{
 
     @FXML
     private TableView<?> parksDetailsPageTableView;

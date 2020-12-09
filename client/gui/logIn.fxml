@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -11,8 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox prefHeight="540.0" prefWidth="460.0" spacing="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="gui.LoginController">
+<VBox prefHeight="540.0" prefWidth="460.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
    <children>
       <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Login">
          <font>
@@ -49,7 +49,7 @@
             <Label text="Username:" />
             <Label text="Password:" GridPane.rowIndex="1" />
             <TextField fx:id="txtUsername" prefWidth="132.0" GridPane.columnIndex="1" />
-            <TextField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <PasswordField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <CheckBox fx:id="cbUserWorker" mnemonicParsing="false" onAction="#UserWorkerCheckBox" text="Worker Login" />

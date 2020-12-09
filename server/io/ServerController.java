@@ -5,8 +5,17 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import gui.ServerGuiController;
-import logic.VisitController;
+import logic.DiscountController;
+import logic.EntryController;
+import logic.MessageController;
+import logic.OrderController;
+import logic.ParkController;
+import logic.ReportController;
+import logic.SubscriberController;
+import logic.WaitingListController;
+import logic.WorkerController;
 import modules.ServerRequest;
+import notForPublish.VisitController;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
@@ -17,7 +26,16 @@ public class ServerController extends AbstractServer{
 	//controllers****************************************
 	
 	private DbController db;//TODO check if needed here
-	private VisitController visit;
+	//private VisitController visit;
+	private SubscriberController subscriber;
+	private WorkerController worker;
+	private MessageController messageC;
+	private DiscountController discount;
+	private ParkController park;
+	private OrderController order;
+	private EntryController entry;
+	private WaitingListController waitingList;
+	private ReportController report;
 	
 	
 	/**controller to show user connection*/
@@ -49,10 +67,32 @@ public class ServerController extends AbstractServer{
 		String response = null;
 				ServerRequest sr = ServerRequest.fromJson(parsed);
 				switch(sr.manager) {
-				case Visitors:
-					response = visit.handelRequest(sr);
+				case Discount:
+					response = discount.handleRequest(sr);
+					break;
+				case Entry:
+					response = entry.handleRequest(sr);
+					break;
+				case Order:
+					response = order.handleRequest(sr);
+					break;
+				case Park:
+					response = park.handleRequest(sr);
+					break;
+				case Report:
+					response = report.handleRequest(sr);
+					break;
+				case Subscriber:
+					response = subscriber.handleRequest(sr);
+					break;
+				case WaitingList:
+					response = waitingList.handleRequest(sr);
+					break;
+				case Worker:
+					response = worker.handleRequest(sr);
 					break;
 				default:
+					response = "Unsuported";
 					break;
 				}
 		try {
@@ -115,8 +155,19 @@ public class ServerController extends AbstractServer{
 	 * @throws SQLException */
 	private void initControllers() throws SQLException {
 		DbController.init();
+		//
 		gui.dbConnected();
-		visit = new VisitController();
+		park = new ParkController();
+		subscriber = new SubscriberController();
+		worker = new WorkerController();
+		messageC = new MessageController();
+		discount = new DiscountController();
+		//
+		order = new OrderController(park,messageC,subscriber,discount);
+		entry = new EntryController(park,messageC,subscriber,discount);
+		//
+		waitingList = new WaitingListController(order,messageC);
+		report = new ReportController(order,entry,park);
 	}
 
 	@Override

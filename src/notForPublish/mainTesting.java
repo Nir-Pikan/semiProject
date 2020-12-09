@@ -17,6 +17,8 @@ import module.PopUp;
 
 public class mainTesting extends Application{
 
+	//TODO delete
+	//Only for UI testing
 	@Override
 	public void start(Stage primaryStage) {
 		try {

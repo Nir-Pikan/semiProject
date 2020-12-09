@@ -1,4 +1,4 @@
-package logic;
+package notForPublish;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,7 +74,7 @@ public class VisitController implements IController {
 	}
 
 	@Override
-	public String handelRequest(ServerRequest request) {
+	public String handleRequest(ServerRequest request) {
 		if (request == null)
 			return "Unknown request";
 		switch (request.job) {

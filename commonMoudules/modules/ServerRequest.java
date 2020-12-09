@@ -22,7 +22,14 @@ public class ServerRequest {
 	}
 	
 	public enum Manager{
-		Visitors
+		Subscriber,
+		Worker,
+		Discount,
+		Park,
+		Order,
+		Entry,
+		WaitingList,
+		Report
 	}
 	
 	/**serializer for objects*/

@@ -1,8 +1,10 @@
 package modules;
 
-import ocsf.server.ConnectionToClient;
-
 public interface IController {
 
-	public String handelRequest(ServerRequest request);
+	/**Handle request for this controller 
+	 * @param request
+	 * @return the response to the client
+	 */
+	public String handleRequest(ServerRequest request);
 }

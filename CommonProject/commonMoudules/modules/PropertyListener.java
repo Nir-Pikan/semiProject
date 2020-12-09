@@ -1,4 +1,4 @@
-package moudules;
+package modules;
 
 
 /**class for functional programming for value change action, for more details see "Property&ltT&gt"*/ 

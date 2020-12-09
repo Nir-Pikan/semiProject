@@ -15,7 +15,6 @@ import logic.SubscriberController;
 import logic.WaitingListController;
 import logic.WorkerController;
 import modules.ServerRequest;
-import notForPublish.VisitController;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 

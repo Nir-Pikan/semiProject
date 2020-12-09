@@ -19,6 +19,7 @@ public class ServerRequest {
 		this.manager=manager;
 		this.job = job;
 		this.data = msg;
+		
 	}
 	
 	public enum Manager{

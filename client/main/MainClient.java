@@ -27,6 +27,13 @@ public class MainClient extends Application{
 			primaryStage.setScene(scene);
 			Pane p =cont.InitMockup(1);
 			primaryStage.show(); 
+			primaryStage.setOnCloseRequest((event)->{
+				try {
+					clientController.client.closeConnection();
+				} catch (IOException e) {}
+				System.exit(0);
+				
+				});
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);
 			Navigator n = Navigator.instance();

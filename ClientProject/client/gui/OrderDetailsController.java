@@ -5,9 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import module.GuiController;
 
-public class OrderDetailsController implements GuiController{
+public class OrderDetailsController {
 
     @FXML
     private Button approveBtn;
@@ -38,6 +37,9 @@ public class OrderDetailsController implements GuiController{
 
     @FXML
     private Label orderNoTxt;
+
+    @FXML
+    private TextField noOfSubscribersTxt;
 
     @FXML
     void ApproveOrder(ActionEvent event) {

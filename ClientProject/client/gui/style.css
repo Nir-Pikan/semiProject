@@ -39,11 +39,18 @@
 
 }
 
+
+
 .button:hover,.toggle-button:selected{
 -fx-background-color:#538996;
 -fx-font-weight:bold;
 }
-
+.btn_no:hover{
+	-fx-background-color:red;
+}
+.btn_yes:hover{
+	-fx-background-color:green;
+}
 .check-box ,.radio-button{ -fx-text-fill: white; }
 .table-view .column-header{	-fx-background-color:#83C1D0;}
 

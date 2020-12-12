@@ -12,6 +12,7 @@ import module.GuiController;
 
 public class ParkManagerParametersUpdateController implements GuiController{
 
+
     @FXML
     private Label labelDateToday;
 
@@ -58,13 +59,13 @@ public class ParkManagerParametersUpdateController implements GuiController{
     private Label labelOnAVGchanged;
 
     @FXML
-    private Button buttonEditParameters;
+    private Button buttonAddDiscount;
 
     @FXML
     private Button buttonSendRequest;
 
     @FXML
-    void editParametersButton_OnClick(ActionEvent event) {
+    void AddDiscount_OnClick(ActionEvent event) {
 
     }
 

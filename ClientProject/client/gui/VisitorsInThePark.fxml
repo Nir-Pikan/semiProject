@@ -11,33 +11,47 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.VisitorsInTheParkPageController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.VisitorsInTheParkPageController">
    <children>
-      <Label layoutX="220.0" layoutY="44.0" text="Visitors in the park">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <GridPane layoutX="131.0" layoutY="155.0" prefHeight="30.0" prefWidth="359.0">
+      <GridPane hgap="10.0" layoutY="6.0" prefHeight="346.0" prefWidth="460.0" vgap="10.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="102.3333740234375" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="139.66668701171875" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="116.33331298828125" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="129.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="189.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="27.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <ChoiceBox fx:id="parkNumChoise" prefHeight="25.0" prefWidth="66.0" GridPane.halignment="RIGHT">
+            <ChoiceBox fx:id="parkNumChoise" prefHeight="25.0" prefWidth="110.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="15.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <Label fx:id="parkNum" text="Park#:" />
-            <Button fx:id="ShowVisitorsAmountButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" text="Show visitors amount" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
-            <TextField fx:id="visitorsAmountText" alignment="CENTER" prefHeight="25.0" prefWidth="43.0" text="###" GridPane.columnIndex="2" />
+            <Label fx:id="parkNum" text="Park:" GridPane.rowIndex="3" />
+            <TextField fx:id="visitorsAmountText" alignment="CENTER" prefHeight="25.0" prefWidth="43.0" text="###" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <Label text="Visitors in the park" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label text="Place Order For Visitor:" GridPane.rowIndex="5" />
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="190.0" text="Regular Order" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="190.0" text="Family/Group Instructor Order" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="190.0" text="Private Group Order" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label text="No of Available spaces" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
          </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
       </GridPane>
-      <Button fx:id="closeButton" layoutX="506.0" layoutY="341.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Close" />
+      <Button fx:id="closeButton" layoutX="365.0" layoutY="501.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Close" />
    </children>
 </Pane>

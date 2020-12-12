@@ -7,9 +7,9 @@ public class UIupdate {
 
 	/**<pre>execute code in the JavaFx thread
 	 *use exemple:
-	 * 	UIupdate.update(()->{
+	 * 	<code>UIupdate.update(()-&gt;{
 	 * 		//code to run
-	 * 	});</pre>
+	 * 	});</code></pre>
 	 * @param toDo the code to run in form of Runnable(use labda for easier work) */
 	public static void update(Runnable toDo) {
 		Platform.runLater(toDo);

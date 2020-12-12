@@ -1,6 +1,7 @@
 package module;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Stack;
 
 import gui.MainScreenController;
@@ -13,7 +14,7 @@ public class Navigator {
 
 	private static Navigator instance = null;
 	private static Pane baseNode = null;
-	private static String defaultTab = "login";
+	private static String defaultTab = null;
 	private Tab current = null;
 
 	private Stack<Tab> history;
@@ -22,7 +23,7 @@ public class Navigator {
 		if (baseNode == null)
 			throw new RuntimeException("Navigator not initiated, run Navigator.init(Pane baseNode) first");
 		history = new Stack<>();
-		navigate(defaultTab);
+		navigate("login");
 	}
 
 	/**
@@ -41,28 +42,37 @@ public class Navigator {
 		return instance;
 	}
 
-	/**init the Navigator to change the content of the given Pane
-	 * @param baseNode the node that the navigator need to change*/
+	/**
+	 * init the Navigator to change the content of the given Pane
+	 * 
+	 * @param baseNode the node that the navigator need to change
+	 */
 	public static void init(Pane baseNode) {
 		Navigator.baseNode = baseNode;
 	}
 
-	/** navigate to the given file(window) and push the current view to the history*/
+	/**
+	 * navigate to the given file(window) and push the current view to the history
+	 */
 	public GuiController navigate(String destenation) {
 		String fxmlName = null;
-
-		
+		if (destenation == null) {
+			baseNode.getChildren().clear();
+			return null;
+		}
 		if (destenation.endsWith(".fxml"))
 			fxmlName = destenation;
 		else
 			fxmlName = destenation + ".fxml";
-		
-		//push the current tab to the history
+
+		// push the current tab to the history
 		if (current != null)
 			history.push(current);
-		
+		URL screen = MainScreenController.class.getResource(fxmlName);
+		if(screen == null) 
+			return navigate(null);
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(MainScreenController.class.getResource(fxmlName));
+		loader.setLocation(screen);
 		try {
 			current = new Tab();
 			current.node = loader.load();
@@ -78,7 +88,7 @@ public class Navigator {
 		return null;
 	}
 
-	/**navigates to the last page all the data from current page will be deleted*/
+	/** navigates to the last page all the data from current page will be deleted */
 	public void back() {
 		if (history.isEmpty())
 			return;
@@ -88,14 +98,14 @@ public class Navigator {
 		baseNode.getChildren().add(current.node);
 	}
 
-	/**navigates to the default page(login) and clear the history*/
+	/** navigates to the default page(empty Page) and clear the history */
 	public void clearHistory() {
 		history = new Stack<>();
 		current = null;
 		navigate(defaultTab);
 	}
 
-	/**helper class for saving windows*/
+	/** helper class for saving windows */
 	private class Tab {
 		public Node node;
 		public GuiController controller;

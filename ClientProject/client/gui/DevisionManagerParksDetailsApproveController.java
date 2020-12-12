@@ -6,7 +6,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import module.GuiController;
 
-public class ParksDetailsPageController implements GuiController{
+public class DevisionManagerParksDetailsApproveController implements GuiController{
 
     @FXML
     private TableView<?> parksDetailsPageTableView;

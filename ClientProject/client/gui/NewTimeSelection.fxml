@@ -49,10 +49,10 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <TableView fx:id="OrdersTable_TableView" blendMode="DARKEN" layoutX="31.0" layoutY="121.0" prefHeight="249.0" prefWidth="406.0">
+      <TableView fx:id="OrdersTable_TableView" layoutX="31.0" layoutY="121.0" prefHeight="249.0" prefWidth="406.0">
         <columns>
-          <TableColumn prefWidth="143.0" text="Times" />
-            <TableColumn prefWidth="75.0" text="Availability" />
+          <TableColumn fx:id="timesCul" prefWidth="143.0" text="Times" />
+            <TableColumn fx:id="AvailabilityCul" prefWidth="75.0" text="Availability" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

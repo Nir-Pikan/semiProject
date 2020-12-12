@@ -7,14 +7,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import module.GuiController;
 
-public class SmallGroupOrderController {
-
-    @FXML
-    private ComboBox<?> Park_ComboBox;
+public class SmallGroupOrderController implements GuiController{
 
     @FXML
-    private ComboBox<?> VisitHour_ComboBox;
+    private ComboBox<String> Park_ComboBox;
+
+    @FXML
+    private ComboBox<String> VisitHour_ComboBox;
 
     @FXML
     private TextField Email_textBox;
@@ -29,7 +30,7 @@ public class SmallGroupOrderController {
     private TextField Phone_textBox;
 
     @FXML
-    private ListView<?> listViewVisitors;
+    private ListView<String> listViewVisitors;
 
     @FXML
     private Button AddVisitor_Button;

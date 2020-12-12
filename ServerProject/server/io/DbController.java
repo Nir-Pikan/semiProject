@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
+/**<pre>class for the connection to the DataBase
+ * contains the userName, Password and SchemeName to the DB
+ * Singelton</pre>
+ * */
 public class DbController {
 
 	private static DbController instance = null;
@@ -64,8 +67,8 @@ public class DbController {
 		return true;
 	}
 	
-	/**send update query to the db
-	 * @param Statment query to send
+	/**send update to the db
+	 * @param statment query to send
 	 * @return if query went through without errors
 	 * */
 	public boolean sendUpdate(String statment) {
@@ -80,7 +83,7 @@ public class DbController {
 		return true;
 	}
 	
-	/**send update query to the db
+	/**send query to the db
 	 * @param statment query to send
 	 * @return the ResultSet if succeeded or null if failed
 	 * */

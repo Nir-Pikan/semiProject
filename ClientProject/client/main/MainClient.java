@@ -12,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import module.GuiController;
 import module.Navigator;
 
 public class MainClient extends Application{
@@ -37,7 +38,7 @@ public class MainClient extends Application{
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);
 			Navigator n = Navigator.instance();
-			//GuiController g = n.navigate("login");
+			GuiController g = n.navigate("RegisterCommonDetails");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

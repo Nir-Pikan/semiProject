@@ -58,14 +58,14 @@
       <Label fx:id="DetailsTimelineLabel" text="Details" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label fx:id="AddCreditCardTimelineLabel" text="Add Credit Card" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label fx:id="SummaryTimelineLabel" text="Summary" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <Label fx:id="FirstNameContantLabel" text="~First Name~" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label fx:id="LastNameContantLabel" text="~Last Name~" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label fx:id="IDContantLabel" text="~ID~" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Label fx:id="PhoneNumberContantLabel" text="~Phone Number~" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-      <Label fx:id="EmailContantLabel" text="~Email~" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <Label fx:id="TypeContantLabel" text="~Type~" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <Label fx:id="FamilySizeContantLabel" text="~Family Size~" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-      <Label fx:id="CardNumberContantLabel" text="~Card Number~" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+      <Label fx:id="FirstNameContantLabel" text="~First Name~" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+      <Label fx:id="LastNameContantLabel" text="~Last Name~" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="4" />
+      <Label fx:id="IDContantLabel" text="~ID~" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="5" />
+      <Label fx:id="PhoneNumberContantLabel" text="~Phone Number~" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="6" />
+      <Label fx:id="EmailContantLabel" text="~Email~" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="7" />
+      <Label fx:id="TypeContantLabel" text="~Type~" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="8" />
+      <Label fx:id="FamilySizeContantLabel" text="~Family Size~" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="9" />
+      <Label fx:id="CardNumberContantLabel" text="~Card Number~" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="10" />
       <Label fx:id="CreditCardLabel" text="Credit Card:" GridPane.columnSpan="2" GridPane.rowIndex="10" />
    </children>
    <padding>

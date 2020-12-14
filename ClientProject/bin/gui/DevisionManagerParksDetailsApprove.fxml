@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DevisionManagerParksDetailsApproveController">
+   <children>
+      <TableView fx:id="parksDetailsPageTableView" layoutX="10.0" layoutY="69.0" prefHeight="455.0" prefWidth="440.0">
+        <columns>
+          <TableColumn fx:id="parkNum" prefWidth="88.0" text="Park #" />
+            <TableColumn prefWidth="75.0" text="Value Name" />
+            <TableColumn prefWidth="90.0" text="Current Value" />
+            <TableColumn prefWidth="75.0" text="Requested Value" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Label layoutX="151.0" layoutY="21.0" styleClass="h1" text=" Parks details page">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="ExitButton" layoutX="857.0" layoutY="471.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" style="-fx-background-color: #e02222;" text="Exit" />
+   </children>
+</Pane>

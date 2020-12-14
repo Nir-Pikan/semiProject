@@ -38,7 +38,7 @@
   </rowConstraints>
    <children>
       <Label fx:id="NameOnCardLabel" text="Name on card" GridPane.rowIndex="5" />
-      <TextField fx:id="NameOnCardTextField" onAction="#SetNameOnCard" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextField fx:id="NameOnCardTextField" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
       <Label fx:id="AddCreditCardTitleLabel" text="Register - Add Credit Card" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.valignment="TOP">
          <font>
             <Font size="20.0" />
@@ -49,26 +49,21 @@
       <Label fx:id="CardNumberLabel" text="Card number" GridPane.rowIndex="7" />
       <Label fx:id="CVVLabel" text="CVV" GridPane.rowIndex="8" />
       <Label fx:id="ExpirationDateLabel" text="Expiration date" GridPane.rowIndex="9" />
-      <TextField fx:id="OwnerIDTextField" onAction="#SetOnwerID" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <TextField fx:id="CardNumberTextField" onAction="#SetCardNumber" promptText="XXXX-XXXX-XXXX-XXXX" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-      <TextField fx:id="CVVTextField" onAction="#SetCVV" promptText="XXX" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <TextField fx:id="OwnerIDTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <TextField fx:id="CardNumberTextField" promptText="XXXX-XXXX-XXXX-XXXX" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+      <TextField fx:id="CVVTextField" promptText="XXX" GridPane.columnIndex="1" GridPane.rowIndex="8" />
       <Label fx:id="RequiredLabel" styleClass="red" text="* Required" textFill="RED" GridPane.rowIndex="3" />
-      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="5">
+      <Label fx:id="OwnerIDNote" styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="6">
+      <Label fx:id="CardNumberNote" styleClass="red" text="*" textFill="RED" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7">
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin>
       </Label>
-      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="3" GridPane.rowIndex="7">
-         <GridPane.margin>
-            <Insets left="10.0" />
-         </GridPane.margin>
-      </Label>
-      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="8">
+      <Label fx:id="CVVNote" styleClass="red" text="*" textFill="RED" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="8">
          <padding>
             <Insets left="10.0" />
          </padding>
@@ -85,15 +80,26 @@
       <Label fx:id="DetailsTimelineLabel" text="Details" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label fx:id="CreditCardTimelineLabel" text="Add Credit Card" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <Label fx:id="SummaryTimelineLabel" text="Summary" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <ComboBox fx:id="CardTypeComboBox" onAction="#SetCardType" prefWidth="150.0" promptText="Visa" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <ComboBox fx:id="CardTypeComboBox" onAction="#SetCardType" prefWidth="150.0" promptText="Visa" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
       <Hyperlink fx:id="CVVHyperLink" onAction="#OpenCVVHyperLink" text="?" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
-      <ComboBox fx:id="ExpirationDateMonthComboBox" onAction="#SetExpirationDateMonth" prefWidth="150.0" promptText="MM" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-      <Label styleClass="red" text="*" textFill="RED" GridPane.columnIndex="3" GridPane.rowIndex="9">
+      <ComboBox fx:id="ExpirationDateMonthComboBox" prefWidth="150.0" promptText="MM" GridPane.columnIndex="1" GridPane.rowIndex="9">
+         <GridPane.margin>
+            <Insets right="5.0" />
+         </GridPane.margin></ComboBox>
+      <Label fx:id="ExpirationDateNote" styleClass="red" text="*" textFill="RED" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="9">
          <padding>
             <Insets left="10.0" />
          </padding>
       </Label>
-      <ComboBox fx:id="ExpirationDateYearComboBox" onAction="#SetExpirationDateYear" prefWidth="150.0" promptText="YYYY" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+      <ComboBox fx:id="ExpirationDateYearComboBox" prefWidth="150.0" promptText="YYYY" GridPane.columnIndex="2" GridPane.rowIndex="9">
+         <GridPane.margin>
+            <Insets left="5.0" />
+         </GridPane.margin></ComboBox>
+      <Label fx:id="NameOnCardNote" styleClass="red" text="*" textFill="RED" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

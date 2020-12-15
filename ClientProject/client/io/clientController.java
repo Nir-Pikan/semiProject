@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import entities.ParkNameAndTimes;
 import entities.Subscriber;
-//import entities.Worker;
+import entities.Worker;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 import ocsf.client.AbstractClient;
@@ -27,8 +27,8 @@ public class clientController extends AbstractClient {
 	//common data
 	public ParkNameAndTimes[] openingTimes;
 	public String[] parkNames;
-	//public Worker logedInWorker;
-	public Subscriber logedInSunscriber;
+	public Worker logedInWorker = null;
+	public Subscriber logedInSunscriber = null;
 	
 	public clientController(String host, int port) throws IOException {
 		super(host, port);

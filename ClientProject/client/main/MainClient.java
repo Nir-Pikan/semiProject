@@ -39,7 +39,7 @@ public class MainClient extends Application{
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);
 			Navigator n = Navigator.instance();
-			GuiController g = n.navigate("VisitorsInThePark");
+			GuiController g = n.navigate("RegisterCommonDetails");
 			//((ParkManagerParametersUpdateController) g).setPark("1");
 		} catch(Exception e) {
 			e.printStackTrace();

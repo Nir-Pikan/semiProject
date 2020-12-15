@@ -73,19 +73,5 @@ public class VisitorsInTheParkPageController implements GuiController {
 		parkNumChoise.getSelectionModel().select(parkId);
 	}
 
-    @FXML
-    void familyOrder(ActionEvent event) {
-
-    }
-
-    @FXML
-    void privateGroupOrder(ActionEvent event) {
-
-    }
-
-    @FXML
-    void regularOrder(ActionEvent event) {
-
-    }
 
 }

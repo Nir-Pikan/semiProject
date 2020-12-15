@@ -107,11 +107,13 @@
 
 /* alert */
 .alert{
+	-fx-font-family:"System" ;
     -fx-background-color: #1C2729;
     -fx-border-color: white;
 }
 
 .alert > *.label.content{
+	-fx-padding:10px;
     -fx-font-size: 14px;
     -fx-text-fill: white;
 }

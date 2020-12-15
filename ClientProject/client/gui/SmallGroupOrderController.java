@@ -45,4 +45,9 @@ public class SmallGroupOrderController implements GuiController{
 
     }
 
+	public void setSpontaneous(String ordererId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

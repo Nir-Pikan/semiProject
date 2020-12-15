@@ -11,7 +11,7 @@ import java.sql.Statement;
  * contains the userName, Password and SchemeName to the DB
  * Singelton</pre>
  * */
-public class DbController {
+public class DbController implements IDbController {
 
 	private static DbController instance = null;
 	
@@ -21,7 +21,6 @@ public class DbController {
 	private static final String dbPass = "Aa123456";
 	
 	private Connection conn;
-	private PreparedStatement create;
 	
 	private DbController() throws SQLException {
 		try 
@@ -56,6 +55,7 @@ public class DbController {
 	 * @param creatStatment the table to create
 	 * @return if query went through without errors
 	 * */
+	@Override
 	public boolean createTable(String creatStatment) {
 		
 		try {
@@ -71,6 +71,7 @@ public class DbController {
 	 * @param statment query to send
 	 * @return if query went through without errors
 	 * */
+	@Override
 	public boolean sendUpdate(String statment) {
 		
 		try {
@@ -87,6 +88,7 @@ public class DbController {
 	 * @param statment query to send
 	 * @return the ResultSet if succeeded or null if failed
 	 * */
+	@Override
 	public ResultSet sendQuery(String statment) {
 		
 		try {
@@ -102,6 +104,7 @@ public class DbController {
 	 * @param query query to send
 	 * @return the PreparedStatement if succeeded or null if failed
 	 * */
+	@Override
 	public PreparedStatement getPreparedStatement(String query) {
 		try {
 			return conn.prepareStatement(query);

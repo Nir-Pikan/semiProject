@@ -10,7 +10,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -59,6 +63,8 @@ public class PopUp extends Alert {
 		((Stage) this.getDialogPane().getScene().getWindow()).setOnCloseRequest((event) -> {
 			event.consume();
 		});
+		this.setResizable(true);
+
 	}
 
 	/**
@@ -111,6 +117,23 @@ public class PopUp extends Alert {
 	}
 
 	/**
+	 * show an Alert with 'OK' option and error logo. not waiting until the user
+	 * answer
+	 * 
+	 * @param title  the title of the window(not shown in the head)
+	 * @param header the text to show in the upper part of the alert
+	 * @param body   the text to show in the lower part of the alert
+	 */
+	public static void showError(String title, String header, String body) {
+		Alert alert = new PopUp(AlertType.ERROR);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(body);
+		alert.show();
+
+	}
+
+	/**
 	 * create Alert with styling and custom content(Pane) but with file name
 	 * 
 	 * @param title       the title of the window
@@ -133,5 +156,25 @@ public class PopUp extends Alert {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * show an Alert with 'OK' option and textField. wait for answer, and return the
+	 * typed Text
+	 * 
+	 * @param title  the title of the window(not shown in the head)
+	 * @param header the text to show in the upper part of the alert
+	 * @param body   the text to show in the lower part of the alert(next to the
+	 *               text field)
+	 * @return the text inputes by the user
+	 */
+	public static String getUserInput(String title, String header, String body) {
+		Alert alert = new PopUp(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		TextField tf = new TextField();
+		alert.getDialogPane().setContent(new HBox(10, new Label(body), tf));
+		alert.showAndWait();
+		return tf.getText();
 	}
 }

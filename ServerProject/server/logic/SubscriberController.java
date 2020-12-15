@@ -89,7 +89,6 @@ public class SubscriberController implements IController {
 				s = new Subscriber(res.getString(1), res.getString(2),res.getString(3),
 						 res.getString(4), res.getString(5), res.getString(6),
 						 res.getInt(8), Type.valueOf(res.getString(9)));
-											// TODO check type on DB (ENUM)
 				
 				//if subscriber has a credit card get him from creditcards table as well
 				if(s.creditCardNumber != null) {
@@ -102,7 +101,6 @@ public class SubscriberController implements IController {
 								s.SetCreditCard(res2.getString(1), res2.getString(2), res2.getString(3), 
 										res2.getString(4), res2.getString(5), res2.getString(6),
 										Subscriber.CardType.valueOf(res2.getString(7)));
-											// TODO check type on DB (ENUM)
 							}
 							res2.close();
 							

@@ -1,7 +1,7 @@
 package entities;
 
 public class Visitor {
-
+//TODO delete
 	public String firstName,surname,id,email,phone;
 
 	public Visitor(String firstName, String surname, String id, String email, String phone) {

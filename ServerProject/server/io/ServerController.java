@@ -24,7 +24,6 @@ public class ServerController extends AbstractServer{
 	
 	//controllers****************************************
 	
-	private DbController db;//TODO check if needed here
 	//private VisitController visit;
 	private SubscriberController subscriber;
 	private WorkerController worker;
@@ -124,6 +123,7 @@ public class ServerController extends AbstractServer{
 	protected synchronized void clientDisconnected(ConnectionToClient client) {
 		super.clientDisconnected(client);
 		System.out.println("client disconnected: "+client);
+		//TODO add disconnect to client
 		//TODO prototype only code
 		gui.setDisconnected();
 	}

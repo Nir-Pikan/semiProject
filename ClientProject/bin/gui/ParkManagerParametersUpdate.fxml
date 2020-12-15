@@ -30,7 +30,7 @@
    </rowConstraints>
    <children>
       <Label fx:id="labelDateToday" text="Date :" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-      <TextField fx:id="textDateToday" GridPane.columnIndex="3">
+      <TextField fx:id="textDateToday" editable="false" GridPane.columnIndex="3">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin>
@@ -48,7 +48,7 @@
             <Insets left="10.0" />
          </padding>
       </Label>
-      <TextField fx:id="textParkName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <TextField fx:id="textParkName" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Label fx:id="labelcurrentOnChanged" prefHeight="17.0" prefWidth="98.0" text="Current " GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
          <padding>
             <Insets left="25.0" />
@@ -60,7 +60,7 @@
          </padding>
       </Label>
       <TextField fx:id="textParkMaxCapacity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label fx:id="labelOnCapacityChanged" text="OnCapacityChanged" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+      <Label fx:id="labelOnCapacityChanged" text="" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
          <padding>
             <Insets left="25.0" />
          </padding>
@@ -74,7 +74,7 @@
          </GridPane.margin>
       </Label>
       <TextField fx:id="textParkMaxPreOrders" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Label fx:id="labelOnPreOrdersChanged" text="OnPreOrdersChanged" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
+      <Label fx:id="labelOnPreOrdersChanged" text="" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
          <padding>
             <Insets left="25.0" />
          </padding>
@@ -85,7 +85,7 @@
          </padding>
       </Label>
       <TextField fx:id="textParkAVGtime" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <Label fx:id="labelOnAVGchanged" text="OnAVGchanged" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
+      <Label fx:id="labelOnAVGchanged" text="" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
          <padding>
             <Insets left="25.0" />
          </padding>

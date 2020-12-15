@@ -37,4 +37,15 @@ public class GroupOrderController implements GuiController{
 
     }
 
+	public void setSpontaneous(String ordererId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void setFamilyOrderOnly() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

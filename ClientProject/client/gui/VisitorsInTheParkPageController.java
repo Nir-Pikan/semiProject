@@ -1,40 +1,75 @@
 package gui;
 
+import entities.Subscriber;
+import entities.Subscriber.Type;
+import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
+import module.Navigator;
+import module.PopUp;
+import modules.ServerRequest;
+import modules.ServerRequest.Manager;
 
 public class VisitorsInTheParkPageController implements GuiController {
 
-    @FXML
-    private ChoiceBox<String> parkNumChoise;
+	@FXML
+	private ChoiceBox<String> parkNumChoise;
 
-    @FXML
-    private Label parkNum;
+	@FXML
+	private TextField visitorsAmountText;
 
-    @FXML
-    private TextField visitorsAmountText;
+	@FXML
+	private Button closeButton;
 
-    @FXML
-    private Button closeButton;
+	@FXML
+	void familyOrder(ActionEvent event) {
+		String ordererId = PopUp.getUserInput("family/Group Order", "enter Id of the orderer", "id or subscriberId :");
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ordererId));
+		Subscriber s = ServerRequest.gson.fromJson(response, Subscriber.class);
+		GroupOrderController g = (GroupOrderController) Navigator.instance().navigate("GroupOrder");
+		g.setSpontaneous(ordererId);
+		if (s.type == Type.SUBSCRIBER)
+			g.setFamilyOrderOnly();
 
-    @FXML
-    void familyOrder(ActionEvent event) {
+	}
 
-    }
+	@FXML
+	void privateGroupOrder(ActionEvent event) {
+		String ordererId = PopUp.getUserInput("private Group Order", "enter Id of the orderer", "id or subscriberId :");
+		((SmallGroupOrderController) Navigator.instance().navigate("SmallGroupOrder")).setSpontaneous(ordererId);
+	}
 
-    @FXML
-    void privateGroupOrder(ActionEvent event) {
+	@FXML
+	void regularOrder(ActionEvent event) {
+		String ordererId = PopUp.getUserInput("regular Order", "enter Id of the orderer", "id or subscriberId :");
 
-    }
+		((RegularOrderController) Navigator.instance().navigate("RegularOrder")).setSpontaneous(ordererId);
+	}
 
-    @FXML
-    void regularOrder(ActionEvent event) {
+	@Override
+	public void init() {
+		parkNumChoise.getItems().addAll(clientController.client.parkNames);
+		parkNumChoise.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+			String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park,
+					"get number of visitor available", parkNumChoise.getSelectionModel().getSelectedItem()));
+			if (response.equals("park not exists")) {
+				PopUp.showError("available visitors", "failed to get Available visitor",
+						"Park " + parkNumChoise.getSelectionModel().getSelectedItem() + " not exists");
+				return;
+			}
+			visitorsAmountText.setText(response);
+		});
+		// TODO call set Park for worker and park manager
+	}
 
-    }
+	public void setPark(String parkId) {
+		parkNumChoise.setDisable(true);
+		parkNumChoise.getSelectionModel().select(parkId);
+	}
 
 }

@@ -55,7 +55,8 @@ public class mainTesting extends Application{
 //			GuiController g = n.navigate("AddDiscount");
 //			GuiController g = n.navigate("DevisionManagerParksDetailsApprove.fxml");
 //			GuiController g = n.navigate("DevisionManagerDiscount");
-			System.out.println(PopUp.ask("waiting list", "The date and time you choose is taken", "Do you want to enter the waiting list?"));
+//			System.out.println(PopUp.ask("waiting list", "The date and time you choose is taken", "Do you want to enter the waiting list?"));
+			PopUp.showInformation("", "", "1\n2\n3\n2\n3\n");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

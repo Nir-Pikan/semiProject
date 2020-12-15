@@ -34,4 +34,10 @@ public class RegularOrderController implements GuiController{
 
     }
 
+
+	public void setSpontaneous(String ordererId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

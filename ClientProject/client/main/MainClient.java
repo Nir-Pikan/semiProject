@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import gui.LoginController;
 import gui.MainScreenController;
+import gui.ParkManagerParametersUpdateController;
 import io.clientController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +39,8 @@ public class MainClient extends Application{
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);
 			Navigator n = Navigator.instance();
-			GuiController g = n.navigate("RegisterCommonDetails");
+			GuiController g = n.navigate("VisitorsInThePark");
+			//((ParkManagerParametersUpdateController) g).setPark("1");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

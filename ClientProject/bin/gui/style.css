@@ -39,7 +39,15 @@
 
 }
 
+.table-cell{
+	 -fx-alignment: CENTER;
+	 -fx-font-weight :bold;
+}
 
+.table-view-M *.column-header-background { 
+-fx-padding:10px;
+-fx-background-color:#83C1D0;
+}
 
 .button:hover,.toggle-button:selected{
 -fx-background-color:#538996;

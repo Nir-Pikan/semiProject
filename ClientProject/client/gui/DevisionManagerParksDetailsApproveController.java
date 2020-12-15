@@ -1,5 +1,6 @@
 package gui;
 
+
 import entities.PendingValueChangeRequest;
 import entities.PendingValueChangeRequest.ParkAttribute;
 import io.clientController;
@@ -85,5 +86,4 @@ public class DevisionManagerParksDetailsApproveController implements GuiControll
 		parksDetailsPageTableView.getItems().addAll(arr);
 		parksDetailsPageTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 	}
-
 }

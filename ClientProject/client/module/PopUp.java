@@ -134,6 +134,7 @@ public class PopUp extends Alert {
 	}
 
 	/**
+
 	 * create Alert with styling and custom content(Pane) but with file name
 	 * 
 	 * @param title       the title of the window
@@ -156,6 +157,7 @@ public class PopUp extends Alert {
 			e.printStackTrace();
 		}
 		return null;
+
 	}
 
 	/**

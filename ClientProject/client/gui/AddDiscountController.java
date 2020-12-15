@@ -100,4 +100,5 @@ public class AddDiscountController implements GuiController {
 			return;
 		}
 	}
+
 }

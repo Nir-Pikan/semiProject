@@ -16,11 +16,13 @@ import modules.ServerRequest.Manager;
 
 public class VisitorsInTheParkPageController implements GuiController {
 
+
 	@FXML
 	private ChoiceBox<String> parkNumChoise;
 
 	@FXML
 	private TextField visitorsAmountText;
+
 
 	@FXML
 	private Button closeButton;
@@ -35,7 +37,6 @@ public class VisitorsInTheParkPageController implements GuiController {
 		g.setSpontaneous(ordererId);
 		if (s.type == Type.SUBSCRIBER)
 			g.setFamilyOrderOnly();
-
 	}
 
 	@FXML
@@ -71,5 +72,20 @@ public class VisitorsInTheParkPageController implements GuiController {
 		parkNumChoise.setDisable(true);
 		parkNumChoise.getSelectionModel().select(parkId);
 	}
+
+    @FXML
+    void familyOrder(ActionEvent event) {
+
+    }
+
+    @FXML
+    void privateGroupOrder(ActionEvent event) {
+
+    }
+
+    @FXML
+    void regularOrder(ActionEvent event) {
+
+    }
 
 }

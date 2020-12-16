@@ -35,11 +35,10 @@ public class DiscountController implements IController {
 	 * Create Discount Table if not exist
 	 */
 	private void createTable() {
-		boolean isCreated =dbController.createTable(tableName + " ( discountID varchar(40)," + " discountValue FLOAT NULL ,"
-				+ " startDate TIMESTAMP(1) NULL ," + " endDate TIMESTAMP(1) NULL ," + " isApproved TINYINT NULL ,"
-				+ " PRIMARY KEY (discountID)) ;");
-		if(isCreated)
-		{
+		boolean isCreated = dbController.createTable(tableName + " ( discountID varchar(40),"
+				+ " discountValue FLOAT NULL ," + " startDate TIMESTAMP(1) NULL ," + " endDate TIMESTAMP(1) NULL ,"
+				+ " isApproved TINYINT NULL ," + " PRIMARY KEY (discountID)) ;");
+		if (isCreated) {
 			System.out.println("Table has been created");
 		}
 	}
@@ -48,12 +47,12 @@ public class DiscountController implements IController {
 	public String handleRequest(ServerRequest request) {
 		String job = request.job;
 		String response = null;
-	
+
 		switch (job) {
 
 		case "getAllDiscount":
-			DiscountEntity[] discounts= getAllDiscount();
-			response=ServerRequest.gson.toJson(discounts,DiscountEntity[].class);
+			DiscountEntity[] discounts = getAllDiscount();
+			response = ServerRequest.gson.toJson(discounts, DiscountEntity[].class);
 			break;
 		// TODO Michael
 		case "CalculatePriceForEntryByOrder": // to orderController
@@ -76,7 +75,7 @@ public class DiscountController implements IController {
 			break;
 
 		case "ApproveDiscount":
-			String discountId = ServerRequest.gson.fromJson(request.data, String.class);
+			String discountId = request.data;
 			if (discountId == null) {
 				response = "Failed to update Discount got Null";
 			} else if (ApproveDiscount(discountId)) {
@@ -87,7 +86,7 @@ public class DiscountController implements IController {
 			break;
 
 		case "DeleteDiscount":
-			String discountID = ServerRequest.gson.fromJson(request.data, String.class);
+			String discountID = request.data;
 			if (discountID == null) {
 				response = "Failed to delete Discount got Null";
 			} else if (DeleteDiscount(discountID)) {
@@ -107,6 +106,7 @@ public class DiscountController implements IController {
 
 	/**
 	 * Receive all Discounts which not approved yet
+	 * 
 	 * @return array type DiscountEntity with isApprove==false
 	 */
 	public DiscountEntity[] getAllDiscount() {
@@ -136,18 +136,19 @@ public class DiscountController implements IController {
 	 * @return did the method succeeded
 	 */
 	public boolean ApproveDiscount(String discountID) {
-		PreparedStatement pstmt = dbController.getPreparedStatement("UPDATE "+ tableName+" SET isApproved = true WHERE ( discountID = ? );");
+		PreparedStatement pstmt = dbController
+				.getPreparedStatement("UPDATE " + tableName + " SET isApproved = true WHERE ( discountID = (?) );");
 		try {
 			pstmt.setString(1, discountID);
-			return pstmt.executeUpdate()==1;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(pstmt.toString());
 			System.out.println("Failed to execute update");
 		}
-	
+
 		return false;
-	
+
 	}
 
 	/**
@@ -249,7 +250,7 @@ public class DiscountController implements IController {
 	public boolean AddNewDiscount(DiscountEntity newDiscount) {
 
 		PreparedStatement pstmt = dbController.getPreparedStatement("INSERT INTO " + tableName
-				+ "( discountID , discountValue , startDate , endDate , isApproved ) VALUES ( ? , ? , ? , ? , ? );" );
+				+ "( discountID , discountValue , startDate , endDate , isApproved ) VALUES ( ? , ? , ? , ? , ? );");
 		try {
 			pstmt.setString(1, newDiscount.DiscountID);
 			pstmt.setFloat(2, newDiscount.DiscountValue);
@@ -257,15 +258,15 @@ public class DiscountController implements IController {
 			pstmt.setTimestamp(4, newDiscount.EndTime);
 			pstmt.setBoolean(5, newDiscount.IsApproved);
 
-			return pstmt.executeUpdate()==1;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(pstmt.toString());
 			System.out.println("Failed to execute update");
 		}
-	
+
 		return false;
-	
+
 	}
 
 	/**
@@ -275,8 +276,19 @@ public class DiscountController implements IController {
 	 * @return did the method succeeded
 	 */
 	public boolean DeleteDiscount(String discountID) {
-		String statment = " DELETE FROM " + tableName + " WHERE ( discountID = " + discountID + ");";
-		return dbController.sendUpdate(statment);
+
+		PreparedStatement pstmt = dbController
+				.getPreparedStatement("DELETE FROM " + tableName + " WHERE ( discountID = ? );");
+		try {
+			pstmt.setString(1, discountID);
+			return pstmt.executeUpdate() == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(pstmt.toString());
+			System.out.println("Failed to execute update");
+		}
+		return false;
+
 	}
 
 	/**
@@ -291,17 +303,18 @@ public class DiscountController implements IController {
 	private float ApplyDiscount(float currentPrice, Timestamp orderTime) {
 
 		float newPrice;
-		
-		String statment = "SELECT MAX(discountValue) FROM " + tableName + "  where (timestamp(startDate) < timestamp("
-				+ orderTime + ")" + " and  timestamp(endDate)>timestamp(" + orderTime + ") " + "and "
-				+ "isApproved=true);";
-		ResultSet res = dbController.sendQuery(statment);
 
-		if (res == null) {
-			return currentPrice;
-		}
+		PreparedStatement pstmt = dbController.getPreparedStatement(
+				"SELECT MAX(discountValue) FROM " + tableName + "  where (timestamp(startDate) < timestamp( ?)"
+						+ " and  timestamp(endDate)>timestamp( ? ) and isApproved=true");
 
 		try {
+			pstmt.setTimestamp(1, orderTime);
+			pstmt.setTimestamp(2, orderTime);
+			ResultSet res = pstmt.executeQuery();
+			if (res == null) {
+				return currentPrice;
+			}
 
 			float discountApply = res.getFloat(1);// discountApply should be between 0.00 to 1.00
 			if (discountApply < 0 || discountApply > 1)
@@ -312,7 +325,9 @@ public class DiscountController implements IController {
 			return newPrice;
 
 		} catch (SQLException e) {
-
+			e.printStackTrace();
+			System.out.println(pstmt.toString());
+			System.out.println("Failed to execute query");
 			return currentPrice;
 		}
 	}

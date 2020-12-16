@@ -179,23 +179,4 @@ public class PopUp extends Alert {
 		return tf.getText();
 	}
 
-	/**
-	 * show an Alert with 'OK' option and textField. wait for answer, and return the
-	 * typed Text
-	 * 
-	 * @param title  the title of the window(not shown in the head)
-	 * @param header the text to show in the upper part of the alert
-	 * @param body   the text to show in the lower part of the alert(next to the
-	 *               text field)
-	 * @return the text inputes by the user
-	 */
-	public static String getUserInput(String title, String header, String body) {
-		Alert alert = new PopUp(AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		TextField tf = new TextField();
-		alert.getDialogPane().setContent(new HBox(10, new Label(body), tf));
-		alert.showAndWait();
-		return tf.getText();
-	}
 }

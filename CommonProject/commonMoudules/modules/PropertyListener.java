@@ -11,7 +11,7 @@ public abstract class PropertyListener<T> {
 	
 	/***
 	 * Execute this method when the value of the property changed
-	 * @apiNote WARNING the parameter 'property' need to be used carefully, the use of setValue can cause loop,use {@link Property#silentSet(Object)} instead
+	 * @apiNote WARNING the parameter 'property' need to be used carefully, the use of setValue can cause loop,use {@link Property#silentSet(T)} instead
 	 * @param property the {@link Property} that called this action
 	 * @param oldVal the last value of the property
 	 * @param newVal the new value of the property

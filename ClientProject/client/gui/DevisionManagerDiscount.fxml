@@ -20,7 +20,6 @@
       <TableView fx:id="discountsTable" prefHeight="436.0" prefWidth="440.0">
         <columns>
             <TableColumn fx:id="discountID" prefWidth="121.0" text="Discount ID" />
-
           <TableColumn fx:id="discountInPercentage" prefWidth="121.0" text="Discount in %" />
           <TableColumn fx:id="discountStartDate" minWidth="0.0" prefWidth="224.0" text="Start Date" />
             <TableColumn fx:id="discountEndDate" minWidth="0.0" prefWidth="200.0" text="End Date" />

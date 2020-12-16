@@ -39,6 +39,7 @@ public class DiscountController implements IController {
 				+ " discountValue FLOAT NULL ," + " startDate TIMESTAMP(1) NULL ," + " endDate TIMESTAMP(1) NULL ,"
 				+ " isApproved TINYINT NULL ," + " PRIMARY KEY (discountID)) ;");
 		if (isCreated) {
+
 			System.out.println("Table has been created");
 		}
 	}
@@ -47,7 +48,6 @@ public class DiscountController implements IController {
 	public String handleRequest(ServerRequest request) {
 		String job = request.job;
 		String response = null;
-
 		switch (job) {
 
 		case "getAllDiscount":
@@ -76,6 +76,7 @@ public class DiscountController implements IController {
 
 		case "ApproveDiscount":
 			String discountId = request.data;
+
 			if (discountId == null) {
 				response = "Failed to update Discount got Null";
 			} else if (ApproveDiscount(discountId)) {
@@ -106,7 +107,6 @@ public class DiscountController implements IController {
 
 	/**
 	 * Receive all Discounts which not approved yet
-	 * 
 	 * @return array type DiscountEntity with isApprove==false
 	 */
 	public DiscountEntity[] getAllDiscount() {
@@ -146,7 +146,6 @@ public class DiscountController implements IController {
 			System.out.println(pstmt.toString());
 			System.out.println("Failed to execute update");
 		}
-
 		return false;
 
 	}
@@ -250,7 +249,7 @@ public class DiscountController implements IController {
 	public boolean AddNewDiscount(DiscountEntity newDiscount) {
 
 		PreparedStatement pstmt = dbController.getPreparedStatement("INSERT INTO " + tableName
-				+ "( discountID , discountValue , startDate , endDate , isApproved ) VALUES ( ? , ? , ? , ? , ? );");
+				+ "( discountID , discountValue , startDate , endDate , isApproved ) VALUES ( ? , ? , ? , ? , ? );" );
 		try {
 			pstmt.setString(1, newDiscount.DiscountID);
 			pstmt.setFloat(2, newDiscount.DiscountValue);
@@ -258,12 +257,13 @@ public class DiscountController implements IController {
 			pstmt.setTimestamp(4, newDiscount.EndTime);
 			pstmt.setBoolean(5, newDiscount.IsApproved);
 
-			return pstmt.executeUpdate() == 1;
+			return pstmt.executeUpdate()==1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(pstmt.toString());
 			System.out.println("Failed to execute update");
 		}
+
 
 		return false;
 
@@ -277,6 +277,7 @@ public class DiscountController implements IController {
 	 */
 	public boolean DeleteDiscount(String discountID) {
 
+
 		PreparedStatement pstmt = dbController
 				.getPreparedStatement("DELETE FROM " + tableName + " WHERE ( discountID = ? );");
 		try {
@@ -288,7 +289,6 @@ public class DiscountController implements IController {
 			System.out.println("Failed to execute update");
 		}
 		return false;
-
 	}
 
 	/**
@@ -316,6 +316,7 @@ public class DiscountController implements IController {
 				return currentPrice;
 			}
 
+
 			float discountApply = res.getFloat(1);// discountApply should be between 0.00 to 1.00
 			if (discountApply < 0 || discountApply > 1)
 				return currentPrice;
@@ -325,6 +326,7 @@ public class DiscountController implements IController {
 			return newPrice;
 
 		} catch (SQLException e) {
+
 			e.printStackTrace();
 			System.out.println(pstmt.toString());
 			System.out.println("Failed to execute query");

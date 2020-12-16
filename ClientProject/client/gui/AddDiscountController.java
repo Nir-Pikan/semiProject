@@ -121,4 +121,15 @@ public class AddDiscountController implements GuiController {
 		}
 	}
 
+
+		} catch (NumberFormatException e) {
+			PopUp.showInformation("Invalid Value", "Invalid Discount Value Input", "Please Enter Value between 0 to 100");
+			return;
+		} catch (IllegalArgumentException e) {
+			dateStartDate.getEditor().clear();
+			dateEndDate.getEditor().clear();
+			PopUp.showInformation("Invalid Value", "Invalid Discount Dates Input", "Please Enter Currect date");
+			return;
+		}
+	}
 }

@@ -1,6 +1,4 @@
 package gui;
-
-
 import java.time.LocalDate;
 
 import com.oracle.webservices.internal.api.EnvelopeStyle.Style;

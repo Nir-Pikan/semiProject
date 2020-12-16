@@ -9,7 +9,6 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DevisionManagerParksDetailsApproveController">
    <children>
-
       <TableView fx:id="parksDetailsPageTableView" layoutX="10.0" layoutY="69.0" prefHeight="406.0" prefWidth="440.0">
         <columns>
           <TableColumn fx:id="parkNum" prefWidth="88.0" text="Park #" />
@@ -26,7 +25,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Button layoutX="10.0" layoutY="501.0" mnemonicParsing="false" onAction="#DeclineRequest" text="Decline" />
-      <Button layoutX="394.0" layoutY="501.0" mnemonicParsing="false" onAction="#approveRequest" text="Approve" />
+      <Button layoutX="10.0" layoutY="501.0" mnemonicParsing="false" onAction="#DeclineRequest" styleClass="btn_no" text="Decline" />
+      <Button layoutX="394.0" layoutY="501.0" mnemonicParsing="false" onAction="#approveRequest" styleClass="btn_yes" text="Approve" />
    </children>
 </Pane>

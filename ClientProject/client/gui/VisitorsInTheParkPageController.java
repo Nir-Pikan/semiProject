@@ -23,7 +23,6 @@ public class VisitorsInTheParkPageController implements GuiController {
 	@FXML
 	private TextField visitorsAmountText;
 
-
 	@FXML
 	private Button closeButton;
 
@@ -37,6 +36,7 @@ public class VisitorsInTheParkPageController implements GuiController {
 		g.setSpontaneous(ordererId);
 		if (s.type == Type.SUBSCRIBER)
 			g.setFamilyOrderOnly();
+
 	}
 
 	@FXML
@@ -51,6 +51,7 @@ public class VisitorsInTheParkPageController implements GuiController {
 
 		((RegularOrderController) Navigator.instance().navigate("RegularOrder")).setSpontaneous(ordererId);
 	}
+
 
 	@Override
 	public void init() {
@@ -72,6 +73,5 @@ public class VisitorsInTheParkPageController implements GuiController {
 		parkNumChoise.setDisable(true);
 		parkNumChoise.getSelectionModel().select(parkId);
 	}
-
 
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import entities.ParkNameAndTimes;
 import entities.Subscriber;
 import entities.Worker;
+import modules.Property;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 import ocsf.client.AbstractClient;
@@ -27,18 +28,20 @@ public class clientController extends AbstractClient {
 	//common data
 	public ParkNameAndTimes[] openingTimes;
 	public String[] parkNames;
-	public Worker logedInWorker = null;
-	public Subscriber logedInSunscriber = null;
+	public Property<Worker> logedInWorker = null;
+	public Property<Subscriber> logedInSunscriber = null;
+	public Property<String> visitorID = null;
+
 	
 	public clientController(String host, int port) throws IOException {
 		super(host, port);
 		
 			this.openConnection();
 			client = this;
-		
+
 			//save the names and opening hours for all of the parks
-			sendRequest(new ServerRequest(Manager.Park, "get all parks data", ""));
-			String response = consumeResponse();
+			
+			String response = sendRequestAndResponse(new ServerRequest(Manager.Park, "get all parks data", ""));
 			openingTimes = ServerRequest.gson.fromJson(response, ParkNameAndTimes[].class);
 			parkNames = new String[openingTimes.length];
 			for(int i = 0;i<openingTimes.length;i++) {
@@ -54,7 +57,8 @@ public class clientController extends AbstractClient {
 	}
 	
 	/**Refactor - use sendRequestAndResponse instead, added the return value to the request
-	 * @deprecated*///TODO delete
+	 * @deprecated use {@link #sendRequestAndResponse(ServerRequest)}
+	 * *///TODO delete
 	public void sendRequest(ServerRequest request) {
 		try
 	    {
@@ -105,7 +109,8 @@ public class clientController extends AbstractClient {
 
 	/**get respone from server, reset to \"\" in the end
 	 * @return the response from the server
-	 * @deprecated*///TODO delete
+	 * @deprecated the method {@link #sendRequestAndResponse(ServerRequest)} returns the response*///TODO delete
+
 	public static String consumeResponse() {
 		String msg = response;
 		response = "";

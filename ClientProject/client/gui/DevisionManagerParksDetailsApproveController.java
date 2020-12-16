@@ -1,6 +1,4 @@
 package gui;
-
-
 import entities.PendingValueChangeRequest;
 import entities.PendingValueChangeRequest.ParkAttribute;
 import io.clientController;
@@ -71,6 +69,22 @@ public class DevisionManagerParksDetailsApproveController implements GuiControll
 		currentVal.setCellValueFactory(new PropertyValueFactory<PendingValueChangeRequest, Double>("currentValue"));
 		requestedValue
 				.setCellValueFactory(new PropertyValueFactory<PendingValueChangeRequest, Double>("reuestedValue"));
+
+		
+		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "get pending change requests", ""));
+		if (response.equals("[]")) {
+			PopUp.showInformation("value change request", "No Value Change Requests", "");
+			return;
+		}
+		if (response.equals("failed")) {
+			PopUp.showInformation("value change request", "error while getting value", "call tech support");
+			return;
+		}
+		PendingValueChangeRequest[] arr = ServerRequest.gson.fromJson(response, PendingValueChangeRequest[].class);
+		parksDetailsPageTableView.getItems().addAll(arr);
+		parksDetailsPageTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+	}
+
 
 		
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "get pending change requests", ""));

@@ -111,6 +111,17 @@
 .spinner .decrement-arrow-button:hover {
     -fx-body-color: #538996;
 }
+
+.hyperlink:focused { 
+	-fx-text-fill: #0096c9;
+	-fx-border-width: 0px;
+
+}
+.hyperlink:hover { 
+	-fx-text-fill: #4CB6D9;
+
+}
+
 /*END OF controls */
 
 /* alert */

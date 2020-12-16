@@ -40,15 +40,32 @@ public class AddDiscountController implements GuiController {
 			LocalDate startDate = dateStartDate.getValue();
 			LocalDate endDate = dateEndDate.getValue();
 
-			if(disID.isEmpty()) {
-				PopUp.showInformation("DiscountID invalid", "Discount ID Is Empty",
-						"Please Enter Discount ID");
+			txtDiscountId.getStyleClass().remove("error");
+			txtDiscountValue.getStyleClass().remove("error");
+			dateStartDate.getStyleClass().remove("error");
+			dateEndDate.getStyleClass().remove("error");
+
+			String bodyMsg = "";
+			if (disID.isEmpty()) {
+				bodyMsg += "The ID of the discount is Empty\n";
+				txtDiscountId.getStyleClass().add("error");
+			}
+			if (disVal.isEmpty()) {
+				bodyMsg += "The Value of the discount is Empty\n";
+				txtDiscountValue.getStyleClass().add("error");
+			}
+			if (startDate == null) {
+				bodyMsg += "The Start Date of the discount is Empty\n";
+				dateStartDate.getStyleClass().add("error");
+			}
+			if (endDate == null) {
+				bodyMsg += "The End Date of the discount is Empty\n";
+				dateEndDate.getStyleClass().add("error");
+			}
+			if (!bodyMsg.isEmpty()) {
+				PopUp.showError("Missing Fields", "Missing Fields", bodyMsg);
 				return;
 			}
-			
-			
-			
-			
 			// Validate correct discount range
 			float discountValue = Float.valueOf(disVal);
 
@@ -59,17 +76,19 @@ public class AddDiscountController implements GuiController {
 				return;
 			}
 
-			Timestamp startTimeDiscount =Timestamp.valueOf(startDate.atTime(0, 0, 0).minusHours(3).minusMinutes(30));//removing offset of local time minus 03:30:00.0
-			Timestamp endTimeDiscount = Timestamp.valueOf(endDate.atTime(0, 0, 0).minusHours(3).minusMinutes(30));//removing offset of local time minus 03:30:00.0
-			
+			Timestamp startTimeDiscount = Timestamp.valueOf(startDate.atTime(0, 0, 0).minusHours(3).minusMinutes(30));
+			// removing offset of local time minus 03:30:00.0
+			Timestamp endTimeDiscount = Timestamp.valueOf(endDate.atTime(0, 0, 0).minusHours(3).minusMinutes(30));
+			// removing offset of local time minus 03:30:00.0 // offset
+
 			if (endTimeDiscount.getTime() <= startTimeDiscount.getTime()) {
 				PopUp.showInformation("Invalid Value", "Invalid Discount Dates Input",
 						"The end date should be at least 1 day long");
 				return;
 			}
 
-			DiscountEntity discountEntity = new DiscountEntity(disID, discountValue/100, startTimeDiscount, endTimeDiscount,
-					false);
+			DiscountEntity discountEntity = new DiscountEntity(disID, discountValue / 100, startTimeDiscount,
+					endTimeDiscount, false);
 
 			ServerRequest sr = new ServerRequest(Manager.Discount, "AddNewDiscount",
 					ServerRequest.gson.toJson(discountEntity, DiscountEntity.class));
@@ -91,7 +110,8 @@ public class AddDiscountController implements GuiController {
 			}
 
 		} catch (NumberFormatException e) {
-			PopUp.showInformation("Invalid Value", "Invalid Discount Value Input", "Please Enter Value between 0 to 100");
+			PopUp.showInformation("Invalid Value", "Invalid Discount Value Input",
+					"Please Enter Value between 0 to 100");
 			return;
 		} catch (IllegalArgumentException e) {
 			dateStartDate.getEditor().clear();

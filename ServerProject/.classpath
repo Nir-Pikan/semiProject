@@ -16,6 +16,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/CommonProject/gson-2.8.6-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/mail"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="mockito-all-2.0.2-beta.jar"/>
 	<classpathentry kind="output" path="bin"/>

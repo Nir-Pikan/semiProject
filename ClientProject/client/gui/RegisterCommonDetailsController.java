@@ -338,7 +338,7 @@ public class RegisterCommonDetailsController implements GuiController {
 			return false;
 			}
 		
-		String emailFormat = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+		String emailFormat = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)+$";
 		
 		//if field is not in wanted format
 		if (!email.matches(emailFormat)) {

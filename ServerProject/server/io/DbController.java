@@ -34,7 +34,7 @@ public class DbController implements IDbController {
         
         try 
         {
-            conn = DriverManager.getConnection("jdbc:mysql://"+dbHost+"/"+dbSchemeName+"?serverTimezone=IST",dbUser,dbPass);
+            conn = DriverManager.getConnection("jdbc:mysql://"+dbHost+"/"+dbSchemeName+"?serverTimezone=CAT",dbUser,dbPass);
             System.out.println("SQL connection succeed");
      	} catch (SQLException ex) 
      	    {/* handle any errors*/

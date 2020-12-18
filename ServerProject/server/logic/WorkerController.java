@@ -1,11 +1,6 @@
 package logic;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
-import com.mysql.cj.protocol.Resultset;
-
 import entities.Permission;
 import entities.Permissions;
 import entities.Worker;
@@ -16,6 +11,8 @@ import modules.ServerRequest;
 public class WorkerController implements IController 
 {
 	DbController dbController ;
+	
+	/**Create worker table in DB if not exist*/
 	public WorkerController() 
 	{
 		dbController = DbController.getInstance();
@@ -29,7 +26,8 @@ public class WorkerController implements IController
 				+ "isLogged varchar(4),permissions varchar(200),"
 				+ "primary key(UserName));"); 
 	}
-	
+		
+	/** Request: 1. (request.job = LogInWorker), (request.data = userName password) */
 	@Override
 	public String handleRequest(ServerRequest request) 
 	{	
@@ -44,15 +42,17 @@ public class WorkerController implements IController
 		return null;
 	}
 	
+	/** add worker to DB, return true if success*/
 	public boolean AddWorker(Worker worker) 
 	{
       worker.setIsLogged(false);
 	  return dbController.sendUpdate("INSERT INTO worker() VALUES ("+worker.getFirstName()+","+worker.getLastName()+","+worker.getWorkerID()+","
 	  		+ worker.getEmail()+","+worker.getUserName()+","+worker.getWorkerType()+","
 	  		+ ""+worker.getPassword()+","+ParseIsLogginBoolToString(worker.getIsLogged())+","
-	        + ParsePermissionsToString(worker.getPermissions()));
+	        + ParsePermissionsToString(worker.getPermissions()) + ");");
 	}
 	
+	/** if this userName exist in DB and he has this password and he not log in return this worker and update that he log in, else return null*/
 	public Worker LogInWorker(String userName, String password)
 	{
 		ResultSet result = dbController.sendQuery("select * from worker where UserName=" + userName + " AND Password=" + password + ";");
@@ -70,12 +70,21 @@ public class WorkerController implements IController
 			if(isLogged)
 				return null;
 			isLogged = true;
-			return new Worker(userName, FirstName, LastName, WorkerID, Email, WorkerType, password, isLogged, permissions);			
+			Worker worker = new Worker(userName, FirstName, LastName, WorkerID, Email, WorkerType, password, isLogged, permissions);		
+			if(!updateWorkerLogginDB(worker))
+				return null;
+			return worker;		
 		} 
 		catch (Exception e) 
 		{
 			return null;
 		} 
+	}
+	
+	/** update the worker log in status in DB (worker.IsLogged property need to be updated before), return true if success*/
+	public boolean updateWorkerLogginDB(Worker worker) 
+	{
+		return dbController.sendUpdate("UPDATE worker SET isLogged=" + ParseIsLogginBoolToString(worker.getIsLogged()) + " WHERE UserName=" + worker.getUserName());
 	}
 	
 	private String ParsePermissionsToString(Permissions permissions)

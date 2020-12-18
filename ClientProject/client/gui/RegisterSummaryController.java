@@ -85,9 +85,8 @@ public class RegisterSummaryController implements GuiController{
     void FinishRegistration(ActionEvent event) {
     	
     	//send request to add subscriber to clientController
-    	clientController.client.sendRequest(new ServerRequest(
+    	String response = clientController.client.sendRequestAndResponse(new ServerRequest(
     			Manager.Subscriber, "AddNewSubscriber" , ServerRequest.gson.toJson(s,Subscriber.class)));
-    	String response = clientController.consumeResponse();
     	
     	switch(response) {
     	case "Subscriber was added successfully":
@@ -122,7 +121,6 @@ public class RegisterSummaryController implements GuiController{
 	/**
 	 * initialize the fields using the received subscriber*/
 	public void FieldsInit() {
-		System.out.println(s);
 		FirstNameContantLabel.setText(s.firstName);
 		LastNameContantLabel.setText(s.lastName);
 		IDContantLabel.setText(s.personalID);

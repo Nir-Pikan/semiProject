@@ -3,48 +3,59 @@ package entities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Permissions 
-{
+/**
+ * A class containing a list of {@link Permission}.
+ * <p>
+ * Each list is for a specific {@link Park}
+ */
+public class Permissions {
 
 	private String ParkID;
 	private List<Permission> PermissionsList;
-	
-	public List<Permission> GetPermissions() 
-	{
+
+	public List<Permission> GetPermissions() {
 		return PermissionsList;
 	}
-	
-	public String GetParkID() 
-	{
-		return ParkID;
-	}
-	
-	public Permissions(String parkID)
-	{
+
+	/**
+	 * creates an empty {@link Permissions} for a {@link Park}
+	 * 
+	 * @param parkID String
+	 */
+	public Permissions(String parkID) {
 		ParkID = parkID;
 		PermissionsList = new ArrayList<Permission>();
 	}
-	
-	public Permissions(String parkID , List<Permission> permissions)
-	{
+
+	/**
+	 * creates {@link Permissions} for a {@link Park} using a {@link Permission}
+	 * List.
+	 * 
+	 * @param parkID      String
+	 * @param permissions List<{@link Permission}>
+	 */
+	public Permissions(String parkID, List<Permission> permissions) {
 		ParkID = parkID;
 		PermissionsList = permissions;
 	}
-	
-	public void RemovePermission(Permission permission)
-	{
+
+	public String GetParkID() {
+		return ParkID;
+	}
+
+	/** removes wanted {@link Permission} from the list */
+	public void RemovePermission(Permission permission) {
 		PermissionsList.remove(permission);
 	}
-	
-	public void AddPermission(Permission permission)
-	{
+
+	/** adds wanted {@link Permission} to the list */
+	public void AddPermission(Permission permission) {
 		PermissionsList.add(permission);
 	}
-	
-	public void AddPermissions(List<Permission> permissions)
-	{
-		for (Permission permission : permissions) 
-		{
+
+	/** adds a List of {@link Permission} to the list */
+	public void AddPermissions(List<Permission> permissions) {
+		for (Permission permission : permissions) {
 			PermissionsList.add(permission);
 		}
 	}

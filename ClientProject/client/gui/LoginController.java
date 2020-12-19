@@ -40,6 +40,7 @@ public class LoginController implements GuiController {
 
 	}
 
+	//TODO delete later ~Aviv~
 	@FXML
 	void UserWorkerCheckBox(ActionEvent event) {
 		if (cbUserWorker.isSelected()) {

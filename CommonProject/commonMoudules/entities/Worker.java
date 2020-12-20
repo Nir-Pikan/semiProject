@@ -12,7 +12,7 @@ public class Worker {
 	private String LastName;
 	private String WorkerID;
 	private String Email;
-	private String WorkerType;
+	private String WorkerType; //TODO Why String and not Enum? ~Nir Pikan~
 	private String Password;
 	private Boolean isLogged;
 	private Permissions permissions;
@@ -25,15 +25,15 @@ public class Worker {
 	/**
 	 * creates a {@link Worker} using all fields.
 	 * 
-	 * @param userName    String
-	 * @param firstName   String
-	 * @param lastName    String
-	 * @param workerID    String
-	 * @param email       String
-	 * @param workerType  String
-	 * @param password    String
-	 * @param isLogged    Boolean
-	 * @param permissions {@link Permissions}
+	 * @param userName    the worker's user name
+	 * @param firstName   the worker's first name
+	 * @param lastName    the worker's last name
+	 * @param workerID    the worker's ID
+	 * @param email       the worker's email address
+	 * @param workerType  the type of worker
+	 * @param password    the worker's password
+	 * @param isLogged    the worker's logged in status
+	 * @param permissions the worker's list of {@link Permissions}
 	 */
 	public Worker(String userName, String firstName, String lastName, String workerID, String email, String workerType,
 			String password, Boolean isLogged, Permissions permissions) {

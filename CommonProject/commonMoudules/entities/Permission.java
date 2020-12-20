@@ -10,7 +10,7 @@ public class Permission {
 	/**
 	 * creates a {@link Permission} with a name
 	 * 
-	 * @param name String
+	 * @param name the premission's name
 	 */
 	public Permission(String name) {
 		Name = name;

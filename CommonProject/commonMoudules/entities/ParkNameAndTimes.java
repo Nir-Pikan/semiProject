@@ -10,21 +10,21 @@ public class ParkNameAndTimes {
 	public String parkName;
 	public String parkID;
 	public int openTime;
-	public int endTime;
+	public int closeTime;
 
 	/**
 	 * Creates a {@link ParkNameAndTimes}
 	 * 
-	 * @param parkName String
-	 * @param parkID   String
-	 * @param openTime int
-	 * @param endTime  int
+	 * @param parkName the park's name
+	 * @param parkID   the park's ID
+	 * @param openTime the park's open time
+	 * @param closeTime  the park's closing time
 	 */
-	public ParkNameAndTimes(String parkName, String parkID, int openTime, int endTime) {
+	public ParkNameAndTimes(String parkName, String parkID, int openTime, int closeTime) {
 		this.parkName = parkName;
 		this.parkID = parkID;
 		this.openTime = openTime;
-		this.endTime = endTime;
+		this.closeTime = closeTime;
 	}
 
 }

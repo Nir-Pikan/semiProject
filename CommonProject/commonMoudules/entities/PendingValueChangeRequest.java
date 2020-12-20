@@ -5,21 +5,21 @@ public class PendingValueChangeRequest {
 
 	public String parkId;
 	public ParkAttribute attName;
-	public double reuestedValue;
+	public double requestedValue;
 	public double currentValue;
 
 	/**
 	 * Creates a {@link PendingValueChangeRequest}
 	 * 
-	 * @param parkId        String
-	 * @param attName       ParkAttribute{MaxCapacity,MaxPreOrder,AvgVisitTime}
-	 * @param reuestedValue double
-	 * @param currentValue  double
+	 * @param parkId         the park ID to be updated
+	 * @param attName        the Attribute to be changed
+	 * @param requestedValue the new attribute value
+	 * @param currentValue   the old attribute value
 	 */
-	public PendingValueChangeRequest(String parkId, ParkAttribute attName, double reuestedValue, double currentValue) {
+	public PendingValueChangeRequest(String parkId, ParkAttribute attName, double requestedValue, double currentValue) {
 		this.parkId = parkId;
 		this.attName = attName;
-		this.reuestedValue = reuestedValue;
+		this.requestedValue = requestedValue;
 		this.currentValue = currentValue;
 	}
 
@@ -32,7 +32,7 @@ public class PendingValueChangeRequest {
 	}
 
 	public double getReuestedValue() {
-		return reuestedValue;
+		return requestedValue;
 	}
 
 	public double getCurrentValue() {

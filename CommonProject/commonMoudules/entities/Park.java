@@ -31,15 +31,15 @@ public class Park {
 	/**
 	 * creates a {@link Park} using all fields from the DB.
 	 * 
-	 * @param parkID               String
-	 * @param parkName             String
-	 * @param maxCapacity          int
-	 * @param managerID            String
-	 * @param maxPreOrders         int
-	 * @param avgVisitTime         double
-	 * @param currentNumOfVisitors int
-	 * @param openTime             int
-	 * @param closeTime            int
+	 * @param parkID               the park's ID
+	 * @param parkName             the park's name
+	 * @param maxCapacity          the park's max visitor capacity
+	 * @param managerID            the park manager's ID
+	 * @param maxPreOrders         the maximum amount of preorders allowed
+	 * @param avgVisitTime         visitors average visit time
+	 * @param currentNumOfVisitors amount of visitors currently at the park
+	 * @param openTime             the park's open time
+	 * @param closeTime            the park's close time
 	 */
 	public Park(String parkID, String parkName, int maxCapacity, String managerID, int maxPreOrders,
 			double avgVisitTime, int currentNumOfVisitors, int openTime, int closeTime) {
@@ -59,14 +59,14 @@ public class Park {
 	 * <p>
 	 * (the Average VisitTime is 4 hours)
 	 * 
-	 * @param parkID               String
-	 * @param parkName             String
-	 * @param maxCapacity          int
-	 * @param managerID            String
-	 * @param maxPreOrders         int
-	 * @param currentNumOfVisitors int
-	 * @param openTime             int
-	 * @param closeTime            int
+	 * @param parkID               the park's ID
+	 * @param parkName             the park's name
+	 * @param maxCapacity          the park's max visitor capacity
+	 * @param managerID            the park manager's ID
+	 * @param maxPreOrders         the maximum amount of preorders allowed
+	 * @param currentNumOfVisitors amount of visitors currently at the park
+	 * @param openTime             the park's open time
+	 * @param closeTime            the park's close time
 	 */
 	public Park(String parkID, String parkName, int maxCapacity, String managerID, int maxPreOrders,
 			int currentNumOfVisitors, int openTime, int closeTime) {

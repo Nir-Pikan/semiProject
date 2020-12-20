@@ -24,14 +24,14 @@ public class Subscriber {
 	/**
 	 * Creates a {@link Subscriber}
 	 * 
-	 * @param subscriberID String
-	 * @param personalID   String
-	 * @param firstName    String
-	 * @param lastName     String
-	 * @param phone        String
-	 * @param email        String
-	 * @param familySize   int
-	 * @param type         Type{SUBSCRIBER,GUIDE}
+	 * @param subscriberID S + the subscriber's personal ID
+	 * @param personalID   the subscriber's personal ID
+	 * @param firstName    the subscriber's first name
+	 * @param lastName     the subscriber's last name
+	 * @param phone        the subscriber's phone number
+	 * @param email        the subscriber's email address
+	 * @param familySize   the subscriber's family size
+	 * @param type         the type of subscriber. can be SUBSCRIBER/GUIDE
 	 **/
 	public Subscriber(String subscriberID, String personalID, String firstName, String lastName, String phone,
 			String email, int familySize, Type type) {
@@ -51,13 +51,14 @@ public class Subscriber {
 	/**
 	 * Creates a {@link CreditCard} for the {@link Subscriber}
 	 * 
-	 * @param creditCardNumber    String
-	 * @param ownerID             String
-	 * @param nameOnCard          String
-	 * @param cvv                 String
-	 * @param expirationDateMonth String
-	 * @param expirationDateYear  String
-	 * @param cardType            CardType{VISA,MASTERCARD,AMERICANEXPRESS}
+	 * @param creditCardNumber    the credit card's number
+	 * @param ownerID             the credit card's owner ID
+	 * @param nameOnCard          the name on the credit card
+	 * @param cvv                 the credit card's cvv
+	 * @param expirationDateMonth the credit card's month expiration date
+	 * @param expirationDateYear  the credit card's year expiration date
+	 * @param cardType            the type of credit card. can be
+	 *                            VISA/MASTERCARD/AMERICANEXPRESS
 	 **/
 	public void SetCreditCard(String creditCardNumber, String ownerID, String nameOnCard, String cvv,
 			String expirationDateMonth, String expirationDateYear, CardType cardType) {
@@ -85,13 +86,14 @@ public class Subscriber {
 		/**
 		 * Creates a {@link CreditCard}
 		 * 
-		 * @param creditCardNumber    String
-		 * @param ownerID             String
-		 * @param nameOnCard          String
-		 * @param cvv                 String
-		 * @param expirationDateMonth String
-		 * @param expirationDateYear  String
-		 * @param cardType            CardType{VISA,MASTERCARD,AMERICANEXPRESS}
+		 * @param creditCardNumber    the credit card's number
+		 * @param ownerID             the credit card's owner ID
+		 * @param nameOnCard          the name on the credit card
+		 * @param cvv                 the credit card's cvv
+		 * @param expirationDateMonth the credit card's month expiration date
+		 * @param expirationDateYear  the credit card's year expiration date
+		 * @param cardType            the type of credit card. can be
+		 *                            VISA/MASTERCARD/AMERICANEXPRESS
 		 **/
 		public CreditCard(String creditCardNumber, String ownerID, String nameOnCard, String cvv,
 				String expirationDateMonth, String expirationDateYear, CardType cardType) {

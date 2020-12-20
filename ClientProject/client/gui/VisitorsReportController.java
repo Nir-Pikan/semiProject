@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the VisitorsReport page controller */
 public class VisitorsReportController implements GuiController{
 
     @FXML

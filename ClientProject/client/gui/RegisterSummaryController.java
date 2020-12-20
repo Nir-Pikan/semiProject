@@ -12,6 +12,7 @@ import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
+/** the RegisterSummary page controller */
 public class RegisterSummaryController implements GuiController{
 	
 	private Subscriber s;

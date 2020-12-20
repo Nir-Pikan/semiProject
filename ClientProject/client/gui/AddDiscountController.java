@@ -16,6 +16,7 @@ import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
+/** the AddDiscount page controller */
 public class AddDiscountController implements GuiController {
 
 	@FXML
@@ -30,6 +31,7 @@ public class AddDiscountController implements GuiController {
 	@FXML
 	private TextField txtDiscountValue;
 
+	/** submits a discount according to AddDiscount page fields */
 	@FXML
 	void submitDiscount(ActionEvent event) {
 
@@ -110,7 +112,8 @@ public class AddDiscountController implements GuiController {
 			}
 
 		} catch (NumberFormatException e) {
-			PopUp.showInformation("Invalid Value", "Invalid Discount Value Input", "Please Enter Value between 0 to 100");
+			PopUp.showInformation("Invalid Value", "Invalid Discount Value Input",
+					"Please Enter Value between 0 to 100");
 			return;
 		} catch (IllegalArgumentException e) {
 			dateStartDate.getEditor().clear();

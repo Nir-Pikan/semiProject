@@ -8,6 +8,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the RegularOrder page controller */
 public class RegularOrderController implements GuiController{
 
     @FXML

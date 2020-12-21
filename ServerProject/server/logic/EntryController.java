@@ -106,7 +106,7 @@ public class EntryController implements IController {
 	 *                            that is subscribers
 	 * @return true if succeeded to enter new
 	 */
-	public boolean AddNewEntry(ParkEntry newEntry) {
+	private boolean AddNewEntry(ParkEntry newEntry) {
 
 		if (newEntry.numberOfSubscribers > newEntry.numberOfVisitors)
 			return false;
@@ -146,7 +146,7 @@ public class EntryController implements IController {
 	 * @param personID of the person left the park
 	 * @return true if succeed
 	 */
-	public boolean updateExit(String personID) {
+	private boolean updateExit(String personID) {
 
 		ResultSet rs = dbController
 				.sendQuery("select parkID from parkEntry where personID = " + personID + " AND exitTime is null  ;");
@@ -186,7 +186,7 @@ public class EntryController implements IController {
 	 * @param toTime   date till which you want to get the entries
 	 * @return array of ParkEntry in the given timeline
 	 */
-	public ParkEntry[] getEntitiesByDate(Timestamp fromTime, Timestamp toTime) {
+	private ParkEntry[] getEntitiesByDate(Timestamp fromTime, Timestamp toTime) {
 
 		ArrayList<ParkEntry> resultList = new ArrayList<>();
 		try {

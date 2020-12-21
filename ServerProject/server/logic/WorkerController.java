@@ -30,10 +30,12 @@ public class WorkerController implements IController {
 	}
 
 	/**
-	 * Request: 1. (request.job = LogInWorker), (request.data = userName password)
+	 * Request: 1. (request.job = LogInWorker), (request.data = userName password (seprated by space)) 
+	 * Request: 2. (request.job = LogOutWorker), (request.data = userName)
 	 */
 	@Override
-	public String handleRequest(ServerRequest request) {
+	public String handleRequest(ServerRequest request)
+    {
 		if (request.job.equals("LogInWorker")) {
 			String[] parameters = request.data.split(" ");
 			String userName = parameters[0];
@@ -41,9 +43,15 @@ public class WorkerController implements IController {
 			Worker worker = LogInWorker(userName, password);
 			return ServerRequest.gson.toJson(worker, Worker.class);
 		}
+		if (request.job.equals("LogOutWorker")) 
+		{
+			String userName = request.data;
+			boolean logoutSucceded = updateWorkerLogginDB(userName, false);
+			return ServerRequest.gson.toJson(logoutSucceded, boolean.class);
+		}
 		return null;
 	}
-
+	
 	/**
 	 * add worker to DB
 	 * 
@@ -85,7 +93,7 @@ public class WorkerController implements IController {
 			isLogged = true;
 			Worker worker = new Worker(userName, FirstName, LastName, WorkerID, Email, WorkerType, password, isLogged,
 					permissions);
-			if (!updateWorkerLogginDB(worker))
+			if (!updateWorkerLogginDB(worker.getUserName(), true))
 				return null;
 			return worker;
 		} catch (Exception e) {
@@ -95,15 +103,14 @@ public class WorkerController implements IController {
 
 	/**
 	 * update the worker log in status in DB
-	 * <p>
-	 * (worker.IsLogged property need to be updated before), return true if success
-	 * 
-	 * @param worker the worker we want to update
+	 * @param workerUserName the worker we want update
+	 * @param status the new status we want to update to
 	 * @return true if success, false otherwise
 	 */
-	public boolean updateWorkerLogginDB(Worker worker) {
-		return dbController.sendUpdate("UPDATE worker SET isLogged=" + ParseIsLoginBoolToString(worker.getIsLogged())
-				+ " WHERE UserName=" + worker.getUserName());
+	public boolean updateWorkerLogginDB(String workerUserName, boolean status) 
+	{
+		return dbController.sendUpdate("UPDATE worker SET isLogged=" + ParseIsLoginBoolToString(status)
+				+ " WHERE UserName=" + workerUserName);
 	}
 
 	/**

@@ -18,7 +18,8 @@ import modules.Property;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
-public class LoginController implements GuiController {
+public class LoginController implements GuiController 
+{
 
 	@FXML
 	private GridPane visitorLoginForm;
@@ -88,31 +89,42 @@ public class LoginController implements GuiController {
 		String userID = txtId.getText();
 		if(isSubscriberID(userID))
 		{
-			ServerRequest serverRequest = new ServerRequest(Manager.Subscriber,
-					"GetSubscriberData", userID);
-			String response = clientController.client.sendRequestAndResponse(serverRequest);
-			if(response.endsWith("not found"))
-			{
-				PopUp.showError("Sign up error", "Faild to identify", "This subscriber ID not exist\nPlease check the input");
-				return;
-			}
-			Subscriber subscriber = ServerRequest.gson.fromJson(response, Subscriber.class);
-			if(subscriber == null)
-			{
-				PopUp.showError("Sign up error", "Faild to identify", "This subscriber ID not exist\nPlease check the input");
-				return;
-			}
-			clientController.client.logedInSunscriber = new Property<Subscriber>(subscriber);
-			Navigator.instance().clearHistory();
-			return;
+			LoginSubscriber(userID, "This subscriber ID not exist \nPlease check the input", true);
+			return;		
 		}
 		if(isID(userID))
 		{
+			 if(LoginSubscriber("S"+userID,"",false))
+				 return;
 			 clientController.client.visitorID = new Property<String>(userID);
 			 Navigator.instance().clearHistory();
 			 return;
 		}
 		PopUp.showError("Error", "Faild to identify", "Please check the input:\nID: 9 digit number\nSubscriber ID: need to start with 'S'");
+	}
+	
+	//return true if success to log in the subscriber
+	private boolean LoginSubscriber(String subscriberID, String ErrorMessageForPopUp, boolean needPopUpForFail)
+	{
+		ServerRequest serverRequest = new ServerRequest(Manager.Subscriber,
+				"GetSubscriberData", subscriberID);
+		String response = clientController.client.sendRequestAndResponse(serverRequest);
+		if(response.endsWith("not found"))
+		{
+			if(needPopUpForFail)
+			     PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
+			return false;
+		}
+		Subscriber subscriber = ServerRequest.gson.fromJson(response, Subscriber.class);
+		if(subscriber == null)
+		{
+			if(needPopUpForFail)
+			    PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
+			return false;
+		}
+		clientController.client.logedInSunscriber = new Property<Subscriber>(subscriber);
+		Navigator.instance().clearHistory();
+		return true;
 	}
 	
 	private boolean isSubscriberID(String idString)

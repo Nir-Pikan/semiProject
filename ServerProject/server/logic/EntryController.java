@@ -37,12 +37,15 @@ public class EntryController implements IController {
 	 * Creates the DB table
 	 */
 	private void createTable() {
-		dbController.createTable("parkEntry " + "(entryType ENUM('Personal','Subscriber','Group','PrivateGroup') , "
-				+ "personID  varchar(20) NOT NULL , " + "parkID  varchar(20) NULL , "
+		boolean isCreated =dbController.createTable("parkEntry " + "(entryType ENUM('Personal','Subscriber','Group','PrivateGroup') , "
+				+ "personID varchar(20) NOT NULL , " + "parkID varchar(20) NULL , "
 				+ "arriveTime TIMESTAMP(1) NOT NULL , " + "exitTime TIMESTAMP(1) NULL , "
 				+ "numberOfVisitors  int NULL , numberOfSubscribers  int NULL , " + "isCasual TINYINT NULL ,"
 				+ "priceOfOrder FLOAT NULL , " + "priceOfEntry FLOAT NULL , "
-				+ "primary key('personID' , 'arriveTime'));");
+				+ "primary key(personID , arriveTime));");
+		if (isCreated) {
+			System.out.println("Table parkEntry created successful");
+		}
 	}
 
 	@Override

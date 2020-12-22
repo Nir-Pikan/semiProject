@@ -43,27 +43,27 @@
       <ComboBox fx:id="VisitHour_ComboBox" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <ComboBox fx:id="NumberOfVisitors_ComboBox" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <TextField fx:id="Email_textBox" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <Label alignment="BASELINE_LEFT" prefHeight="32.0" prefWidth="42.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="7">
+      <Label fx:id="EmailNote" alignment="BASELINE_LEFT" prefHeight="30.0" prefWidth="143.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="7">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label alignment="BASELINE_LEFT" prefHeight="32.0" prefWidth="42.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="5">
+      <Label fx:id="NumberOfVisitorsNote" alignment="BASELINE_LEFT" prefHeight="30.0" prefWidth="140.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="5">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label alignment="BASELINE_LEFT" prefHeight="32.0" prefWidth="42.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="4">
+      <Label fx:id="VisitHourNote" alignment="BASELINE_LEFT" prefHeight="30.0" prefWidth="150.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="4">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label alignment="BASELINE_LEFT" prefHeight="32.0" prefWidth="42.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="3">
+      <Label fx:id="DateNote" alignment="BASELINE_LEFT" prefHeight="30.0" prefWidth="141.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="3">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label alignment="BASELINE_LEFT" prefHeight="32.0" prefWidth="42.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      <Label fx:id="ParkNote" alignment="BASELINE_LEFT" prefHeight="30.0" prefWidth="139.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="2">
          <font>
             <Font size="15.0" />
          </font>
@@ -98,7 +98,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label alignment="BASELINE_LEFT" layoutX="320.0" layoutY="250.0" prefHeight="32.0" prefWidth="42.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="1" GridPane.rowIndex="6">
+      <Label fx:id="FamilyOrderNote" alignment="BASELINE_LEFT" layoutX="320.0" layoutY="250.0" prefHeight="30.0" prefWidth="140.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <font>
             <Font size="15.0" />
          </font>
@@ -113,8 +113,8 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="Phone_textBox1" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <Label alignment="BASELINE_LEFT" prefHeight="32.0" prefWidth="42.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="8">
+      <TextField fx:id="Phone_textBox" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <Label fx:id="PhoneNote" alignment="BASELINE_LEFT" prefHeight="30.0" prefWidth="143.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="2" GridPane.rowIndex="8">
          <font>
             <Font size="15.0" />
          </font>

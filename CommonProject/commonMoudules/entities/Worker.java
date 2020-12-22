@@ -17,11 +17,6 @@ public class Worker {
 	private Boolean isLogged;
 	private Permissions permissions;
 
-	// TODO Why create an empty worker? ~Nir Pikan~
-	public Worker() {
-
-	}
-
 	/**
 	 * creates a {@link Worker} using all fields.
 	 * 

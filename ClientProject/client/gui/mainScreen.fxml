@@ -35,7 +35,7 @@
             <HBox alignment="BOTTOM_RIGHT" prefHeight="37.0" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
                   <Label fx:id="greetingMsg" />
-                  <Button fx:id="Login" mnemonicParsing="false" onAction="#logInOut" style="-fx-background-insets: 1;" text="Button" />
+                  <Button fx:id="Login" mnemonicParsing="false" onAction="#logInOut" style="-fx-background-insets: 1;" text="LogOut" />
                </children>
             </HBox>
          </right>

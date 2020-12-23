@@ -20,9 +20,10 @@ public class Order {
 	public Timestamp visitTime;
 	public Timestamp timeOfOrder;
 	public boolean isUsed; // by default false
+	public String ownerID;
 	
 	public Order(String parkSite, int numberOfVisitors, int orderID, float priceOfOrder, String email, String phone,
-			IdType type, OrderStatus orderStatus, Timestamp visitTime, Timestamp timeOfOrder, boolean isUsed) {
+			IdType type, OrderStatus orderStatus, Timestamp visitTime, Timestamp timeOfOrder, boolean isUsed, String ownerID) {
 		super();
 		this.parkSite = parkSite;
 		this.numberOfVisitors = numberOfVisitors;
@@ -35,6 +36,7 @@ public class Order {
 		this.visitTime = visitTime;
 		this.timeOfOrder = timeOfOrder;
 		this.isUsed = isUsed;
+		this.ownerID = ownerID;
 	}
 
 	

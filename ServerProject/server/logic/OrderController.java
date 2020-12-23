@@ -42,10 +42,10 @@ public class OrderController implements IController {
 	/** Create Order table in DB if not exists */
 	private void createTable() {
 
-		boolean isCreated = dbController.createTable("orders(parkSite varchar(20),numberOfVisitor int,orderID int,"
-				+ "priceOfOrder FLOAT, email varchar(20),phone varchar(20), IdType ENUM('PRIVATE','PRIVATEGROUP','GUIDE','FAMILY'),"
+		boolean isCreated = dbController.createTable("orders(parkSite varchar(20),numberOfVisitors int,orderID int,"
+				+ "priceOfOrder FLOAT, email varchar(20),phone varchar(20), type ENUM('PRIVATE','PRIVATEGROUP','GUIDE','FAMILY'),"
 				+ "orderStatus ENUM('CANCEL','IDLE','CONFIRMED','WAITINGLIST','WAITINGLISTMASSAGESENT'),"
-				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN, primary key(orderID));");
+				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN,ownerID varchar(20), primary key(orderID));");
 		if (isCreated)
 			System.out.println("Table has been created");
 	}
@@ -55,11 +55,18 @@ public class OrderController implements IController {
 		String job = request.job;
 		String response = null;
 		Order ord;
-		Timestamp startAndEnd[] = new Timestamp[2];
+		Order[] orders;
+		String startTimeAndEndTimeAndParkSite[] = new String[3];
+		Integer orderID;
+		Integer nextOrderID;
+		Timestamp start;
+		Timestamp end;
+		String parkSite;
+		boolean answer;
 		switch (job) {
 
 		case "GetOrderByID":
-			Integer orderID = ServerRequest.gson.fromJson(request.data, Integer.class);
+			orderID = ServerRequest.gson.fromJson(request.data, Integer.class);
 			ord = GetOrderByID(orderID);
 			if (ord == null)
 				response = "Order was not found";
@@ -88,13 +95,57 @@ public class OrderController implements IController {
 				response = "Failed to add Order";
 			break;
 		case "NextOrderID":
-			Integer nextOrderID = NextOrderID();
+			nextOrderID = NextOrderID();
 			response = ServerRequest.gson.toJson(nextOrderID);
 			break;
 		case "GetOrderListForDate":
-			startAndEnd = ServerRequest.gson.fromJson(request.data, Timestamp[].class); // get start and end time from String
-			Order[] orders = GetOrderListForDate(startAndEnd[0],startAndEnd[1]); // get the orders
+			startTimeAndEndTimeAndParkSite = ServerRequest.gson.fromJson(request.data, String[].class);
+			start = ServerRequest.gson.fromJson(startTimeAndEndTimeAndParkSite[0], Timestamp.class);
+			end = ServerRequest.gson.fromJson(startTimeAndEndTimeAndParkSite[1], Timestamp.class);
+			parkSite = startTimeAndEndTimeAndParkSite[2];
+			orders = GetOrderListForDate(start, end, parkSite); // get the orders
 			response = ServerRequest.gson.toJson(orders, Order[].class);
+			break;
+		case "GetAllListOfOrders":
+			Order[] allOrders = GetAllListOfOrders();
+			response = ServerRequest.gson.toJson(allOrders, Order[].class);
+			break;
+		case "GetOrderByVisitorID":
+			String ownerID = ServerRequest.gson.fromJson(request.data, String.class);
+			orders = GetOrdersByVisitorID(ownerID);
+			if (orders == null)
+				response = "Owner with this ID is not found";
+			else
+				response = ServerRequest.gson.toJson(orders, Order[].class);
+			break;
+		case "CancelOrderByOrderID": ///////////////////////////////////////////////////////////// not shore if
+										///////////////////////////////////////////////////////////// needed
+			orderID = ServerRequest.gson.fromJson(request.data, Integer.class);
+			answer = CancelOrderByOrderID(orderID);
+			if (answer)
+				// response = ServerRequest.gson.toJson(answer);
+				response = "Order Canceled";
+			else
+				response = "Failed to cancel an order";
+			break;
+		case "SetOrderToIsUsed": ///////////////////////////////////////////////////////////// not shore if
+									///////////////////////////////////////////////////////////// needed
+			orderID = ServerRequest.gson.fromJson(request.data, Integer.class);
+			answer = SetOrderToIsUsed(orderID);
+			if (answer)
+				// response = ServerRequest.gson.toJson(answer);
+				response = "Order seted as used";
+			else
+				response = "Failed to set order as used";
+			break;
+		case "UpdateOrder":
+			ord = ServerRequest.gson.fromJson(request.data, Order.class);
+			answer = UpdateOrder(ord);
+			if (answer)
+				// response = ServerRequest.gson.toJson(answer);
+				response = "Order updated";
+			else
+				response = "Failed to update order";
 			break;
 		default:
 			response = "Error: No such job";
@@ -115,7 +166,7 @@ public class OrderController implements IController {
 				// Print out the values
 				o = new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4), res.getString(5),
 						res.getString(6), IdType.valueOf(res.getString(7)), OrderStatus.valueOf(res.getString(8)),
-						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11));
+						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12));
 			}
 			res.close();
 			return o;
@@ -134,10 +185,8 @@ public class OrderController implements IController {
 	 * @return boolean did the function succeed
 	 */
 	private boolean AddNewOrder(Order ord) {
-
-		// add the subscriber to the subscribers table
 		PreparedStatement ps = dbController
-				.getPreparedStatement("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				.getPreparedStatement("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 		try {
 			ps.setString(1, ord.parkSite);
 			ps.setInt(2, ord.numberOfVisitors);
@@ -150,6 +199,7 @@ public class OrderController implements IController {
 			ps.setTimestamp(9, ord.visitTime);
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setBoolean(11, ord.isUsed);
+			ps.setString(12, ord.ownerID);
 
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
@@ -194,6 +244,7 @@ public class OrderController implements IController {
 			ResultSet ps = dbController.sendQuery("SELECT MAX(orderID) FROM orders");
 			if (ps.next())
 				res = ps.getInt(1) + 1; // + for next ID in the DB
+			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -224,19 +275,20 @@ public class OrderController implements IController {
 
 	}
 
-	// TODO GetOrderListForDate() ask Michael he did something very similar
-	// TODO GetAvailableSlots() real shit do in later
+	// TODO GetOrderListForDate() done
+	// TODO GetAvailableSlots() real shit do it later
 	// TODO InItMassagerReminder() weird stuff
-	// TODO CancelOrder()
+	// TODO CancelOrder() set the enum OrderStatus to CANCEL done
 	/*
 	 * TODO UpdateOrder() friend of CanselOrder() !!!! it's easier to delete the old
 	 * one and add a "new" after change
 	 */
 	// TODO GetOrderByID() done
 
-	public Order[] GetOrderListForDate(Timestamp start, Timestamp end) {
-		ResultSet res = dbController.sendQuery(
-				"SELECT * FROM orders WHERE visitTime > \"" + start + "\" && visitTime < \"" + end + "\"\r\n" + "");
+	public Order[] GetOrderListForDate(Timestamp start, Timestamp end, String parkSite) {
+		ResultSet res = dbController.sendQuery("SELECT *\r\n" + " FROM orders \r\n" + " WHERE visitTime > \"" + start
+				+ "\" && visitTime < \"" + end + "\" && parkSite = \"" + parkSite + "\";");
+
 		if (res == null)
 			return null;
 		ArrayList<Order> resultList = new ArrayList<>();
@@ -245,7 +297,7 @@ public class OrderController implements IController {
 				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
 						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
 						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
-						res.getBoolean(11)));
+						res.getBoolean(11), res.getString(12)));
 			}
 
 			res.close();
@@ -255,5 +307,114 @@ public class OrderController implements IController {
 		return resultList.toArray(new Order[] {});
 	}
 
+	// maybe will be needed at least for testing
+	public Order[] GetAllListOfOrders() {
+		ResultSet res = dbController.sendQuery("SELECT * FROM orders");
+		if (res == null)
+			return null;
+		ArrayList<Order> resultList = new ArrayList<>();
+		try {
+			while (res.next()) {
+				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
+						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
+						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
+						res.getBoolean(11), res.getString(12)));
+			}
+
+			res.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resultList.toArray(new Order[] {});
+	}
+
+	public Order[] GetOrdersByVisitorID(String ID) {
+		ResultSet res = dbController.sendQuery("SELECT * FROM orders WHERE ownerID =" + ID + "");
+		if (res == null)
+			return null;
+		ArrayList<Order> resultList = new ArrayList<>();
+		try {
+			while (res.next())
+				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
+						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
+						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
+						res.getBoolean(11), res.getString(12)));
+
+			res.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resultList.toArray(new Order[] {});
+
+	}
+
+	public boolean CancelOrderByOrderID(int orderID) {
+		PreparedStatement pstmt = dbController
+				.getPreparedStatement("UPDATE orders SET orderStatus = \"CANCEL\" WHERE orderID = ?;");
+		try {
+			pstmt.setInt(1, orderID);
+			return pstmt.executeUpdate() == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(pstmt.toString());
+			System.out.println("Failed to execute update");
+		}
+		return false;
+	}
+
+	public boolean SetOrderToIsUsed(int orderID) {
+		PreparedStatement pstmt = dbController.getPreparedStatement("UPDATE orders SET isUsed = 1 WHERE orderID = ?;");
+		try {
+			pstmt.setInt(1, orderID);
+			return pstmt.executeUpdate() == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(pstmt.toString());
+			System.out.println("Failed to set order like used");
+		}
+		return false;
+	}
+
+	public boolean UpdateOrder(Order ord) {
+		PreparedStatement ps = dbController.getPreparedStatement(
+				"UPDATE orders SET isUsed = ?, parkSite = ? , numberOfVisitors = ?, priceOfOrder = ?,"
+						+ " email = ?, phone = ?,type = ?, orderStatus = ?, visitTime = ?, timeOfOrder = ?,\r\n"
+						+ "ownerID = ?  WHERE orderID = ?");
+		try {
+			ps.setBoolean(1, ord.isUsed);
+			ps.setString(2, ord.parkSite);
+			ps.setInt(3, ord.numberOfVisitors);
+			ps.setFloat(4, ord.priceOfOrder);
+			ps.setString(5, ord.email);
+			ps.setString(6, ord.phone);
+			ps.setString(7, ord.type.toString()); // can be stored as enum ?
+			ps.setString(8, ord.orderStatus.toString()); // can be stored as enum ?
+			ps.setTimestamp(9, ord.visitTime);
+			ps.setTimestamp(10, ord.timeOfOrder);
+			ps.setString(11, ord.ownerID);
+			ps.setLong(12, ord.orderID);
+			return ps.executeUpdate() == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Fail to update an order");
+		}
+		return false;
+	}
+//	
+//	public Order(String parkSite, int numberOfVisitors, int orderID, float priceOfOrder, String email, String phone,
+//			IdType type, OrderStatus orderStatus, Timestamp visitTime, Timestamp timeOfOrder, boolean isUsed, String ownerID)
+
+	public boolean deleteOrder(int orderID) {
+		PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM orders WHERE orderID = ?;");
+		try {
+			pstmt.setInt(1, orderID);
+			return pstmt.executeUpdate() == 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(pstmt.toString());
+			System.out.println("Failed to delete order");
+		}
+		return false;
+	}
 
 }

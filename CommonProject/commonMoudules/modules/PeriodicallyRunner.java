@@ -10,6 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Class that execute specific "job" at specific time, and run it every "delta" time
+ * @author Or Man
+ * @version 1.1
+ * @since 21/12/2020
  */
 public class PeriodicallyRunner {
 	private ScheduledExecutorService scheduler;
@@ -42,6 +45,7 @@ public class PeriodicallyRunner {
 	 * @param targetHour starting hour
 	 * @param targetMin starting minutes
 	 * @param job runnable to execute 
+	 * @return the {@link PeriodicallyRunner}
 	 */
 	public static PeriodicallyRunner runEveryDayAt(int targetHour, int targetMin, Runnable job) {
 		return new PeriodicallyRunner(targetHour, targetMin, TimeUnit.DAYS, 1, job);
@@ -59,6 +63,5 @@ public class PeriodicallyRunner {
 
 		}
 	}
-
 
 }

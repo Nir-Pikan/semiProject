@@ -42,7 +42,6 @@ public class MainClient extends Application{
 			Navigator.init(p);
 			Navigator n = Navigator.instance();
 			GuiController g = n.navigate("VisitorsInThePark");
-			clientController.client.logedInSunscriber.setVal(new Subscriber("","","Or","Man","","",1,Type.SUBSCRIBER));
 			//((ParkManagerParametersUpdateController) g).setPark("1");
 		} catch(Exception e) {
 			e.printStackTrace();

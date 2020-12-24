@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the ReportExport page controller */
 public class ReportExportController implements GuiController{
 
     @FXML

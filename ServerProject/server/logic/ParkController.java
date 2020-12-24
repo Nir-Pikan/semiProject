@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.DiscountEntity;
 import entities.Park;
 import entities.ParkNameAndTimes;
 import entities.PendingValueChangeRequest;
@@ -16,25 +17,27 @@ import io.ServerController;
 import modules.IController;
 import modules.ServerRequest;
 
-
+/**the park controller class*/
 public class ParkController implements IController {
 	IDbController db;
-	
-/**constructor for normal operation*/
+
+	/** creates the {@link ParkController} */
 	public ParkController() {
 		db = DbController.getInstance();
 		createTable();
-		
 	}
-	
-	/**Constructor for testing,
-	 * Constructor dependency injection*/
+
+	/**
+	 * Constructor for testing, Constructor dependency injection
+	 */
 	public ParkController(IDbController cont) {
 		db = cont;
 	}
 
 	/**
-	 * Creates the DB table
+	 * Creates the Park table if not exist
+	 * <p>
+	 * table of {@link Park}s
 	 */
 	private void createTable() {
 		db.createTable("park(parkId varchar(20),parkName  varchar(20),maxCapacity int,managerId  varchar(20),"
@@ -43,7 +46,8 @@ public class ParkController implements IController {
 
 		db.createTable("valueChangeRequest(parkId  varchar(20),"
 				+ "attributeName ENUM('MaxCapacity','MaxPreOrder','AvgVisitTime'),"
-				+ "requestedValue double,currentValue double,primary key(parkId,attributeName) ," + "foreign key(parkID) references park(parkId));");
+				+ "requestedValue double,currentValue double,primary key(parkId,attributeName) ,"
+				+ "foreign key(parkID) references park(parkId));");
 
 	}
 
@@ -98,7 +102,8 @@ public class ParkController implements IController {
 	 * @return boolean - if the update worked successfully
 	 */
 	private boolean setValue(String parkId, ParkAttribute attribute, Number val) {
-		PreparedStatement setValue = db.getPreparedStatement("UPDATE park SET "+attribute.toString()+" = ? WHERE parkId = ?");
+		PreparedStatement setValue = db
+				.getPreparedStatement("UPDATE park SET " + attribute.toString() + " = ? WHERE parkId = ?");
 		try {
 			switch (attribute) {
 			case AvgVisitTime:
@@ -124,8 +129,10 @@ public class ParkController implements IController {
 	 * @return boolean the outcome of the operation
 	 */
 	private boolean addValueChangeRequest(PendingValueChangeRequest request) {
-		return db.sendUpdate("INSERT INTO valueChangeRequest(parkId,attributeName,requestedValue,currentValue) VALUES(\"" + request.parkId
-				+ "\",\"" + request.attName.toString() + "\"," + request.reuestedValue + "," + request.currentValue + ");");
+		return db
+				.sendUpdate("INSERT INTO valueChangeRequest(parkId,attributeName,requestedValue,currentValue) VALUES(\""
+						+ request.parkId + "\",\"" + request.attName.toString() + "\"," + request.requestedValue + ","
+						+ request.currentValue + ");");
 
 	}
 
@@ -136,8 +143,8 @@ public class ParkController implements IController {
 	 * @return boolean the outcome of the operation
 	 */
 	private boolean removeValueChangeRequest(PendingValueChangeRequest request) {
-		return db.sendUpdate("DELETE FROM valueChangeRequest WHERE parkId=\"" + request.parkId + "\" AND attributeName=\""
-				+ request.attName.toString() + "\";");
+		return db.sendUpdate("DELETE FROM valueChangeRequest WHERE parkId=\"" + request.parkId
+				+ "\" AND attributeName=\"" + request.attName.toString() + "\";");
 
 	}
 
@@ -154,7 +161,8 @@ public class ParkController implements IController {
 		Park p = getPark(parkId);
 		if (p == null)
 			return -1;
-		PreparedStatement setValue = db.getPreparedStatement("UPDATE park SET currentNumOfVisitors = ? WHERE parkId = ?");
+		PreparedStatement setValue = db
+				.getPreparedStatement("UPDATE park SET currentNumOfVisitors = ? WHERE parkId = ?");
 		int newVal = p.currentNumOfVisitors + delta;
 		if (newVal < 0 || newVal > p.maxCapacity)
 			throw new IllegalArgumentException("Num of current Visitor change request, current val "
@@ -212,13 +220,13 @@ public class ParkController implements IController {
 		switch (request.job) {
 		case "approve change":
 			PendingValueChangeRequest vcr = ServerRequest.gson.fromJson(request.data, PendingValueChangeRequest.class);
-			if(vcr.attName == ParkAttribute.MaxPreOrder) {
-				if(getMaxCapacity(vcr.parkId)<vcr.reuestedValue)
+			if (vcr.attName == ParkAttribute.MaxPreOrder) {
+				if (getMaxCapacity(vcr.parkId) < vcr.requestedValue)
 					return "value error";
 			}
 			if (!removeValueChangeRequest(vcr))
 				return "failed to delete";
-			if (setValue(vcr.parkId, vcr.attName, vcr.reuestedValue))
+			if (setValue(vcr.parkId, vcr.attName, vcr.requestedValue))
 				return "cahnged successfully";
 			else
 				return "failed to setValue";
@@ -234,44 +242,51 @@ public class ParkController implements IController {
 			return "failed to add";
 		case "get pending change requests":
 			PendingValueChangeRequest[] result = getAllValueChangeRequests();
-			if(result == null)return "failed";
-			return ServerRequest.gson.toJson(result,PendingValueChangeRequest[].class);
+			if (result == null)
+				return "failed";
+			return ServerRequest.gson.toJson(result, PendingValueChangeRequest[].class);
 		case "get current parameter":
 			Park p = getPark(request.data);
 			if (p == null)
 				return "park not exists";
 			String response[] = { "" + p.maxCapacity, "" + p.maxPreOrders, "" + p.avgVisitTime };
-			return ServerRequest.gson.toJson(response,String[].class);
+			return ServerRequest.gson.toJson(response, String[].class);
 		case "get number of visitor available":
 			Park p2 = getPark(request.data);
 			if (p2 == null)
 				return "park not exists";
-			return (p2.maxCapacity - p2.currentNumOfVisitors)+"";
+			return (p2.maxCapacity - p2.currentNumOfVisitors) + "";
 		case "get all parks data":
-			return ServerRequest.gson.toJson(getParksData(),ParkNameAndTimes[].class);
+			return ServerRequest.gson.toJson(getParksData(), ParkNameAndTimes[].class);
 		}
-		
-			
+
 		return null;
 
 	}
 
-	
+	/**
+	 * Get all the park value change requests
+	 * 
+	 * @return a list of all the {@link PendingValueChangeRequest}s
+	 */
 	private PendingValueChangeRequest[] getAllValueChangeRequests() {
 		List<PendingValueChangeRequest> l = new ArrayList<>();
 		ResultSet rs = db.sendQuery("SELECT * From valueChangeRequest");
 		try {
-			while(rs.next()) {
-				l.add(new PendingValueChangeRequest(rs.getString(1),ParkAttribute.valueOf(rs.getString(2)),rs.getDouble(3),rs.getDouble(4)));
+			while (rs.next()) {
+				l.add(new PendingValueChangeRequest(rs.getString(1), ParkAttribute.valueOf(rs.getString(2)),
+						rs.getDouble(3), rs.getDouble(4)));
 			}
 			return l.toArray(new PendingValueChangeRequest[0]);
 		} catch (SQLException e) {
-DbController.printSQLException(e);
+			DbController.printSQLException(e);
 		}
 		return null;
 	}
 
-	/**return Array with all of the parks(names and id) and their working hours
+	/**
+	 * return Array with all of the parks(names and id) and their working hours
+	 * 
 	 * @return ParkNameAndTimes[] with all the parks
 	 */
 	private ParkNameAndTimes[] getParksData() {
@@ -279,13 +294,13 @@ DbController.printSQLException(e);
 		ParkNameAndTimes[] res = {};
 		ResultSet rs = db.sendQuery("SELECT parkId, parkName,openTime,closeTime From park;");
 		try {
-			while(rs.next()) {
+			while (rs.next()) {
 				l.add(new ParkNameAndTimes(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
 			}
 		} catch (SQLException e) {
 			DbController.printSQLException(e);
 		}
-		
+
 		return l.toArray(res);
 	}
 

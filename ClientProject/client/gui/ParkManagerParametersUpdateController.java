@@ -20,6 +20,7 @@ import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
+/** the ParkManagerParametersUpdate page controller */
 public class ParkManagerParametersUpdateController implements GuiController {
 
 	private String[] currentParameters;
@@ -76,12 +77,14 @@ public class ParkManagerParametersUpdateController implements GuiController {
 	@FXML
 	private Button buttonSendRequest;
 
+	/** when clicked open the AddDiscount page */
 	@FXML
 	void AddDiscount_OnClick(ActionEvent event) {
 		AddDiscountController c = (AddDiscountController) Navigator.instance().navigate("AddDiscount");
 		// TODO Add Set Park from manager Park
 	}
 
+	/** when clicked send the update request */
 	@FXML
 	void sendRequest_OnClick(ActionEvent event) {
 		String[] response = new String[3];
@@ -95,24 +98,24 @@ public class ParkManagerParametersUpdateController implements GuiController {
 		if (!textParkMaxCapacity.getText().equals(currentParameters[0])) {
 			pvc = new PendingValueChangeRequest(this.parkID, ParkAttribute.MaxCapacity,
 					Integer.parseInt(textParkMaxCapacity.getText()), Integer.parseInt(currentParameters[0]));
-			response[0] = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "add Value Change Request",
-					ServerRequest.gson.toJson(pvc, PendingValueChangeRequest.class)));
+			response[0] = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park,
+					"add Value Change Request", ServerRequest.gson.toJson(pvc, PendingValueChangeRequest.class)));
 
 		}
 		if (!textParkMaxPreOrders.getText().equals(currentParameters[1])) {
 			pvc = new PendingValueChangeRequest(this.parkID, ParkAttribute.MaxPreOrder,
 					Integer.parseInt(textParkMaxPreOrders.getText()), Integer.parseInt(currentParameters[1]));
 
-			response[1] = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "add Value Change Request",
-					ServerRequest.gson.toJson(pvc, PendingValueChangeRequest.class)));
+			response[1] = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park,
+					"add Value Change Request", ServerRequest.gson.toJson(pvc, PendingValueChangeRequest.class)));
 
 		}
 		if (!textParkAVGtime.getText().equals(currentParameters[2])) {
 			pvc = new PendingValueChangeRequest(this.parkID, ParkAttribute.AvgVisitTime,
 					Double.parseDouble(textParkAVGtime.getText()), Double.parseDouble(currentParameters[2]));
 
-			response[2] = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "add Value Change Request",
-					ServerRequest.gson.toJson(pvc, PendingValueChangeRequest.class)));
+			response[2] = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park,
+					"add Value Change Request", ServerRequest.gson.toJson(pvc, PendingValueChangeRequest.class)));
 		}
 
 		StringBuilder sb = new StringBuilder("");
@@ -190,7 +193,8 @@ public class ParkManagerParametersUpdateController implements GuiController {
 	public void setPark(String ParkId) {
 		this.parkID = ParkId;
 		textParkName.setText(ParkId);
-		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "get current parameter", ParkId));
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Park, "get current parameter", ParkId));
 		if (response.equals("park not exists")) {
 			PopUp.showError("park not exists", "park not exists", "Park manager for non existing park");
 			return;

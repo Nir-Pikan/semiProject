@@ -29,7 +29,7 @@ public class mainTesting extends Application{
 			Scene scene = new Scene(root);
 			MainScreenController cont = loader.getController();
 			primaryStage.setScene(scene);
-			Pane p =cont.InitMockup(1);
+			Pane p =cont.init();
 			primaryStage.show(); 
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);
@@ -39,7 +39,7 @@ public class mainTesting extends Application{
 //			GuiController g = n.navigate("SmallGroupOrder");
 //			GuiController g = n.navigate("GroupOrder");
 //			GuiController g = n.navigate("OrderDetails");
-			GuiController g = n.navigate("RegisterCommonDetails");
+			GuiController g = n.navigate("RegularOrder.fxml");
 //			GuiController g = n.navigate("RegisterAddCreditCard");
 //			GuiController g = n.navigate("RegisterSummary");
 //			GuiController g = n.navigate("VisitorsInThePark");
@@ -56,7 +56,7 @@ public class mainTesting extends Application{
 //			GuiController g = n.navigate("DevisionManagerParksDetailsApprove.fxml");
 //			GuiController g = n.navigate("DevisionManagerDiscount");
 //			System.out.println(PopUp.ask("waiting list", "The date and time you choose is taken", "Do you want to enter the waiting list?"));
-			PopUp.showInformation("", "", "1\n2\n3\n2\n3\n");
+//			PopUp.showInformation("", "", "1\n2\n3\n2\n3\n");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

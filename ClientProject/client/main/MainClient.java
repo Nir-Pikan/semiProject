@@ -2,6 +2,8 @@ package main;
 
 import java.io.IOException;
 
+import entities.Subscriber;
+import entities.Subscriber.Type;
 import gui.LoginController;
 import gui.MainScreenController;
 import gui.ParkManagerParametersUpdateController;
@@ -29,7 +31,7 @@ public class MainClient extends Application{
 			Scene scene = new Scene(root);
 			MainScreenController cont = loader.getController();
 			primaryStage.setScene(scene);
-			Pane p =cont.InitMockup(1);
+			Pane p =cont.init();
 			primaryStage.show(); 
 			primaryStage.setOnCloseRequest((event)->{
 				try {
@@ -41,7 +43,7 @@ public class MainClient extends Application{
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);
 			Navigator n = Navigator.instance();
-			GuiController g = n.navigate("VisitorsInThePark");
+			GuiController g = n.navigate("RegularOrder");
 			//((ParkManagerParametersUpdateController) g).setPark("1");
 		} 
 		catch(Exception e) 

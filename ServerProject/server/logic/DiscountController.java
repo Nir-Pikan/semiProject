@@ -11,10 +11,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import entities.DiscountEntity;
+import entities.Subscriber;
 import io.DbController;
 import modules.IController;
 import modules.ServerRequest;
 
+/**the discount controller class*/
 public class DiscountController implements IController {
 
 	private final static float FullPriceForPerson = 100;// TODO what is the value ?
@@ -26,6 +28,7 @@ public class DiscountController implements IController {
 
 	DbController dbController;
 
+	/** creates the {@link DiscountController} */
 	public DiscountController() {
 		dbController = DbController.getInstance();
 		createTable();
@@ -33,6 +36,8 @@ public class DiscountController implements IController {
 
 	/**
 	 * Create Discount Table if not exist
+	 * <p>
+	 * table of {@link DiscountEntity}s
 	 */
 	private void createTable() {
 		boolean isCreated = dbController.createTable(tableName + " ( discountID varchar(40),"
@@ -107,6 +112,7 @@ public class DiscountController implements IController {
 
 	/**
 	 * Receive all Discounts which not approved yet
+	 * 
 	 * @return array type DiscountEntity with isApprove==false
 	 */
 	public DiscountEntity[] getAllDiscount() {
@@ -249,7 +255,7 @@ public class DiscountController implements IController {
 	public boolean AddNewDiscount(DiscountEntity newDiscount) {
 
 		PreparedStatement pstmt = dbController.getPreparedStatement("INSERT INTO " + tableName
-				+ "( discountID , discountValue , startDate , endDate , isApproved ) VALUES ( ? , ? , ? , ? , ? );" );
+				+ "( discountID , discountValue , startDate , endDate , isApproved ) VALUES ( ? , ? , ? , ? , ? );");
 		try {
 			pstmt.setString(1, newDiscount.DiscountID);
 			pstmt.setFloat(2, newDiscount.DiscountValue);
@@ -257,13 +263,12 @@ public class DiscountController implements IController {
 			pstmt.setTimestamp(4, newDiscount.EndTime);
 			pstmt.setBoolean(5, newDiscount.IsApproved);
 
-			return pstmt.executeUpdate()==1;
+			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println(pstmt.toString());
 			System.out.println("Failed to execute update");
 		}
-
 
 		return false;
 
@@ -276,7 +281,6 @@ public class DiscountController implements IController {
 	 * @return did the method succeeded
 	 */
 	public boolean DeleteDiscount(String discountID) {
-
 
 		PreparedStatement pstmt = dbController
 				.getPreparedStatement("DELETE FROM " + tableName + " WHERE ( discountID = ? );");
@@ -315,7 +319,6 @@ public class DiscountController implements IController {
 			if (res == null) {
 				return currentPrice;
 			}
-
 
 			float discountApply = res.getFloat(1);// discountApply should be between 0.00 to 1.00
 			if (discountApply < 0 || discountApply > 1)

@@ -12,7 +12,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
+import module.JavafxPrinter;
 
+/** the VisitorsReport page controller */
 public class VisitorsReportController implements GuiController{
 
     @FXML
@@ -74,7 +76,7 @@ public class VisitorsReportController implements GuiController{
 
     @FXML
     void buttonPrint_OnClick(ActionEvent event) {
-
+JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
     }
 
 }

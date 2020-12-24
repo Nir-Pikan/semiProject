@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the UsageReport page controller */
 public class UsageReportController implements GuiController{
 
     @FXML

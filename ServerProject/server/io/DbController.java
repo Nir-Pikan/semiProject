@@ -18,7 +18,7 @@ public class DbController implements IDbController {
 	private static final String dbHost = "localhost";
 	private static final String dbSchemeName = "new_schema";
 	private static final String dbUser = "root";
-	private static final String dbPass = "5t6y7u8iAviv";
+	private static final String dbPass = "0662263"; // change back when finish
 	
 	private Connection conn;
 	

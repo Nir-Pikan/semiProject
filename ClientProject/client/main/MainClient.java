@@ -2,6 +2,8 @@ package main;
 
 import java.io.IOException;
 
+import entities.Subscriber;
+import entities.Subscriber.Type;
 import gui.LoginController;
 import gui.MainScreenController;
 import gui.ParkManagerParametersUpdateController;
@@ -27,7 +29,7 @@ public class MainClient extends Application{
 			Scene scene = new Scene(root);
 			MainScreenController cont = loader.getController();
 			primaryStage.setScene(scene);
-			Pane p =cont.InitMockup(1);
+			Pane p =cont.init();
 			primaryStage.show(); 
 			primaryStage.setOnCloseRequest((event)->{
 				try {

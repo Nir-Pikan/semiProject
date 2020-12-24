@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the OrderDetails page controller */
 public class OrderDetailsController implements GuiController{
 
     @FXML

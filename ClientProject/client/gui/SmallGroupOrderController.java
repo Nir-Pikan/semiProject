@@ -10,7 +10,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
-public class SmallGroupOrderController implements GuiController {
+/** the SmallGroupOrder page controller */
+public class SmallGroupOrderController implements GuiController{
+
 
 	private int visitorsCounter = 1;
 	

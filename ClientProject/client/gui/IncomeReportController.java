@@ -14,6 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the IncomeReport page controller */
 public class IncomeReportController implements GuiController{
 
     @FXML

@@ -10,7 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
-public class GroupOrderController implements GuiController {
+
+/** the GroupOrder page controller */
+public class GroupOrderController implements GuiController{
 
 	@FXML
 	private ComboBox<String> Park_ComboBox;

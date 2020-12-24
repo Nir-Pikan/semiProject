@@ -44,6 +44,10 @@ public class RegularOrderController implements GuiController {
 	@FXML
 	private DatePicker Date_DatePicker;
 
+/** the RegularOrder page controller */
+public class RegularOrderController implements GuiController{
+
+
 	@FXML
 	private Button PlaceOrder_Button;
 

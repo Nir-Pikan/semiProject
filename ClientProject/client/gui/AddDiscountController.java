@@ -9,13 +9,16 @@ import entities.DiscountEntity;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 import module.GuiController;
 import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
+/** the AddDiscount page controller */
 public class AddDiscountController implements GuiController {
 
 	@FXML
@@ -30,6 +33,53 @@ public class AddDiscountController implements GuiController {
 	@FXML
 	private TextField txtDiscountValue;
 
+
+	@Override
+	public void init() {
+		   Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
+	            @Override
+	            public DateCell call(final DatePicker param) {
+	                return new DateCell() {
+	                    @Override
+	                    public void updateItem(LocalDate item, boolean empty) {
+	                        super.updateItem(item, empty); 
+	                        LocalDate today = LocalDate.now();
+	                        if(dateEndDate.getValue()!=null)
+	                        setDisable(empty || item.compareTo(today) < 0 || item.compareTo(dateEndDate.getValue().minusDays(1))>0);
+	                        else {
+	                        	setDisable(empty || item.compareTo(today) < 0);
+							}
+	                    }
+
+	                };
+	            }
+
+	        };
+	        dateStartDate.setDayCellFactory(callB);
+	        Callback<DatePicker, DateCell> callB2 = new Callback<DatePicker, DateCell>() {
+	            @Override
+	            public DateCell call(final DatePicker param) {
+	                return new DateCell() {
+	                    @Override
+	                    public void updateItem(LocalDate item, boolean empty) {
+	                        super.updateItem(item, empty); 
+	                      	LocalDate startDate;
+	                        if(dateStartDate.getValue()!=null)
+	                        	 startDate = dateStartDate.getValue();
+	                        else {
+								startDate=LocalDate.now();
+							}
+	                        setDisable(empty || item.compareTo(startDate.plusDays(1)) < 0);
+	                    }
+
+	                };
+	            }
+
+	        };
+	        dateEndDate.setDayCellFactory(callB2);
+	}
+
+  /** submits a discount according to AddDiscount page fields */
 	@FXML
 	void submitDiscount(ActionEvent event) {
 
@@ -110,7 +160,8 @@ public class AddDiscountController implements GuiController {
 			}
 
 		} catch (NumberFormatException e) {
-			PopUp.showInformation("Invalid Value", "Invalid Discount Value Input", "Please Enter Value between 0 to 100");
+			PopUp.showInformation("Invalid Value", "Invalid Discount Value Input",
+					"Please Enter Value between 0 to 100");
 			return;
 		} catch (IllegalArgumentException e) {
 			dateStartDate.getEditor().clear();

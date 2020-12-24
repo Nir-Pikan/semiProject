@@ -22,7 +22,8 @@
 .h2{
 	-fx-font-size:18px;
 }
-.text-field.error , .combo-box.error{
+
+.error{
 	-fx-border-color: red;
 	-fx-border-width: 2px;
 	-fx-border-radius: 3px, 2px;

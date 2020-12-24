@@ -1,48 +1,45 @@
 package entities;
 
-/**class for park manager value change requests*/
+/** a class for park manager value change requests */
 public class PendingValueChangeRequest {
 
 	public String parkId;
 	public ParkAttribute attName;
-	public double reuestedValue;
+	public double requestedValue;
 	public double currentValue;
-	
+
 	/**
-	 * @param parkId
-	 * @param attName
-	 * @param reuestedValue
-	 * @param currentValue
+	 * Creates a {@link PendingValueChangeRequest}
+	 * 
+	 * @param parkId         the park ID to be updated
+	 * @param attName        the Attribute to be changed
+	 * @param requestedValue the new attribute value
+	 * @param currentValue   the old attribute value
 	 */
-	public PendingValueChangeRequest(String parkId, ParkAttribute attName, double reuestedValue, double currentValue) {
+	public PendingValueChangeRequest(String parkId, ParkAttribute attName, double requestedValue, double currentValue) {
 		this.parkId = parkId;
 		this.attName = attName;
-		this.reuestedValue = reuestedValue;
+		this.requestedValue = requestedValue;
 		this.currentValue = currentValue;
 	}
-
 
 	public String getParkId() {
 		return parkId;
 	}
 
-
 	public ParkAttribute getAttName() {
 		return attName;
 	}
 
-
 	public double getReuestedValue() {
-		return reuestedValue;
+		return requestedValue;
 	}
-
 
 	public double getCurrentValue() {
 		return currentValue;
 	}
 
-
-	public static enum ParkAttribute{
-		MaxCapacity,MaxPreOrder,AvgVisitTime
+	public static enum ParkAttribute {
+		MaxCapacity, MaxPreOrder, AvgVisitTime
 	}
 }

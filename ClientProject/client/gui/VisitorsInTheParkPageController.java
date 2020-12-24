@@ -14,6 +14,7 @@ import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
+/** the VisitorsInTheParkPage page controller */
 public class VisitorsInTheParkPageController implements GuiController {
 
 

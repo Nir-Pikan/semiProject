@@ -4,10 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * class for properties, when value changed all Listeners(added with
- * {@link #AddListener(PropertyListener)}) will be executed
+ * a class for properties, when value changed all Listeners
+ * <p>
+ * (added with {@link #AddListener(PropertyListener)})
+ * <p>
+ * will be executed.
+ * 
  * @author Or Man
  * @version 1.1
+ * @since 21/12/2020
  */
 public class Property<T> {
 
@@ -15,14 +20,18 @@ public class Property<T> {
 	private Set<PropertyListener<T>> listeners = new HashSet<>();
 
 	/***
-	 * Creates Property with 'null' as initial value and without listeners
+	 * Creates {@link Property} with 'null' as initial value
+	 * <p>
+	 * and without listeners.
 	 */
 	public Property() {
 
 	}
 
 	/***
-	 * Creates Property with initial value and without listeners
+	 * Creates {@link Property} with initial value
+	 * <p>
+	 * and without listeners.
 	 * 
 	 * @param val the value to set
 	 */
@@ -31,8 +40,9 @@ public class Property<T> {
 	}
 
 	/***
-	 * Creates Property with initial value and set listener. the listener fires for
-	 * this initialization
+	 * Creates {@link Property} with initial value and sets listener.
+	 * <p>
+	 * The listener fires for this initialization
 	 * 
 	 * @param val      the value to set
 	 * @param listener {@link PropertyListener} that execute operation when value
@@ -45,7 +55,7 @@ public class Property<T> {
 	}
 
 	/**
-	 * return the value of this property
+	 * return the value of this {@link Property}
 	 * 
 	 * @return the value in the property or null if not initialized
 	 */
@@ -54,7 +64,7 @@ public class Property<T> {
 	}
 
 	/**
-	 * set the property value and run all listeners
+	 * set the {@link Property} value and run all listeners
 	 * 
 	 * @param val Value to set
 	 */
@@ -62,12 +72,13 @@ public class Property<T> {
 		T oldVal = this.val;
 		this.val = val;
 		for (PropertyListener<T> list : listeners) {
-			list.onChange(this,oldVal, val);
+			list.onChange(this, oldVal, val);
 		}
 	}
-	
+
 	/**
-	 * set the property value without running all listeners  
+	 * set the {@link Property} value without running all listeners
+	 * 
 	 * @param val Value to set
 	 */
 	public void silentSet(T val) {
@@ -75,7 +86,7 @@ public class Property<T> {
 	}
 
 	/**
-	 * add listener to the property, will be execute when setVal is called
+	 * add listener to the {@link Property}, will be execute when setVal is called
 	 * 
 	 * @param listener {@link PropertyListener} that execute operation when value
 	 *                 change
@@ -85,7 +96,7 @@ public class Property<T> {
 	}
 
 	/**
-	 * remove specific listener from the property
+	 * remove specific listener from the {@link Property}
 	 * 
 	 * @param listener {@link PropertyListener} that execute operation when value
 	 *                 change
@@ -94,24 +105,25 @@ public class Property<T> {
 		listeners.remove(listener);
 	}
 
-	/** remove all the listeners from the Property */
+	/** remove all the listeners from the {@link Property} */
 	public void clearAllListeners() {
 		listeners.clear();
 	}
 
 	/**
-	 * call all the listeners with the current value, both oldVal and newVal will be
-	 * the current value
+	 * call all the listeners with the current value,
+	 * <p>
+	 * both oldVal and newVal will be the current value
 	 */
 	public void emitChange() {
 		for (PropertyListener<T> list : listeners) {
-			list.onChange(this,this.val, this.val);
+			list.onChange(this, this.val, this.val);
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof Property<?>) {
+		if (obj instanceof Property<?>) {
 			Property<?> pro = (Property<?>) obj;
 			return val.equals(pro.getVal());
 		}

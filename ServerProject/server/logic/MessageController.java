@@ -5,6 +5,7 @@ import mail.MyMail;
 public class MessageController {
 	
 	MyMail mailService;
+	
 	public MessageController() {
 		mailService = new MyMail();
 		

@@ -11,6 +11,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import module.GuiController;
 
+/** the NewTimeSelection page controller */
 public class NewTimeSelectionController implements GuiController{
 
     @FXML

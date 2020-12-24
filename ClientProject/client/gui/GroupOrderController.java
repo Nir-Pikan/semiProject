@@ -9,6 +9,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the GroupOrder page controller */
 public class GroupOrderController implements GuiController{
 
     @FXML

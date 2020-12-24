@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import module.GuiController;
 
+/** the Login page controller */
 public class LoginController implements GuiController {
 
 	@FXML
@@ -30,7 +31,7 @@ public class LoginController implements GuiController {
 	private TextField txtUsername;
 
 	@FXML
-    private PasswordField txtPassword;
+	private PasswordField txtPassword;
 
 	@FXML
 	private CheckBox cbUserWorker;
@@ -40,6 +41,7 @@ public class LoginController implements GuiController {
 
 	}
 
+	/** when clicking on the user/worker check box hide/reveal wanted fields */
 	@FXML
 	void UserWorkerCheckBox(ActionEvent event) {
 		if (cbUserWorker.isSelected()) {
@@ -59,11 +61,11 @@ public class LoginController implements GuiController {
 	void WorkerLogin(ActionEvent event) {
 
 	}
-	
+
 	public void init() {
 		workerLoginForm.setManaged(false);
 		workerLoginForm.setVisible(false);
-		
+
 	}
 
 }

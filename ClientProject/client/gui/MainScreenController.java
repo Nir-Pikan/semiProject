@@ -20,7 +20,8 @@ import javafx.scene.layout.VBox;
 import module.JavafxPrinter;
 import module.Navigator;
 
-public class MainScreenController{
+/** the MainScreen page controller */
+public class MainScreenController {
 
 	@FXML
 	private Button btnReturn;
@@ -37,10 +38,12 @@ public class MainScreenController{
 	@FXML
 	private Button Login;
 
+
 	private static final List<MenuItem> VISITOR_MAP = createVisitorMap();
 	private static final Map<String,MenuItem> WORKER_MAP = createWorkerMap();
 	private static final List<MenuItem> SUBSCRIBER_MAP = createSubscriberMap();
-	
+
+  	/** when clicking on the back button load previous page */
 	@FXML
 	void back(ActionEvent event) {
 		Navigator.instance().back();
@@ -70,7 +73,7 @@ public class MainScreenController{
 		}
 	}
 
-	
+
 	/**initialize the main screen with the listeners for the login
 	 * @return the body of the main screen for the navigator
 	 */

@@ -1,22 +1,27 @@
 package entities;
 
-public class Permission 
-{
+/**
+ * A class representing a specific permission.
+ * <p>
+ */
+public class Permission {
 	private String Name;
-	
-	public String GetName() 
-	{
-		return Name;
-	}
-	
-	public Permission(String name)
-	{
+
+	/**
+	 * creates a {@link Permission} with a name
+	 * 
+	 * @param name the premission's name
+	 */
+	public Permission(String name) {
 		Name = name;
 	}
-	
+
+	public String GetName() {
+		return Name;
+	}
+
 	@Override
-	public int hashCode()
-{
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((Name == null) ? 0 : Name.hashCode());
@@ -24,7 +29,7 @@ public class Permission
 	}
 
 	@Override
-	public boolean equals(Object obj) //Equals by Name 
+	public boolean equals(Object obj) // Equals by Name
 	{
 		if (this == obj)
 			return true;

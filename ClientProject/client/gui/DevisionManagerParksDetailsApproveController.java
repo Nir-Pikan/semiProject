@@ -1,4 +1,5 @@
 package gui;
+
 import entities.PendingValueChangeRequest;
 import entities.PendingValueChangeRequest.ParkAttribute;
 import io.clientController;
@@ -13,6 +14,7 @@ import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
+/** the DevisionManagerParksDetailsApprove page controller */
 public class DevisionManagerParksDetailsApproveController implements GuiController {
 	@FXML
 	private TableView<PendingValueChangeRequest> parksDetailsPageTableView;
@@ -29,33 +31,37 @@ public class DevisionManagerParksDetailsApproveController implements GuiControll
 	@FXML
 	private TableColumn<PendingValueChangeRequest, Double> requestedValue;
 
+	/** declines the marked request */
 	@FXML
 	void DeclineRequest(ActionEvent event) {
 		if (parksDetailsPageTableView.getSelectionModel().isEmpty())
 			return;
-		String res =clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park,"decline change",
-				ServerRequest.gson.toJson(parksDetailsPageTableView.getSelectionModel().getSelectedItem(),PendingValueChangeRequest.class)));
-		if( res.startsWith("failed")) {
+		String res = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "decline change",
+				ServerRequest.gson.toJson(parksDetailsPageTableView.getSelectionModel().getSelectedItem(),
+						PendingValueChangeRequest.class)));
+		if (res.startsWith("failed")) {
 			PopUp.showError("decline change", "decline Failed", "try again");
-		}else {
+		} else {
 			PopUp.showInformation("decline change", "decline value change succeded", "");
 			int index = parksDetailsPageTableView.getSelectionModel().getSelectedIndex();
 			parksDetailsPageTableView.getItems().remove(index);
 		}
 	}
 
+	/** approves the marked request */
 	@FXML
 	void approveRequest(ActionEvent event) {
 		if (parksDetailsPageTableView.getSelectionModel().isEmpty())
 			return;
-		
-		String res =clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park,"approve change",
-				ServerRequest.gson.toJson(parksDetailsPageTableView.getSelectionModel().getSelectedItem(),PendingValueChangeRequest.class)));
-		if( res.startsWith("failed")) {
+
+		String res = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "approve change",
+				ServerRequest.gson.toJson(parksDetailsPageTableView.getSelectionModel().getSelectedItem(),
+						PendingValueChangeRequest.class)));
+		if (res.startsWith("failed")) {
 			PopUp.showError("apporve change", "apporve Failed", "try again");
-		}else if(res.startsWith("value")) {
+		} else if (res.startsWith("value")) {
 			PopUp.showError("apporve change", "MaxPreOrder is larger than current MaxCapacity", "try again");
-		}else{
+		} else {
 			PopUp.showInformation("apporve change", "apporve value change succeded", "");
 			int index = parksDetailsPageTableView.getSelectionModel().getSelectedIndex();
 			parksDetailsPageTableView.getItems().remove(index);
@@ -70,9 +76,8 @@ public class DevisionManagerParksDetailsApproveController implements GuiControll
 		requestedValue
 				.setCellValueFactory(new PropertyValueFactory<PendingValueChangeRequest, Double>("reuestedValue"));
 
-		
-		
-		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park, "get pending change requests", ""));
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Park, "get pending change requests", ""));
 		if (response.equals("[]")) {
 			PopUp.showInformation("value change request", "No Value Change Requests", "");
 			return;

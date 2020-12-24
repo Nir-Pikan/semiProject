@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import module.GuiController;
 import module.JavafxPrinter;
 
+/** the VisitorsReport page controller */
 public class VisitorsReportController implements GuiController{
 
     @FXML

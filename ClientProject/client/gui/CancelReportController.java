@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the CancelReport page controller */
 public class CancelReportController implements GuiController{
 
     @FXML

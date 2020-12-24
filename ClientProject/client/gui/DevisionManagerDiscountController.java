@@ -1,4 +1,5 @@
 package gui;
+
 import java.time.LocalDate;
 
 import com.oracle.webservices.internal.api.EnvelopeStyle.Style;
@@ -24,6 +25,7 @@ import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
+/** the DevisionManagerDiscount page controller */
 public class DevisionManagerDiscountController implements GuiController {
 
 	@FXML
@@ -39,11 +41,10 @@ public class DevisionManagerDiscountController implements GuiController {
 	private TableColumn<DiscountEntity, LocalDate> discountStartDate;
 
 	@FXML
-	private TableColumn<DiscountEntity, LocalDate> discountEndDate; 
+	private TableColumn<DiscountEntity, LocalDate> discountEndDate;
 
 	@FXML
 	private TableColumn<DiscountEntity, Void> discountApproval;
-
 
 	@Override
 	public void init() {
@@ -70,6 +71,7 @@ public class DevisionManagerDiscountController implements GuiController {
 
 	}
 
+	/** adds a new button to the existing table */
 	private void addButtonToTable() {
 
 		discountApproval = new TableColumn<DiscountEntity, Void>("Approve\n  Ignore");

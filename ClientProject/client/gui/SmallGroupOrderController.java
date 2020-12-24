@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import module.GuiController;
 
+/** the SmallGroupOrder page controller */
 public class SmallGroupOrderController implements GuiController{
 
     @FXML

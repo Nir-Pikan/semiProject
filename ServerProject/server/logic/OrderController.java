@@ -237,8 +237,8 @@ public class OrderController implements IController {
 		Timestamp fourHoursAfter = addTimeInHours(ord.visitTime, AVGvisitTime); // calculate 3 hours before  
 		try {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
-					"SELECT COUNT(parkSite)\r\n" + " FROM orders \r\n" + " WHERE visitTime > \"" + threeHoursBefor
-							+ "\" && visitTime < \"" + fourHoursAfter + "\" && parkSite = \"" + ord.parkSite + "\";");
+					"SELECT COUNT(parkSite)\r\n" + " FROM orders \r\n" + " WHERE visitTime >= \"" + threeHoursBefor
+							+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + ord.parkSite + "\";");
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();
@@ -453,14 +453,16 @@ public class OrderController implements IController {
 	 * @return
 	 */
 	private Timestamp addTimeInHours(Timestamp stamp, int hours) {
+		long tempTimeLong = stamp.getTime();
+		Timestamp temp = new Timestamp(tempTimeLong);
 		int tempHours = stamp.getHours() + hours;
 		if (tempHours < openingHour)
-			stamp.setHours(openingHour);
+			temp.setHours(openingHour);
 		else if (tempHours > closeHour)
-			stamp.setHours(closeHour);
+			temp.setHours(closeHour);
 		else
-			stamp.setHours(stamp.getHours() + hours);
-		return stamp;
+			temp.setHours(stamp.getHours() + hours);
+		return temp;
 	}
 
 }

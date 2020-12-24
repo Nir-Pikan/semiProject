@@ -250,17 +250,17 @@ public class RegularOrderController implements GuiController{
 		o = createOrderDetails();
 
 		// in a case you want to see the order that been initialized
-//		System.out.println(o.parkSite);
-//		System.out.println(o.numberOfVisitors);
-//		System.out.println(o.orderID);
-//		System.out.println(o.priceOfOrder);
-//		System.out.println(o.email);
-//		System.out.println(o.phone);
-//		System.out.println(o.type);
-//		System.out.println(o.orderStatus);
-//		System.out.println(o.visitTime);
-//		System.out.println(o.timeOfOrder);
-//		System.out.println(o.isUsed);
+		System.out.println(o.parkSite);
+		System.out.println(o.numberOfVisitors);
+		System.out.println(o.orderID);
+		System.out.println(o.priceOfOrder);
+		System.out.println(o.email);
+		System.out.println(o.phone);
+		System.out.println(o.type);
+		System.out.println(o.orderStatus);
+		System.out.println(o.visitTime);
+		System.out.println(o.timeOfOrder);
+		System.out.println(o.isUsed);
 
 //================  examples of some functions i used to test the methods from OrderController  =====================
 

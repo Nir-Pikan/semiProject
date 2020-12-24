@@ -8,17 +8,19 @@ import javafx.scene.control.Alert.AlertType;
 
 public class MyMail {
 
-	String from; // GoNature mail address
-	String host; // Host of the mail address
+	private static final String FROM = "g1.gonature@gmail.com"; // GoNature mail address
+	private static final String HOST= "smtp.gmail.com"; // Host of the mail address
+	private static final int PORT = 587;
+	private static final String USERNAME = "g1.gonature"; // GoNature mail username
+	private static final String PASSWORD= "Aa123456!"; // Host of the mail password
+	
 	Session session; // for some internal usage of mail sending process
 
 	public MyMail() { // Initialize GoNature Email address and other preferences
-		from = "g1.gonature@gmail.com";
-		host = "smtp.gmail.com";
 		Properties mailProps = new Properties();
-		mailProps.put("mail.smtp.from", from);
-		mailProps.put("mail.smtp.host", host);
-		mailProps.put("mail.smtp.port", 587);
+		mailProps.put("mail.smtp.from", FROM);
+		mailProps.put("mail.smtp.host", HOST);
+		mailProps.put("mail.smtp.port", PORT);
 		mailProps.put("mail.smtp.auth", true);
 		mailProps.put("mail.smtp.starttls.enable", "true");
 
@@ -26,7 +28,7 @@ public class MyMail {
 
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("g1.gonature", "Aa123456!");
+				return new PasswordAuthentication(USERNAME,PASSWORD );
 			}
 
 		});
@@ -35,7 +37,7 @@ public class MyMail {
 
 	/** send Mail and SMS as Pop up window. return true if mail sending succeeded **/
 	public boolean SendEmailAndSMS(String destinationMail,String cellPhoneNum, String massageContent, String subject) {
-		infoBox(massageContent, subject, cellPhoneNum); //use cell phone number as a header (only for vision)
+		infoBox("subject: " + subject + "\n\n" +massageContent, "SMS send", "SMS sent to : "+ cellPhoneNum); //use cell phone number as a header (only for vision)
 		if(!isValidEmailAddress(destinationMail))
 			return false;  // if destination Mail address is invalid return false
 		return SendEmaill(destinationMail, massageContent, subject);
@@ -48,7 +50,7 @@ public class MyMail {
 			// Create a default MimeMessage object.
 			MimeMessage message = new MimeMessage(session);
 			// Set From: header field of the header.
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(FROM));
 
 			// Set To: header field of the header.
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));

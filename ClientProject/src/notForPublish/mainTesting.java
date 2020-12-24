@@ -29,7 +29,7 @@ public class mainTesting extends Application{
 			Scene scene = new Scene(root);
 			MainScreenController cont = loader.getController();
 			primaryStage.setScene(scene);
-			Pane p =cont.InitMockup(1);
+			Pane p =cont.init();
 			primaryStage.show(); 
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);

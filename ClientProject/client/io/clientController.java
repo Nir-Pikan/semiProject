@@ -28,9 +28,9 @@ public class clientController extends AbstractClient {
 	// common data
 	public ParkNameAndTimes[] openingTimes;
 	public String[] parkNames;
-	public Property<Worker> logedInWorker = null;
-	public Property<Subscriber> logedInSunscriber = null;
-	public Property<String> visitorID = null;
+	public Property<Worker> logedInWorker = new Property<>();
+	public Property<Subscriber> logedInSunscriber = new Property<>();
+	public Property<String> visitorID = new Property<>();
 
 	/**
 	 * creates a {@link clientController}

@@ -12,6 +12,7 @@ import java.util.Set;
  * 
  * @author Or Man
  * @version 1.1
+ * @since 21/12/2020
  */
 public class Property<T> {
 

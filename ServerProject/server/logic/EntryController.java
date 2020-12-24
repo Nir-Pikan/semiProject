@@ -53,8 +53,7 @@ public class EntryController implements IController {
 		String job = request.job;
 		String response = null;
 		switch (job) {
-
-		//TODO tell everyone to change from "getEntitiesByDate" to "getEntriesByDate" ~Nir Pikan~
+		
 		case "getEntriesByDate":
 			Timestamp[] times = ServerRequest.gson.fromJson(request.data, Timestamp[].class);
 			if (times == null || times.length != 2) {

@@ -3,7 +3,6 @@ package gui;
 import java.sql.Timestamp;
 
 import entities.ParkEntry;
-import entities.Subscriber;
 import io.clientController;
 
 /**
@@ -15,13 +14,11 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import module.GuiController;
 import module.JavafxPrinter;
-import module.Navigator;
-import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
@@ -74,7 +71,7 @@ public class VisitorsReportController implements GuiController {
 	private Label textTotalVisitors;
 
 	@FXML
-	private BarChart<?, ?> VisitorsChart;
+	private BarChart<String, Number> VisitorsChart;
 
 	@FXML
 	private CategoryAxis CharVisitorsTypeX;
@@ -85,51 +82,108 @@ public class VisitorsReportController implements GuiController {
 	@FXML
 	private Button buttonPrint;
 
+	/**
+	 * prints the report when Print report button is clicked
+	 */
 	@FXML
 	void buttonPrint_OnClick(ActionEvent event) {
-		JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
+		// JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
+//		XYChart.Series series1 = new XYChart.Series();
+//		series1.setName("Num of visitors");
+//		series1.getData().add(new XYChart.Data("Single",10));
+//		series1.getData().add(new XYChart.Data("Group",5));
+//		series1.getData().add(new XYChart.Data("Subscribers",20));
+//		VisitorsChart.getData().add(series1);
 	}
-	
+
 	/**
 	 * Initialize the monthly visitors report using the parameters
-	 * @param parkName name of the park the report's on 
-	 * @param parkID ID of the park the report's on
+	 * 
+	 * @param parkName   name of the park the report's on
+	 * @param parkID     ID of the park the report's on
 	 * @param reportDate the date range of the report
-	 * <p>
-	 * @apiNote reportDate[0] = from , reportDate[1] = to. 
-	 * */
+	 *                   <p>
+	 * @apiNote reportDate[0] = from , reportDate[1] = to.
+	 */
 	public void initReport(String parkName, String parkID, Timestamp[] reportDate) {
 		Timestamp current = new Timestamp(System.currentTimeMillis());
 		textDateToday.setText(current.toString());
 		textParkName.setText(parkName);
 		textReportDate.setText("from " + reportDate[0].toString() + " to " + reportDate[1].toString());
-		
-    	//send request to get park entries to clientController
-    	String response = clientController.client.sendRequestAndResponse(new ServerRequest(
-    			Manager.Entry, "getEntriesByDate" , ServerRequest.gson.toJson(reportDate,Timestamp[].class)));
-    	
-    	switch(response) {
-    	case "Error: There is no 2 times search between ":
-    		
-    		break;
-    		
-    	case "Error: start time is later than end time ":
-    
-    		break;
-    		
-    	case "Error: could not get entires from DB ":
-    		
-    		break;
-    	
-    	default:
-    		ServerRequest.gson.fromJson(response, ParkEntry[].class);
-    	}
-		
-	};
+
+		// send request to get park entries to clientController
+		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Entry,
+				"getEntriesByDate", ServerRequest.gson.toJson(reportDate, Timestamp[].class)));
+
+		switch (response) {
+		case "Error: There is no 2 times search between ":
+			System.out.println(response);
+			break;
+
+		case "Error: start time is later than end time ":
+			System.out.println(response);
+			break;
+
+		case "Error: could not get entires from DB ":
+			System.out.println(response);
+			break;
+
+		default:
+			int singleVisitorsCounter = 0;
+			int groupVisitorsCounter = 0;
+			int subscriberVisitorsCounter = 0;
+
+			ParkEntry[] entries = ServerRequest.gson.fromJson(response, ParkEntry[].class);
+
+			// for each entry
+			for (ParkEntry entry : entries) {
+
+				// only for wanted park
+				if (entry.parkID.equals(parkID)) {
+
+					// single
+					if (entry.entryType.equals(ParkEntry.EntryType.Personal)) {
+						singleVisitorsCounter++;
+						subscriberVisitorsCounter += entry.numberOfSubscribers;
+					}
+
+					// subscriber
+					if (entry.entryType.equals(ParkEntry.EntryType.Subscriber))
+						subscriberVisitorsCounter += entry.numberOfSubscribers;
+
+					// group
+					if (entry.entryType.equals(ParkEntry.EntryType.Group)) {
+						groupVisitorsCounter += entry.numberOfVisitors;
+						subscriberVisitorsCounter += entry.numberOfSubscribers;
+					}
+
+					// privateGroup
+					if (entry.entryType.equals(ParkEntry.EntryType.PrivateGroup)) {
+						singleVisitorsCounter += entry.numberOfVisitors;
+						subscriberVisitorsCounter += entry.numberOfSubscribers;
+					}
+				}
+			}
+			// set the visitor numbers
+			textNumSingleVisitors.setText(String.valueOf(singleVisitorsCounter));
+			textNumGroupVisitors.setText(String.valueOf(groupVisitorsCounter));
+			textNumSubscriberVisitors.setText(String.valueOf(subscriberVisitorsCounter));
+			textTotalVisitors
+					.setText(String.valueOf(singleVisitorsCounter + groupVisitorsCounter + subscriberVisitorsCounter));
+
 	
-	//for testing
-	public static void main(String[] args) {
-		
+			//update the bar chart
+			//TODO Work on how this looks ~Nir Pikan~
+			XYChart.Series series1 = new XYChart.Series();
+			series1.setName("Num of visitors");
+			series1.getData().add(new XYChart.Data("Single",singleVisitorsCounter));
+			series1.getData().add(new XYChart.Data("Group",groupVisitorsCounter));
+			series1.getData().add(new XYChart.Data("Subscribers",subscriberVisitorsCounter));
+			VisitorsChart.getData().add(series1);
+		}
 	}
 
+	public static enum VisitorType {
+		Single, Subscribers, Group
+	}
 }

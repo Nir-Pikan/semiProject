@@ -27,7 +27,9 @@ import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
-public class RegularOrderController implements GuiController {
+/** the RegularOrder page controller */
+public class RegularOrderController implements GuiController{
+
 	// the hours when the parks is working
 
 	private Order o;
@@ -43,10 +45,6 @@ public class RegularOrderController implements GuiController {
 
 	@FXML
 	private DatePicker Date_DatePicker;
-
-/** the RegularOrder page controller */
-public class RegularOrderController implements GuiController{
-
 
 	@FXML
 	private Button PlaceOrder_Button;

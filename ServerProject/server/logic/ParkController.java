@@ -131,7 +131,7 @@ public class ParkController implements IController {
 	private boolean addValueChangeRequest(PendingValueChangeRequest request) {
 		return db
 				.sendUpdate("INSERT INTO valueChangeRequest(parkId,attributeName,requestedValue,currentValue) VALUES(\""
-						+ request.parkId + "\",\"" + request.attName.toString() + "\"," + request.reuestedValue + ","
+						+ request.parkId + "\",\"" + request.attName.toString() + "\"," + request.requestedValue + ","
 						+ request.currentValue + ");");
 
 	}
@@ -221,12 +221,12 @@ public class ParkController implements IController {
 		case "approve change":
 			PendingValueChangeRequest vcr = ServerRequest.gson.fromJson(request.data, PendingValueChangeRequest.class);
 			if (vcr.attName == ParkAttribute.MaxPreOrder) {
-				if (getMaxCapacity(vcr.parkId) < vcr.reuestedValue)
+				if (getMaxCapacity(vcr.parkId) < vcr.requestedValue)
 					return "value error";
 			}
 			if (!removeValueChangeRequest(vcr))
 				return "failed to delete";
-			if (setValue(vcr.parkId, vcr.attName, vcr.reuestedValue))
+			if (setValue(vcr.parkId, vcr.attName, vcr.requestedValue))
 				return "cahnged successfully";
 			else
 				return "failed to setValue";

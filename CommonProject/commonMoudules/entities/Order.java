@@ -7,7 +7,7 @@ public class Order {
 		PRIVATE, PRIVATEGROUP, GUIDE, FAMILY
 	};
 	public enum OrderStatus {
-		CANCEL,IDLE,CONFIRMED,WAITINGLIST,WAITINGLISTMASSAGESENT
+		CANCEL,SEMICANCELED,IDLE,CONFIRMED,WAITINGLIST,WAITINGLISTMASSAGESENT
 	};
 	// Identification Number // not for now
 	public String parkSite;

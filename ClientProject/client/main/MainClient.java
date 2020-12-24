@@ -19,8 +19,10 @@ import module.Navigator;
 public class MainClient extends Application{
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		try {
+	public void start(Stage primaryStage) throws Exception 
+	{
+		try 
+		{
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainScreenController.class.getResource("mainScreen.fxml"));
 			BorderPane root = loader.load();
@@ -41,7 +43,9 @@ public class MainClient extends Application{
 			Navigator n = Navigator.instance();
 			GuiController g = n.navigate("VisitorsInThePark");
 			//((ParkManagerParametersUpdateController) g).setPark("1");
-		} catch(Exception e) {
+		} 
+		catch(Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}

@@ -79,7 +79,7 @@ public class LoginController implements GuiController
 			PopUp.showError("Sign up error", "Faild to log in", "Please check the user name and the password");
 			return;
 		}
-		clientController.client.logedInWorker = new Property<Worker>(worker);
+		clientController.client.logedInWorker.setVal(worker);
 		Navigator.instance().clearHistory();
 	}
 	
@@ -96,7 +96,7 @@ public class LoginController implements GuiController
 		{
 			 if(LoginSubscriber("S"+userID,"",false))
 				 return;
-			 clientController.client.visitorID = new Property<String>(userID);
+			 clientController.client.visitorID.setVal(userID);
 			 Navigator.instance().clearHistory();
 			 return;
 		}
@@ -122,7 +122,7 @@ public class LoginController implements GuiController
 			    PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
 			return false;
 		}
-		clientController.client.logedInSunscriber = new Property<Subscriber>(subscriber);
+		clientController.client.logedInSunscriber.setVal(subscriber);
 		Navigator.instance().clearHistory();
 		return true;
 	}

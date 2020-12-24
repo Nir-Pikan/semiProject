@@ -39,7 +39,7 @@ public class mainTesting extends Application{
 //			GuiController g = n.navigate("SmallGroupOrder");
 //			GuiController g = n.navigate("GroupOrder");
 //			GuiController g = n.navigate("OrderDetails");
-			GuiController g = n.navigate("RegularOrder.fxml");
+//			GuiController g = n.navigate("RegularOrder.fxml");
 //			GuiController g = n.navigate("RegisterAddCreditCard");
 //			GuiController g = n.navigate("RegisterSummary");
 //			GuiController g = n.navigate("VisitorsInThePark");

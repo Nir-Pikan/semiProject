@@ -9,7 +9,6 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 
 import entities.ParkEntry;
-import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -156,6 +155,9 @@ public class UsageReportController implements GuiController {
 		}
 	}
 
+	/**
+	 * private class to create rows for the usage table
+	 */
 	private class UsageRow {
 		protected String date;
 		protected int visitors;

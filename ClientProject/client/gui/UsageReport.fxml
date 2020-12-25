@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -40,11 +39,6 @@
    </rowConstraints>
    <children>
       <Label fx:id="labelDateToday" text="Date :" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-      <TextField fx:id="textDateToday" maxWidth="-Infinity" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </GridPane.margin>
-      </TextField>
       <Label fx:id="labelUsageReport" text="Usage Report" GridPane.columnSpan="2" GridPane.rowSpan="2">
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -58,19 +52,16 @@
             <Insets left="20.0" />
          </padding>
       </Label>
-      <TextField fx:id="textParkName" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Label fx:id="labelReportDate" text="Report Date :" GridPane.rowIndex="3">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <TextField fx:id="textReportDate" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <Label fx:id="labelMaxCapacity" text="Max Capacity Available :" GridPane.rowIndex="4">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <TextField fx:id="textMaxCapacity" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <TableView fx:id="visitorUsageTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="5" GridPane.rowSpan="10">
         <columns>
           <TableColumn fx:id="dateColumn" editable="false" prefWidth="81.0" text="Date" />
@@ -85,5 +76,25 @@
          </GridPane.margin>
       </TableView>
       <Button fx:id="buttonPrint" mnemonicParsing="false" onAction="#printButton_OnClick" text="Print Report" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
+      <Label fx:id="textParkName" text="textParkName" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </Label>
+      <Label fx:id="textReportDate" text="textReportDate" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </Label>
+      <Label fx:id="textMaxCapacity" text="textMaxCapacity" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </Label>
+      <Label fx:id="textDateToday" text="textDateToday" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </Label>
    </children>
 </GridPane>

@@ -45,8 +45,8 @@ public class mainTesting extends Application{
 //			GuiController g = n.navigate("VisitorsInThePark");
 //			GuiController g = n.navigate("NewTimeSelection");
 //			GuiController g = n.navigate("ReportExport");
-			PopUp.showCostumContent("visitor report", "VisitorsReport.fxml");
-//			PopUp.showCostumContent("usage report", "UsageReport.fxml");
+//			PopUp.showCostumContent("visitor report", "VisitorsReport.fxml");
+			PopUp.showCostumContent("usage report", "UsageReport.fxml");
 //			PopUp.showCostumContent("income report", "IncomeReport.fxml");
 //			PopUp.showCostumContent("entries report", "EntryReport.fxml");
 //			PopUp.showCostumContent("cancels report", "CancelReport.fxml");

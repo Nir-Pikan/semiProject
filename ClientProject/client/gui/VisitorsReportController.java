@@ -88,12 +88,12 @@ public class VisitorsReportController implements GuiController {
 	@FXML
 	void buttonPrint_OnClick(ActionEvent event) {
 		// JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
-//		XYChart.Series series1 = new XYChart.Series();
-//		series1.setName("Num of visitors");
-//		series1.getData().add(new XYChart.Data("Single",10));
-//		series1.getData().add(new XYChart.Data("Group",5));
-//		series1.getData().add(new XYChart.Data("Subscribers",20));
-//		VisitorsChart.getData().add(series1);
+		XYChart.Series series1 = new XYChart.Series();
+		series1.setName("Num of visitors");
+		series1.getData().add(new XYChart.Data("Single",10));
+		series1.getData().add(new XYChart.Data("Group",5));
+		series1.getData().add(new XYChart.Data("Subscribers",20));
+		VisitorsChart.getData().add(series1);
 	}
 
 	/**

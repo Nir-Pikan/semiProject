@@ -80,7 +80,7 @@
             <Insets left="20.0" />
          </padding>
       </Label>
-      <BarChart fx:id="VisitorsChart" title="Number of visitors for each type" GridPane.columnSpan="3" GridPane.rowIndex="11" GridPane.rowSpan="8">
+      <BarChart fx:id="VisitorsChart" animated="false" title="Number of visitors for each type" GridPane.columnSpan="3" GridPane.rowIndex="11" GridPane.rowSpan="8">
         <xAxis>
           <CategoryAxis fx:id="CharVisitorsTypeX" label="Visitors Type" side="BOTTOM" />
         </xAxis>

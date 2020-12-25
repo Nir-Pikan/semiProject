@@ -84,14 +84,13 @@ public class CancelReportController implements GuiController{
     /**
      * impotant Notice:
      * @param parkName
-     * @param reportStartAndEndTimes
+     * @param reportStartAndEndTimes: [0]: start, [1]: end 
      */ 
     public CancelReportController(String parkName, Timestamp[] reportStartAndEndTimes)            
     {
     	this.reportStartAndEndTimes = reportStartAndEndTimes;
-    	this.parkName = parkName;
-    }
-    
+    	this.parkName = parkName;	
+    }  
     
     @FXML
     void buttonPrint_OnClick(ActionEvent event) 
@@ -132,10 +131,9 @@ public class CancelReportController implements GuiController{
     	return arr[2] + "." + arr[1] + "." + arr[0];
     }
     
-    
     private void AnalyzeOrder(Order order)
     {
-    	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())))
+    	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())) || !isTimeInRangeOfStartAndEndTime(order.visitTime))
     			return; 
     	TotalOrders++;		
     	if( order.orderStatus.equals(OrderStatus.CANCEL) || order.orderStatus.equals(OrderStatus.SEMICANCELED))
@@ -144,6 +142,11 @@ public class CancelReportController implements GuiController{
     		NotCanceledNotUsed++;
     	else
   		   used++; 	   
+    }
+    
+    private boolean isTimeInRangeOfStartAndEndTime(Timestamp time)
+    {
+    	return time.before(reportStartAndEndTimes[1]) && time.after(reportStartAndEndTimes[0]);
     }
 
 }

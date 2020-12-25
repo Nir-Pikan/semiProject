@@ -74,7 +74,7 @@ public class IncomeReportController implements GuiController, Initializable{
     private TableView<Cell> incomeTable;
 
     @FXML
-    private TableColumn<Cell, Integer> dateColumn;
+    private TableColumn<Cell, String> dateColumn;
 
     @FXML
     private TableColumn<Cell, Integer> visitorsColumn;
@@ -93,7 +93,7 @@ public class IncomeReportController implements GuiController, Initializable{
     /**
      * impotant Notice:
      * @param parkName
-     * @param reportStartAndEndTimes
+     * @param reportStartAndEndTimes: [0]: start, [1]: end 
      */ 
     public IncomeReportController(String parkName, Timestamp[] reportStartAndEndTimes)            
     {
@@ -110,24 +110,24 @@ public class IncomeReportController implements GuiController, Initializable{
     	Order[] allOrders = ServerRequest.gson.fromJson(response, Order[].class);
     	if(allOrders == null)
     		return; 
-    	Map<Integer, ArrayList<Order>> map = new TreeMap<Integer, ArrayList<Order>>();
+    	Map<myDate, ArrayList<Order>> map = new TreeMap<myDate, ArrayList<Order>>();
     	for (Order order : allOrders) 
     	{
     		if(ValidOrderToReport(order)) 
     		{
-    			int day = order.visitTime.getDay();
-    			if(!map.containsKey(day))
+    			myDate date = new myDate(GetStringTime(order.visitTime));
+    			if(!map.containsKey(date))
     			{
-    				map.put(day, new ArrayList<Order>());
+    				map.put(date, new ArrayList<Order>());
     			}
-    			map.get(day).add(order);
+    			map.get(date).add(order);
     		}
 		}
-    	for (Map.Entry<Integer, ArrayList<Order>> entry : map.entrySet())
+    	for (Map.Entry<myDate, ArrayList<Order>> entry : map.entrySet())
     	{
 			int income = 0;
 			int visitors = 0;
-			int day = entry.getKey();
+			myDate date = entry.getKey();
 			
 			for (Order order : entry.getValue()) 
 			{
@@ -136,7 +136,7 @@ public class IncomeReportController implements GuiController, Initializable{
 			}
 			TotalIncome += income;
 				
-			incomeTable.getItems().add(new Cell(income, visitors, day));
+			incomeTable.getItems().add(new Cell(income, visitors, date.getDate()));
 		}
     	Timestamp currentTime = new Timestamp(System.currentTimeMillis());
     	textDateToday.setText(GetStringTime(currentTime));
@@ -146,7 +146,7 @@ public class IncomeReportController implements GuiController, Initializable{
     	textAVGIncomeDay.setText((TotalIncome/map.size()) + "");
     }
     
-    public String GetStringTime(Timestamp time)
+    public static String GetStringTime(Timestamp time)
     {
     	String[] arr = time.toString().split(" ")[0].split("-");
     	return arr[2] + "." + arr[1] + "." + arr[0];
@@ -154,26 +154,30 @@ public class IncomeReportController implements GuiController, Initializable{
     
     private boolean ValidOrderToReport(Order order)
     {
-    	//// need also to check if it is from the last month ///////////////////////////////////////////////////////////////
-      	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())))
+      	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())) || !isTimeInRangeOfStartAndEndTime(order.visitTime))
 			return false; 		
 	    if( order.orderStatus.equals(OrderStatus.CANCEL) || order.orderStatus.equals(OrderStatus.SEMICANCELED))
 	    	return false; 
 	    return true;
     }
     
+    private boolean isTimeInRangeOfStartAndEndTime(Timestamp time)
+    {
+    	return time.before(reportStartAndEndTimes[1]) && time.after(reportStartAndEndTimes[0]);
+    }
+    
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) { // needed for appropriate working of TableView
-    	dateColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("day"));
+    	dateColumn.setCellValueFactory(new PropertyValueFactory<Cell,String>("date"));
     	visitorsColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("visitors"));
     	incomeColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("price"));
 	}
 
     public class Cell
     {
-    	public Integer price;
-    	public Integer visitors;
-    	public Integer day;
+    	private Integer price;
+    	private Integer visitors;
+    	private String date;
     	
     	public Integer getVisitors() {
 			return visitors;
@@ -183,12 +187,12 @@ public class IncomeReportController implements GuiController, Initializable{
 			this.visitors = visitors;
 		}
 
-		public Integer getDay() {
-			return day;
+		public String getDay() {
+			return date;
 		}
 
-		public void setDay(Integer day) {
-			this.day = day;
+		public void setDay(String date) {
+			this.date = date;
 		}
 
 		public Integer getPrice() {
@@ -199,12 +203,98 @@ public class IncomeReportController implements GuiController, Initializable{
 			this.price = price;
 		}
 
-		public Cell(Integer price,Integer visitors , Integer day)
+		public Cell(Integer price,Integer visitors , String date)
     	{
-			this.day = day;
+			this.date = date;
 			this.visitors = visitors;
     		this.price = price;
     	}
+    }
+    
+    class myDate implements Comparable<myDate>
+    {
+    	@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getEnclosingInstance().hashCode();
+			result = prime * result + ((date == null) ? 0 : date.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			myDate other = (myDate) obj;
+			if (!getEnclosingInstance().equals(other.getEnclosingInstance()))
+				return false;
+			if (date == null) {
+				if (other.date != null)
+					return false;
+			} else if (!date.equals(other.date))
+				return false;
+			return true;
+		}
+
+		private String date;
+    	
+    	public String getDate() {
+			return date;
+		}
+
+		public void setDate(String date) {
+			this.date = date;
+		}
+
+		public myDate( String date)
+    	{
+    		this.date = date.trim();
+    	}
+    	
+		@Override
+		public int compareTo(myDate other) 
+		{
+			if(GetYear(date) > GetYear(other.getDate()))
+				return 1;
+			else if(GetYear(date) < GetYear(other.getDate()))
+				return -1;
+			else if(GetMonth(date) > GetMonth(other.getDate()))
+				return 1;
+			else if(GetMonth(date) < GetMonth(other.getDate()))
+				return -1;
+			else if(GetDay(date) > GetDay(other.getDate()))
+				return 1;
+			else if(GetDay(date) < GetDay(other.getDate()))
+				return -1;
+			return 0;
+		}	
+
+		private IncomeReportController getEnclosingInstance() {
+			return IncomeReportController.this;
+		}
+	}
+
+    public static int GetYear(String time)
+    {
+    	String[] arr = time.split(".");;
+    	return Integer.parseInt(arr[2]);
+    }
+    
+    public static int GetMonth(String time)
+    {
+    	String[] arr = time.split(".");;
+    	return Integer.parseInt(arr[1]);
+    }
+    
+    public static int GetDay(String time)
+    {
+    	String[] arr = time.split(".");;
+    	return Integer.parseInt(arr[0]);
     }
 		
 	

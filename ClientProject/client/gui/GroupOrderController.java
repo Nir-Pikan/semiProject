@@ -318,8 +318,9 @@ public class GroupOrderController implements GuiController {
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
+		int numberOfSubscribers = 0; // in a group order this is not relevant
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
-				visitTime, timeOfOrder, isUsed, ownerID);
+				visitTime, timeOfOrder, isUsed, ownerID,numberOfSubscribers);
 		return ord;
 	}
 

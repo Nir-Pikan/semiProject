@@ -51,7 +51,8 @@ public class OrderController implements IController {
 		boolean isCreated = dbController.createTable("orders(parkSite varchar(20),numberOfVisitors int,orderID int,"
 				+ "priceOfOrder FLOAT, email varchar(20),phone varchar(20), type ENUM('PRIVATE','PRIVATEGROUP','GUIDE','FAMILY'),"
 				+ "orderStatus ENUM('CANCEL','IDLE','CONFIRMED','WAITINGLIST','WAITINGLISTMASSAGESENT'),"
-				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN,ownerID varchar(20), primary key(orderID));");
+				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN,ownerID varchar(20),"
+				+ "numberOfSubscribers int, primary key(orderID));");
 		if (isCreated)
 			System.out.println("Table has been created");
 	}
@@ -192,7 +193,7 @@ public class OrderController implements IController {
 				// Print out the values
 				o = new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4), res.getString(5),
 						res.getString(6), IdType.valueOf(res.getString(7)), OrderStatus.valueOf(res.getString(8)),
-						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12));
+						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12),res.getInt(13));
 			}
 			res.close();
 			return o;
@@ -212,7 +213,7 @@ public class OrderController implements IController {
 	 */
 	private boolean AddNewOrder(Order ord) {
 		PreparedStatement ps = dbController
-				.getPreparedStatement("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				.getPreparedStatement("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 		try {
 			ps.setString(1, ord.parkSite);
 			ps.setInt(2, ord.numberOfVisitors);
@@ -226,6 +227,7 @@ public class OrderController implements IController {
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setBoolean(11, ord.isUsed);
 			ps.setString(12, ord.ownerID);
+			ps.setInt(13, ord.numberOfSubscribers);
 
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
@@ -335,7 +337,7 @@ public class OrderController implements IController {
 				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
 						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
 						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
-						res.getBoolean(11), res.getString(12)));
+						res.getBoolean(11), res.getString(12),res.getInt(13)));
 			}
 
 			res.close();
@@ -361,7 +363,7 @@ public class OrderController implements IController {
 				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
 						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
 						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
-						res.getBoolean(11), res.getString(12)));
+						res.getBoolean(11), res.getString(12),res.getInt(13)));
 			}
 
 			res.close();
@@ -388,7 +390,7 @@ public class OrderController implements IController {
 				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
 						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
 						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
-						res.getBoolean(11), res.getString(12)));
+						res.getBoolean(11), res.getString(12), res.getInt(13)));
 
 			res.close();
 		} catch (SQLException e) {
@@ -449,7 +451,7 @@ public class OrderController implements IController {
 		PreparedStatement ps = dbController.getPreparedStatement(
 				"UPDATE orders SET isUsed = ?, parkSite = ? , numberOfVisitors = ?, priceOfOrder = ?,"
 						+ " email = ?, phone = ?,type = ?, orderStatus = ?, visitTime = ?, timeOfOrder = ?,\r\n"
-						+ "ownerID = ?  WHERE orderID = ?");
+						+ "ownerID = ?,numberOfSubscribers = ?, WHERE orderID = ?");
 		try {
 			ps.setBoolean(1, ord.isUsed);
 			ps.setString(2, ord.parkSite);
@@ -463,6 +465,7 @@ public class OrderController implements IController {
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setString(11, ord.ownerID);
 			ps.setLong(12, ord.orderID);
+			ps.setInt(13, ord.numberOfSubscribers);
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -54,7 +54,7 @@ public class EntryController implements IController {
 		String response = null;
 		switch (job) {
 
-		case "getEntriesByDate":
+		case "getEntitiesByDate"://getEntriesByDate
 			Timestamp[] times = ServerRequest.gson.fromJson(request.data, Timestamp[].class);
 			if (times == null || times.length != 2) {
 				response = "Error: There is no 2 times search between ";
@@ -110,8 +110,11 @@ public class EntryController implements IController {
 	 * @return true if succeeded to enter new
 	 */
 	private boolean AddNewEntry(ParkEntry newEntry) {
+		if(dbController==null)
+			dbController = DbController.getInstance();
+		createTable();
 
-		if (newEntry.numberOfSubscribers > newEntry.numberOfVisitors)
+		if (newEntry.numberOfVisitors > newEntry.numberOfVisitors)
 			return false;
 
 		PreparedStatement pstmt = dbController.getPreparedStatement("INSERT INTO parkEntry"
@@ -129,10 +132,13 @@ public class EntryController implements IController {
 			pstmt.setBoolean(8, newEntry.isCasual);
 			pstmt.setFloat(9, newEntry.priceOfOrder);
 			boolean isGroup = newEntry.entryType == EntryType.Group ? true : false;
-			pstmt.setFloat(10, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
-					newEntry.numberOfSubscribers, isGroup));
+			pstmt.setFloat(10,100);//TODO delete and replace
+		//	pstmt.setFloat(10, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
+			//		newEntry.numberOfSubscribers, isGroup));
 
+			
 			park.updateNumberOfCurrentVisitor(newEntry.parkID, newEntry.numberOfVisitors);
+			
 			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -152,25 +158,25 @@ public class EntryController implements IController {
 	private boolean updateExit(String personID) {
 
 		ResultSet rs = dbController
-				.sendQuery("select parkID from parkEntry where personID = " + personID + " AND exitTime is null  ;");
+				.sendQuery("select * from parkEntry where personID = \"" + personID + "\" AND exitTime is null  ;");
 
 		if (rs == null)
 			return false;
 
 		PreparedStatement pstmt = dbController.getPreparedStatement(
-				"UPDATE parkEntry SET exitTime = ? WHERE ( personID = (?) AND exitTime is null  );");
+				"UPDATE parkEntry SET exitTime = ? WHERE  personID = ? AND exitTime is NULL ;");
 		try {
 			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 			pstmt.setTimestamp(1, currentTime);
 			pstmt.setString(2, personID);
-			if (pstmt.executeUpdate() == 1 && rs.next()) {
+			if  (rs.next()) {
 
 				String parkID = rs.getString(3);
 				int numberOfVisitors = rs.getInt(6);
 
 				park.updateNumberOfCurrentVisitor(parkID, -numberOfVisitors);
 				rs.close();
-				return true;
+				return pstmt.executeUpdate()==1;
 
 			}
 			return false;

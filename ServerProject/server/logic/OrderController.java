@@ -88,17 +88,31 @@ public class OrderController implements IController {
 			if (GetOrderByID(ord.orderID) != null) {
 				response = "Order already exists";
 				break;
+			} 
+			// second check if Order Allowed
+			if (!IsOrderAllowed(ord)) { // now this part is duplicated line 103
+				response = "No more orders allowed in this time";
+				break;
+			}
+			// try to add order
+			if (AddNewOrder(ord))    // now this part is duplicated line 103
+				response = "Order was added successfully";
+			else
+				response = "Failed to add Order";
+			break;
+		case "IsOrderAllowed":
+			ord = ServerRequest.gson.fromJson(request.data, Order.class);
+			// first check if order already exists
+			if (GetOrderByID(ord.orderID) != null) {
+				response = "Order already exists";
+				break;
 			}
 			// second check if Order Allowed
 			if (!IsOrderAllowed(ord)) {
 				response = "No more orders allowed in this time";
 				break;
 			}
-			// try to add order
-			if (AddNewOrder(ord))
-				response = "Order was added successfully";
-			else
-				response = "Failed to add Order";
+			response = "Order can be placed"; // not realy necessary
 			break;
 		case "NextOrderID":
 			nextOrderID = NextOrderID();
@@ -233,22 +247,52 @@ public class OrderController implements IController {
 		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
 		int muxPreOrder = 4; // for test only
 		int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
-		Timestamp threeHoursBefor = addTimeInHours(ord.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after visit time
-		Timestamp fourHoursAfter = addTimeInHours(ord.visitTime, AVGvisitTime); // calculate 3 hours before  
+		Timestamp threeHoursBefor = addTimeInHours(ord.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after visit																				// time
+		Timestamp fourHoursAfter = addTimeInHours(ord.visitTime, AVGvisitTime); // calculate 3 hours before
 		try {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
-					"SELECT COUNT(parkSite)\r\n" + " FROM orders \r\n" + " WHERE visitTime >= \"" + threeHoursBefor
-							+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + ord.parkSite + "\";");
+					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + threeHoursBefor
+							+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + ord.parkSite + 
+							"\" && orderStatus <> \"CANCEL\";"); //TODO test this (Roman)
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();
-			if (resInt < muxPreOrder)
+			if (resInt + ord.numberOfVisitors <= muxPreOrder)
 				return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		return false;
+	}
+	
+	//TODO test this
+	/**
+	 * Method only for waiting list 
+	 * @param order
+	 * @param numberOfVisitorsCanceled
+	 * @return
+	 */
+	public boolean IsOrderAllowedWaitingList(Order order, int numberOfVisitorsCanceled) {
+		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
+				int muxPreOrder = 4; // for test only
+				int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
+				Timestamp threeHoursBefor = addTimeInHours(order.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after visit																				// time
+				Timestamp fourHoursAfter = addTimeInHours(order.visitTime, AVGvisitTime); // calculate 3 hours before
+				try {
+					ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
+							"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + threeHoursBefor
+									+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + order.parkSite + 
+									"\" && orderStatus <> \"CANCEL\";"); //TODO test this (Roman)
+					if (ps.next())
+						resInt = ps.getInt(1);
+					ps.close();
+					if (resInt + order.numberOfVisitors - numberOfVisitorsCanceled <= muxPreOrder)
+						return true;
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				return false;
 	}
 
 	public int NextOrderID() {
@@ -333,7 +377,7 @@ public class OrderController implements IController {
 	 * @param ID
 	 * @return Array of Orders
 	 */
-	//TODO should we add more conditions?
+	// TODO should we add more conditions?
 	public Order[] GetOrdersByVisitorID(String ID) {
 		ResultSet res = dbController.sendQuery("SELECT * FROM orders WHERE ownerID =" + ID + "");
 		if (res == null)
@@ -362,7 +406,7 @@ public class OrderController implements IController {
 	 */
 	public boolean CancelOrderByOrderID(int orderID) {
 		PreparedStatement pstmt = dbController
-				.getPreparedStatement("UPDATE orders SET orderStatus = \"CANCEL\" WHERE orderID = ?;");
+				.getPreparedStatement("UPDATE orders SET orderStatus = \"CANCEL\", isUsed = true WHERE orderID = ?;");
 		try {
 			pstmt.setInt(1, orderID);
 			return pstmt.executeUpdate() == 1;
@@ -381,7 +425,8 @@ public class OrderController implements IController {
 	 * @return true if order changed to used, false otherwise
 	 */
 	public boolean SetOrderToIsUsed(int orderID) {
-		PreparedStatement pstmt = dbController.getPreparedStatement("UPDATE orders SET isUsed = true WHERE orderID = ?;");
+		PreparedStatement pstmt = dbController
+				.getPreparedStatement("UPDATE orders SET isUsed = true WHERE orderID = ?;");
 		try {
 			pstmt.setInt(1, orderID);
 			return pstmt.executeUpdate() == 1;
@@ -394,8 +439,9 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Update the order with the same orderID
-	 * DO NOT CAHNGE orderID !!!!!!!!!!!!!!!!!!!!!
+	 * Update the order with the same orderID DO NOT CAHNGE orderID
+	 * !!!!!!!!!!!!!!!!!!!!!
+	 * 
 	 * @param ord
 	 * @return true if the order was updated, false otherwise
 	 */
@@ -431,7 +477,7 @@ public class OrderController implements IController {
 	 * @param orderID
 	 * @return true if Order was found and deleted, false otherwise
 	 */
-	//TODO  check if needed
+	// TODO check if needed
 	public boolean deleteOrder(int orderID) {
 		PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM orders WHERE orderID = ?;");
 		try {

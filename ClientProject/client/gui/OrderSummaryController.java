@@ -9,50 +9,44 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import module.GuiController;
-import module.Navigator;
 import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
-/** the OrderDetails page controller */
-public class OrderDetailsController implements GuiController {
-
+public class OrderSummaryController implements GuiController {
+	
 	private Order order; // to initialize the fields
 
-	@FXML
-	private Button approveBtn;
+    @FXML
+    private Button approveBtn;
 
-	@FXML
-	private Button cancelBtn;
+    @FXML
+    private TextField personIdTxt;
 
-	@FXML
-	private TextField personIdTxt;
+    @FXML
+    private TextField parkNameTxt;
 
-	@FXML
-	private TextField parkNameTxt;
+    @FXML
+    private TextField orderTypeTxt;
 
-	@FXML
-	private TextField orderTypeTxt;
+    @FXML
+    private TextField noOfVisitorsTxt;
 
-	@FXML
-	private TextField noOfVisitorsTxt;
+    @FXML
+    private TextField emailTxt;
 
-	@FXML
-	private TextField emailTxt;
+    @FXML
+    private TextField phoneTxt;
 
-	@FXML
-	private TextField phoneTxt;
+    @FXML
+    private TextField priceTxt;
 
-	@FXML
-	private TextField priceTxt;
+    @FXML
+    private Label orderNoTxt;
 
-	@FXML
-	private Label orderNoTxt;
+    @FXML
+    private TextField noOfSubscribersTxt;
 
-	@FXML
-	private TextField noOfSubscribersTxt;
-
-	/*   maybe someone will use park of this code, if no delete this. This park writed accidentally here its OrderSummary
 	@FXML
 	void ApproveOrder(ActionEvent event) {
 		String response = clientController.client.sendRequestAndResponse(
@@ -61,10 +55,11 @@ public class OrderDetailsController implements GuiController {
 		case "Order was added successfully":
 			PopUp.showInformation("Order placed success", "Order placed success",
 					"Order placed successfully!\n" + "Your Order ID is:\n" + order.orderID);
-			// get a handle to the stage
-		    Stage stage = (Stage) approveBtn.getScene().getWindow();
-		    // do what you have to do
-		    stage.close();
+//			// get a handle to the stage
+//		    Stage stage = (Stage) approveBtn.getScene().getWindow();
+//		    // do what you have to do
+//		    stage.close();
+				//TODO set navigator
 			break;
 		case "Order already exists":
 			PopUp.showInformation("Order already exists", "Order already exists", "Order already exists");
@@ -73,20 +68,6 @@ public class OrderDetailsController implements GuiController {
 			PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
 					"No more orders allowed in this time");
 			break;
-		}
-	}
-
-	@FXML
-	void cancelOrder(ActionEvent event) {
-		Navigator n = Navigator.instance();
-		if (order.type == Order.IdType.PRIVATE) {
-			GuiController g = n.navigate("RegularOrder");
-			System.out.println(order.ownerID);
-			((RegularOrderController) g).addOrderDataToFields(order);
-		}else if(order.type == Order.IdType.GUIDE || order.type == Order.IdType.FAMILY) {
-			GuiController g = n.navigate("GroupOrder");
-			System.out.println(order.ownerID);
-			((GroupOrderController) g).addOrderDataToFields(order);
 		}
 	}
 
@@ -107,5 +88,5 @@ public class OrderDetailsController implements GuiController {
 		phoneTxt.setText(order.phone);
 		priceTxt.setText(String.valueOf(order.priceOfOrder));
 	}
-*/
+
 }

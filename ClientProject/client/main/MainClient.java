@@ -46,7 +46,7 @@ public class MainClient extends Application{
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);
 			Navigator n = Navigator.instance();
-			GuiController g = n.navigate("RegularOrder");
+			GuiController g = n.navigate("SmallGroupOrder");
 			//((ParkManagerParametersUpdateController) g).setPark("1");
 			//new CardReaderMock(new Stage());//TODO put in comment
 		} catch(Exception e) {

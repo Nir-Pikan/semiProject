@@ -12,7 +12,7 @@ public class Order {
 	// Identification Number // not for now
 	public String parkSite;
 	public int numberOfVisitors;
-	public int orderID = 1; // change letter serial number of the order
+	public int orderID = 0; // change letter serial number of the order
 	public float priceOfOrder; // should be calculated
 	public String email, phone;
 	public IdType type;
@@ -21,9 +21,10 @@ public class Order {
 	public Timestamp timeOfOrder;
 	public boolean isUsed; // by default false
 	public String ownerID;
+	public int numberOfSubscribers;
 	
 	public Order(String parkSite, int numberOfVisitors, int orderID, float priceOfOrder, String email, String phone,
-			IdType type, OrderStatus orderStatus, Timestamp visitTime, Timestamp timeOfOrder, boolean isUsed, String ownerID) {
+			IdType type, OrderStatus orderStatus, Timestamp visitTime, Timestamp timeOfOrder, boolean isUsed, String ownerID,int numberOfSubscribers) {
 		super();
 		this.parkSite = parkSite;
 		this.numberOfVisitors = numberOfVisitors;
@@ -37,6 +38,7 @@ public class Order {
 		this.timeOfOrder = timeOfOrder;
 		this.isUsed = isUsed;
 		this.ownerID = ownerID;
+		this.numberOfSubscribers = numberOfSubscribers;
 	}
 
 	

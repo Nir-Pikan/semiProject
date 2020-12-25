@@ -55,10 +55,11 @@ public class OrderSummaryController implements GuiController {
 		case "Order was added successfully":
 			PopUp.showInformation("Order placed success", "Order placed success",
 					"Order placed successfully!\n" + "Your Order ID is:\n" + order.orderID);
-			// get a handle to the stage
-		    Stage stage = (Stage) approveBtn.getScene().getWindow();
-		    // do what you have to do
-		    stage.close();
+//			// get a handle to the stage
+//		    Stage stage = (Stage) approveBtn.getScene().getWindow();
+//		    // do what you have to do
+//		    stage.close();
+				//TODO set navigator
 			break;
 		case "Order already exists":
 			PopUp.showInformation("Order already exists", "Order already exists", "Order already exists");

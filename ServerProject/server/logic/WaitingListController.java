@@ -180,7 +180,7 @@ public class WaitingListController implements IController {
 			if (res.next()) {
 				list.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4), res.getString(5),
 						res.getString(6), IdType.valueOf(res.getString(7)), OrderStatus.valueOf(res.getString(8)),
-						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12)));
+						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12),res.getInt(13)));
 			}
 			res.close();
 
@@ -188,7 +188,7 @@ public class WaitingListController implements IController {
 			e.printStackTrace();
 		}
 		for(Order o : list) {
-			if(order.isOrderAllowedWaitingList(o,canceled.numberOfVisitors))
+			if(order.IsOrderAllowedWaitingList(o,canceled.numberOfVisitors))
 			{//setting the Order to sent message
 			dbController.sendUpdate("UPDATE waitingList SET orderStatus='WAITINGLISTMASSAGESENT' WHARE orderID = "+o.orderID+";");
 				return o;
@@ -223,7 +223,7 @@ public class WaitingListController implements IController {
 			if (res.next()) {
 				o = new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4), res.getString(5),
 						res.getString(6), IdType.valueOf(res.getString(7)), OrderStatus.valueOf(res.getString(8)),
-						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12));
+						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12),res.getInt(13));
 			}
 			res.close();
 			return o;

@@ -5,10 +5,12 @@ package gui;
  */
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
 import entities.ParkEntry;
+import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -83,10 +85,9 @@ public class UsageReportController implements GuiController {
 	 * @apiNote reportDate[0] = from , reportDate[1] = to.
 	 */
 	public void initReport(String parkName, String parkID, Timestamp[] reportDate) {
-		Timestamp current = new Timestamp(System.currentTimeMillis());
-		textDateToday.setText(current.toString());
+		textDateToday.setText(LocalDate.now().toString());
 		textParkName.setText(parkName);
-		textReportDate.setText("from " + reportDate[0].toString() + " to " + reportDate[1].toString());
+		textReportDate.setText("from " + reportDate[0].toLocalDateTime().toLocalDate().toString() + " to " + reportDate[1].toLocalDateTime().toLocalDate().toString());
 
 		// send request to get park entries to clientController
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Entry,
@@ -144,8 +145,9 @@ public class UsageReportController implements GuiController {
 
 			// create all rows
 			for (int i = 0; i < amountOfDays; i++) {
-				String day = i + "." + reportDate[0].toLocalDateTime().getMonth();
-				double usage = ((double) visitorsPerDay[i]) / maxCapacity;
+				String day = i+1 + "." + reportDate[0].toLocalDateTime().getMonth().getValue();
+				ParkNameAndTimes p = clientController.client.openingTimes.get(parkID);
+				double usage = ((double) visitorsPerDay[i]) / (maxCapacity * (p.closeTime - p.openTime)/Double.parseDouble(parkParameters[2]));
 				usage *= 100;
 				UsageRow row = new UsageRow(day, visitorsPerDay[i], usage);
 				rows.add(row);
@@ -159,7 +161,7 @@ public class UsageReportController implements GuiController {
 	/**
 	 * private class to create rows for the usage table
 	 */
-	private class UsageRow {
+	public static class UsageRow {
 		protected String date;
 		protected int visitors;
 		protected double usage;
@@ -169,5 +171,28 @@ public class UsageReportController implements GuiController {
 			this.visitors = visitors;
 			this.usage = usage;
 		}
+
+		/**
+		 * @return the date
+		 */
+		public String getDate() {
+			return date;
+		}
+
+		/**
+		 * @return the visitors
+		 */
+		public int getVisitors() {
+			return visitors;
+		}
+
+		/**
+		 * @return the usage
+		 */
+		public double getUsage() {
+			return usage;
+		}
+		
+		
 	}
 }

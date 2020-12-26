@@ -199,7 +199,7 @@ public class EntryController implements IController {
 		ArrayList<ParkEntry> resultList = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = dbController
-					.getPreparedStatement("select * from parkEntry  where (timestamp(arriveTime) > timestamp( ? )  "
+					.getPreparedStatement("select * from parkEntry  where timestamp(arriveTime) > timestamp( ? )  "
 							+ " and  timestamp(arriveTime) < timestamp( ? ) ;");
 
 			pstmt.setTimestamp(1, fromTime);

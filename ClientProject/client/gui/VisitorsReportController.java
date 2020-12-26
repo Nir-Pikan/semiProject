@@ -1,6 +1,7 @@
 package gui;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import entities.ParkEntry;
 import io.clientController;
@@ -87,13 +88,8 @@ public class VisitorsReportController implements GuiController {
 	 */
 	@FXML
 	void buttonPrint_OnClick(ActionEvent event) {
-		// JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
-		XYChart.Series series1 = new XYChart.Series();
-		series1.setName("Num of visitors");
-		series1.getData().add(new XYChart.Data("Single",10));
-		series1.getData().add(new XYChart.Data("Group",5));
-		series1.getData().add(new XYChart.Data("Subscribers",20));
-		VisitorsChart.getData().add(series1);
+		 JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
+		 
 	}
 
 	/**
@@ -106,10 +102,9 @@ public class VisitorsReportController implements GuiController {
 	 * @apiNote reportDate[0] = from , reportDate[1] = to.
 	 */
 	public void initReport(String parkName, String parkID, Timestamp[] reportDate) {
-		Timestamp current = new Timestamp(System.currentTimeMillis());
-		textDateToday.setText(current.toString());
+		textDateToday.setText(LocalDate.now().toString());
 		textParkName.setText(parkName);
-		textReportDate.setText("from " + reportDate[0].toString() + " to " + reportDate[1].toString());
+		textReportDate.setText("from " + reportDate[0].toLocalDateTime().toLocalDate().toString() + " to " + reportDate[1].toLocalDateTime().toLocalDate().toString());
 
 		// send request to get park entries to clientController
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Entry,
@@ -132,7 +127,7 @@ public class VisitorsReportController implements GuiController {
 			int singleVisitorsCounter = 0;
 			int groupVisitorsCounter = 0;
 			int subscriberVisitorsCounter = 0;
-
+			int totalVisitorsCounter = 0;
 			ParkEntry[] entries = ServerRequest.gson.fromJson(response, ParkEntry[].class);
 
 			// for each entry
@@ -145,22 +140,27 @@ public class VisitorsReportController implements GuiController {
 					if (entry.entryType.equals(ParkEntry.EntryType.Personal)) {
 						singleVisitorsCounter++;
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
+						totalVisitorsCounter+=entry.numberOfVisitors;
 					}
 
 					// subscriber
-					if (entry.entryType.equals(ParkEntry.EntryType.Subscriber))
+					if (entry.entryType.equals(ParkEntry.EntryType.Subscriber)) {
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
+						totalVisitorsCounter+=entry.numberOfVisitors;
+					}
 
 					// group
 					if (entry.entryType.equals(ParkEntry.EntryType.Group)) {
 						groupVisitorsCounter += entry.numberOfVisitors;
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
+						totalVisitorsCounter+=entry.numberOfVisitors;
 					}
 
 					// privateGroup
 					if (entry.entryType.equals(ParkEntry.EntryType.PrivateGroup)) {
 						singleVisitorsCounter += entry.numberOfVisitors;
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
+						totalVisitorsCounter+=entry.numberOfVisitors;
 					}
 				}
 			}
@@ -169,7 +169,7 @@ public class VisitorsReportController implements GuiController {
 			textNumGroupVisitors.setText(String.valueOf(groupVisitorsCounter));
 			textNumSubscriberVisitors.setText(String.valueOf(subscriberVisitorsCounter));
 			textTotalVisitors
-					.setText(String.valueOf(singleVisitorsCounter + groupVisitorsCounter + subscriberVisitorsCounter));
+					.setText(String.valueOf(totalVisitorsCounter));
 
 	
 			//update the bar chart

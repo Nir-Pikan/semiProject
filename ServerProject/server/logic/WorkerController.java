@@ -103,6 +103,7 @@ public class WorkerController implements IController {
 
 	/**
 	 * update the worker log in status in DB
+
 	 * @param workerUserName the worker we want update
 	 * @param status the new status we want to update to
 	 * @return true if success, false otherwise
@@ -119,9 +120,11 @@ public class WorkerController implements IController {
 	 * @param permissions the {@link Permissions} we want to convert
 	 * @return the output String
 	 */
+
 	private String ParsePermissionsToString(Permissions permissions) {
 		String output = permissions.GetParkID();
 		for (Permission permission : permissions.GetPermissions()) {
+
 			output = output + " " + permission.GetName();
 		}
 		return output;

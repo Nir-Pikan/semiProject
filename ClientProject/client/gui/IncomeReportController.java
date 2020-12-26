@@ -135,7 +135,6 @@ public class IncomeReportController implements GuiController, Initializable{
 				income += order.priceOfOrder;
 			}
 			TotalIncome += income;
-				
 			incomeTable.getItems().add(new Cell(income, visitors, date.getDate()));
 		}
     	Timestamp currentTime = new Timestamp(System.currentTimeMillis());

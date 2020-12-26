@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import io.CardReaderController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +26,9 @@ public class CardReaderSystem implements Initializable{
     private TextField CardNumTextField;
 
     @FXML
+    private TextField NoPeopleTextField;
+    
+    @FXML
     private Button ReadButton;
 
     @FXML
@@ -31,6 +36,9 @@ public class CardReaderSystem implements Initializable{
 
     @FXML
     private TableColumn<Card, String> IDCol;
+
+    @FXML
+    private TableColumn<Card, Integer> NumberOfPeopleCol;
 
     @FXML
     private Label AckLabel;
@@ -42,7 +50,7 @@ public class CardReaderSystem implements Initializable{
     private Button VisitorEnterButton;
     
     private CardReaderController cardReaderController;
-    
+    private ObservableList<Card> data =FXCollections.observableArrayList();
     public void setController(CardReaderController cardReaderController) {
     	this.cardReaderController = cardReaderController;
     }
@@ -52,15 +60,25 @@ public class CardReaderSystem implements Initializable{
     @FXML
     void ReadCardID(ActionEvent event) {
     	String cardNum = CardNumTextField.getText(); // read the number from the TextFiled
-    	Card card = new Card(cardNum);
-    	CardsTableView.getItems().add(card);
+    	String numberOfPeopleString= NoPeopleTextField.getText();
+    	int numberOfPeople = Integer.valueOf(numberOfPeopleString);
+    	Card card = new Card(cardNum,numberOfPeople);
+    	data.add(card);
+    	CardsTableView.setItems(data);
     }
     
 
     @FXML
     void VisitorEnterToThePark(ActionEvent event) {
     	Card selectedItem = CardsTableView.getSelectionModel().getSelectedItem();
+    	
+    	cardReaderController.enterVisitor(selectedItem.getCard(), selectedItem.getNumberOfPeople());
     	//cardReaderController.enterVisitor(selectedItem.getCard()); //method enterVisitor need to be implemented 
+    	
+    	
+    	
+    	
+    	
     }
    
   
@@ -69,7 +87,7 @@ public class CardReaderSystem implements Initializable{
     void VisitorExitsFromPark(ActionEvent event) {
 		Card selectedItem = CardsTableView.getSelectionModel().getSelectedItem();
 		CardsTableView.getItems().remove(selectedItem);
-		//cardReaderController.exitVisitor(selectedItem.getCard()); //method exitVisitor need to be implemented 
+		cardReaderController.exitVisitor(selectedItem.getCard()); //method exitVisitor need to be implemented 
     }
     
 
@@ -84,7 +102,12 @@ public class CardReaderSystem implements Initializable{
     
     @Override
 	public void initialize(URL arg0, ResourceBundle arg1) { // needed for appropriate working of TableView
+    	
+    	CardsTableView.setEditable(true);
 		IDCol.setCellValueFactory(new PropertyValueFactory<Card,String>("card"));
+		NumberOfPeopleCol.setCellValueFactory(new PropertyValueFactory<Card, Integer>("numberOfPeople"));
+	//	CardsTableView.getColumns().addAll(IDCol, NumberOfPeopleCol);
+		cardReaderController=new CardReaderController();
 	}
     
     

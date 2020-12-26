@@ -46,11 +46,10 @@ public class LoginController implements GuiController
 	private CheckBox cbUserWorker;
 	
 
+	/** when clicking on the user/worker check box hide/reveal wanted fields */
 	@FXML
-	void UserWorkerCheckBox(ActionEvent event) 
-	{
-		if (cbUserWorker.isSelected()) 
-		{
+	void UserWorkerCheckBox(ActionEvent event) {
+		if (cbUserWorker.isSelected()) {
 			visitorLoginForm.setManaged(false);
 			visitorLoginForm.setVisible(false);
 			workerLoginForm.setManaged(true);
@@ -102,7 +101,8 @@ public class LoginController implements GuiController
 		}
 		PopUp.showError("Error", "Faild to identify", "Please check the input:\nID: 9 digit number\nSubscriber ID: need to start with 'S'");
 	}
-	
+
+
 	//return true if success to log in the subscriber
 	private boolean LoginSubscriber(String subscriberID, String ErrorMessageForPopUp, boolean needPopUpForFail)
 	{

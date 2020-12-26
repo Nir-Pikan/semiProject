@@ -95,7 +95,7 @@ public class IncomeReportController implements GuiController, Initializable{
      * @param parkName
      * @param reportStartAndEndTimes: [0]: start, [1]: end 
      */ 
-    public IncomeReportController(String parkName, Timestamp[] reportStartAndEndTimes)            
+    public void initReport(String parkName, Timestamp[] reportStartAndEndTimes)            
     {
     	this.reportStartAndEndTimes = reportStartAndEndTimes;
     	this.parkName = parkName;

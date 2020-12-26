@@ -19,6 +19,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import module.GuiController;
+import module.JavafxPrinter;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
@@ -69,7 +70,7 @@ public class UsageReportController implements GuiController {
 
 	@FXML
 	void printButton_OnClick(ActionEvent event) {
-		// JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
+		JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
 	}
 
 	/**

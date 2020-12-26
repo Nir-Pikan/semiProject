@@ -86,7 +86,7 @@ public class CancelReportController implements GuiController{
      * @param parkName
      * @param reportStartAndEndTimes: [0]: start, [1]: end 
      */ 
-    public CancelReportController(String parkName, Timestamp[] reportStartAndEndTimes)            
+    public void initReport(String parkName, Timestamp[] reportStartAndEndTimes)            
     {
     	this.reportStartAndEndTimes = reportStartAndEndTimes;
     	this.parkName = parkName;	

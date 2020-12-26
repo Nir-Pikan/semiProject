@@ -16,7 +16,7 @@ public class DbController implements IDbController {
 	private static DbController instance = null;
 	
 	private static final String dbHost = "localhost";
-	private static final String dbSchemeName = "new_schema";
+	private static final String dbSchemeName = "parkdb";
 	private static final String dbUser = "root";
 	private static final String dbPass = "Aa123456"; 
 	

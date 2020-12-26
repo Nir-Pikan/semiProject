@@ -50,6 +50,7 @@ public class WaitingListController implements IController {
 				 WakeableThread myThread = (WakeableThread )cur;
 				 handelCancel(newVal, myThread);
 				 currentCancelation.remove(myThread);//finish with the cancellation
+				 order.canceled.remove(newVal);
 				});
 			 currentCancelation.put(t, newVal);
 			});

@@ -28,11 +28,11 @@ import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the RegularOrder page controller */
-public class RegularOrderController implements GuiController{
+public class RegularOrderController implements GuiController {
 
 	// the hours when the parks is working
 
-	private Order o;
+	private Order ord;
 
 	@FXML
 	private ComboBox<String> Park_ComboBox;
@@ -78,7 +78,7 @@ public class RegularOrderController implements GuiController{
 		// maybe better to show only relevant hours if today date was selected
 		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00");
 		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
-		
+
 		// ===================== delete later ===========================
 		Phone_textBox.setText("0545518526");
 		Email_textBox.setText("mirage164@gmail.com");
@@ -133,6 +133,7 @@ public class RegularOrderController implements GuiController{
 			ParkSelectionNote.setText("* Please choose park");
 			return false;
 		}
+		Park_ComboBox.getStyleClass().remove("error");
 		ParkSelectionNote.setText("*");
 		return true;
 	}
@@ -150,6 +151,7 @@ public class RegularOrderController implements GuiController{
 			DateSelecionNote.setText("* Please select date");
 			return false;
 		}
+		Date_DatePicker.getStyleClass().remove("error");
 		DateSelecionNote.setText("*");
 		return true;
 	}
@@ -168,12 +170,14 @@ public class RegularOrderController implements GuiController{
 			VisitorHourNote.setText("* Please select hour");
 			return false;
 		}
+		VisitHour_ComboBox.getStyleClass().remove("error");
 		VisitorHourNote.setText("*");
 		return true;
 	}
 
 	/**
 	 * Check if the email address is filled in appropriate form
+	 * 
 	 * @return ture if email address was filled in appropriate form, false otherwise
 	 */
 	private boolean CheckEmail() {
@@ -201,10 +205,13 @@ public class RegularOrderController implements GuiController{
 		EmailNote.setText("*");
 		return true;
 	}
-/**
- * Check if the phone number is filled in appropriate form 
- * @return return true if id phone number filled in appropriate form, false otherwise
- */
+
+	/**
+	 * Check if the phone number is filled in appropriate form
+	 * 
+	 * @return return true if id phone number filled in appropriate form, false
+	 *         otherwise
+	 */
 	private boolean CheckPhoneNumber() {
 		String phoneNumber = Phone_textBox.getText();
 
@@ -236,20 +243,15 @@ public class RegularOrderController implements GuiController{
 		PhoneNote.setText("*");
 		return true;
 	}
-/**
- * Listener that responsible for PlaceOrder button
- * @param event that send a request of new order to the DB through OrderController and get the answer from OrderController
- */
-	@FXML
-	void PlaceOrder_Button_Clicked(ActionEvent event) {
-		if (CheckAllRequiredFields())
-			System.out.println("Pass");
-		else
-			System.out.println("No Pass");
 
-		o = createOrderDetails();
+	/**
+	 * Listener that responsible for PlaceOrder button
+	 * 
+	 * @param event that send a request of new order to the DB through
+	 *              OrderController and get the answer from OrderController
+	 */
 
-		// in a case you want to see the order that been initialized
+	// in a case you want to see the order that been initialized
 //		System.out.println(o.parkSite);
 //		System.out.println(o.numberOfVisitors);
 //		System.out.println(o.orderID);
@@ -274,77 +276,104 @@ public class RegularOrderController implements GuiController{
 
 //		String response = clientController.client.sendRequestAndResponse(
 //				new ServerRequest(Manager.Order, "AddNewOrder", ServerRequest.gson.toJson(o, Order.class)));
-//		String response = clientController.client
-//				.sendRequestAndResponse(new ServerRequest(Manager.Order, "GetOrderByVisitorID", "323533744"));
-
-//		o.orderID = 3;
 //		String response = clientController.client.sendRequestAndResponse(
-//				new ServerRequest(Manager.Order, "UpdateOrder", ServerRequest.gson.toJson(o, Order.class)));
+//				new ServerRequest(Manager.Order, "CancelOrderByOrderID", ServerRequest.gson.toJson(1, Integer.class)));
 
-		// write into the DB
-		String response = clientController.client.sendRequestAndResponse(
-				new ServerRequest(Manager.Order, "AddNewOrder", ServerRequest.gson.toJson(o, Order.class)));
 
-		switch (response) {
-		case "Order was added successfully":
-			PopUp.showInformation("Order placed success", "Order placed success",
-					"Order placed successfully!\n" + "Your Order ID is:\n" + o.orderID);
+	// write into the DB
+//		String response = clientController.client.sendRequestAndResponse(
+//				new ServerRequest(Manager.Order, "AddNewOrder", ServerRequest.gson.toJson(o, Order.class)));
 
-			// after registration return to home page and forget the history
-			// Navigator.instance().clearHistory(); // go to the summary page
-			// !!!!!!!!!!!!!!!!
-			break;
+	@FXML
+	void PlaceOrder_Button_Clicked(ActionEvent event) {
+		if (CheckAllRequiredFields()) {
+			ord = createOrderDetails();
+			
+//			String response = clientController.client.sendRequestAndResponse(
+//			new ServerRequest(Manager.Order, "SetOrderToIsUsed", ServerRequest.gson.toJson(11, Integer.class)));
+			String response = clientController.client.sendRequestAndResponse(
+					new ServerRequest(Manager.Order, "IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
+			//TODO remove all the not necessary cases after integration (Roman)
+			switch (response) {
+			case "Order was added successfully":
+				PopUp.showInformation("Order placed success", "Order placed success",
+						"Order placed successfully!\n" + "Your Order ID is:\n" + ord.orderID);
+				break;
 
-		case "Order was not found":
-			PopUp.showInformation("Order was not found", "Order was not found", "No such order exists");
-			break;
+			case "Order was not found":
+				PopUp.showInformation("Order was not found", "Order was not found", "No such order exists");
+				break;
 
-		case "Failed to add Order":
-			PopUp.showInformation("Order failed", "Order failed", "Order faild!");
-			break;
+			case "Failed to add Order":
+				PopUp.showInformation("Order failed", "Order failed", "Order faild!");
+				break;
 
-		case "Order already exists":
-			PopUp.showInformation("Order already exists", "Order already exists", "Order already exists");
-			break;
-		case "No more orders allwed in this time":
-			PopUp.showInformation("The park is full at this time and date", "The park is full at this time and date",
-					"The park is full at this time and date");
-		case "Owner with this ID is not found":
-			PopUp.showInformation("Owner not exists", "Owner not exists!", "Owner with this ID not exists");
-			break;
-		case "Failed to cancel an order":
-			PopUp.showInformation("Failed to cancel an order", "Failed to cancel an order",
-					"Failed to cancel an order");
-			break;
-		case "No more orders allowed in this time":
-			PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
-					"No more orders allowed in this time");
-			break;
-		case "Order Canceled":
-			PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");
-			break;
-		case "Order seted as used":
-			PopUp.showInformation("Order seted as used", "Order seted as used", "Order seted as used");
-			break;
-		case "Failed to set order as used":
-			PopUp.showInformation("Failed to set order as used", "Failed to set order as used",
-					"Failed to set order as used");
-			break;
-		case "Order updated":
-			PopUp.showInformation("Order updated", "Order updated", "Order updated");
-			break;
-		case "Failed to update order":
-			PopUp.showInformation("Failed to update order", "Failed to update order", "Failed to update order");
-			break;
-		case "Error: No such job":
-			PopUp.showInformation("Unexpected error", "Unexpected error!", "server returned an unexpected response");
+			case "Order already exists":
+				PopUp.showInformation("Order already exists", "Order already exists", "Order already exists");
+				break;
+			case "Owner with this ID is not found":
+				PopUp.showInformation("Owner not exists", "Owner not exists!", "Owner with this ID not exists");
+				break;
+			case "Failed to cancel an order":
+				PopUp.showInformation("Failed to cancel an order", "Failed to cancel an order",
+						"Failed to cancel an order");
+				break;
+			case "No more orders allowed in this time":
+				PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
+						"No more orders allowed in this time");
+				break;
+			case "Order Canceled":
+				PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");
+				break;
+			case "Order seted as used":
+				PopUp.showInformation("Order seted as used", "Order seted as used", "Order seted as used");
+				break;
+			case "Failed to set order as used":
+				PopUp.showInformation("Failed to set order as used", "Failed to set order as used",
+						"Failed to set order as used");
+				break;
+			case "Order updated":
+				PopUp.showInformation("Order updated", "Order updated", "Order updated");
+				break;
+			case "Failed to update order":
+				PopUp.showInformation("Failed to update order", "Failed to update order", "Failed to update order");
+				break;
+			case "Order can be placed":
+				PopUp.showInformation("Order can be placed", "Order can be placed", "Order can be placed");
+				MoveToTheNextPage(ord);
+				break;
+			case "Error: No such job":
+				PopUp.showInformation("Unexpected error", "Unexpected error!",
+						"server returned an unexpected response");
+			}
 		}
 
 	}
-/**
- * Create Order Entity from the fields that was willed by the user on a GUI
- * @return return the Order Entity that was created
- */
+
+	private void MoveToTheNextPage(Order ord) {
+		Navigator n = Navigator.instance();
+		GuiController g = n.navigate("OrderSummary");
+		((OrderSummaryController) g).addOrderDataToFields(ord);
+	}
+
+	public void addOrderDataToFields(Order order) {
+		ord = order;
+		initFields(ord);
+	}
+
+	private void initFields(Order order) {
+		Park_ComboBox.setValue(order.parkSite);
+		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());
+		VisitHour_ComboBox.setValue(order.visitTime.getHours() + ":" + order.visitTime.getMinutes() + "0");
+		Email_textBox.setText(order.email);
+		Phone_textBox.setText(order.phone);
+	}
+
+	/**
+	 * Create Order Entity from the fields that was willed by the user on a GUI
+	 * 
+	 * @return return the Order Entity that was created
+	 */
 	private Order createOrderDetails() {
 		String parkName = Park_ComboBox.getValue();
 		LocalDate date = Date_DatePicker.getValue();
@@ -361,11 +390,17 @@ public class RegularOrderController implements GuiController{
 		String email = Email_textBox.getText();
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
-		String ownerID = "323533745"; //TODO the real ownerID will be provided from previous page (popUp)
-		Order o = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
-				visitTime, timeOfOrder, isUsed, ownerID);
-		return o;
+		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
+//		int numberOfSubscribers = isSubscriber(); 
+		int numberOfSubscribers = 0; // for test
+		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
+				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		return ord;
 	}
+	
+//	private boolean isSubscriber() {
+//		return clientController.logedInSunscriber != null;
+//	}
 
 // how when and why???????????????????????????????????????????????? where is the button, give me the BUTTON!!!!! ????????????????????????????
 	public void setSpontaneous(String ordererId) {

@@ -1,21 +1,24 @@
 package gui;
 
+import java.time.LocalDate;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 import module.GuiController;
 
 /** the SmallGroupOrder page controller */
-public class SmallGroupOrderController implements GuiController{
-
+public class SmallGroupOrderController implements GuiController {
 
 	private int visitorsCounter = 1;
-	
+
 	@FXML
 	private ComboBox<String> Park_ComboBox;
 
@@ -62,10 +65,32 @@ public class SmallGroupOrderController implements GuiController{
 		VisitHour_ComboBox.getItems().clear(); // for what? maybe not necessary
 		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
 		// last enter time should be 12:00 ?
-		VisitHour_ComboBox.getItems().addAll("8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30",
-				"12:00"/* , "12:30", "13:00","13:30", "14:00", "14:30", "15:00", "15:30", "16:00" */);
+		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00");
 		// CardTypeComboBox.getSelectionModel().select(0);
 		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
+
+		// ===================== delete later ===========================
+		Phone_textBox.setText("0545518526");
+		Email_textBox.setText("mirage164@gmail.com");
+		// =============================================================
+
+		// set only relevant dates
+		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
+			@Override
+			public DateCell call(final DatePicker param) {
+				return new DateCell() {
+					@Override
+					public void updateItem(LocalDate item, boolean empty) {
+						super.updateItem(item, empty);
+						LocalDate today = LocalDate.now();
+						setDisable(empty || item.compareTo(today) < 0);
+					}
+
+				};
+			}
+
+		};
+		Date_DatePicker.setDayCellFactory(callB);
 	}
 
 	private boolean CheckAllRequiredFields() {
@@ -85,19 +110,19 @@ public class SmallGroupOrderController implements GuiController{
 			ParkNote.setText("please choose park");
 			return false;
 		}
+		Park_ComboBox.getStyleClass().remove("error");
 		ParkNote.setText("*");
 		return true;
 	}
 
 	private boolean CheckDateSelection() {
 		if (Date_DatePicker.getValue() == null) {
-			if (!Date_DatePicker.getStyleClass().contains("error")) // is it a CSS property that don't declared for date
-																	// picker?
-				Date_DatePicker.getStyleClass().add("error"); // is it a CSS property that don't declared for date
-																// picker?
+			if (!Date_DatePicker.getStyleClass().contains("error"))
+				Date_DatePicker.getStyleClass().add("error");
 			DateNote.setText("* Please select date");
 			return false;
 		}
+		Date_DatePicker.getStyleClass().remove("error");
 		DateNote.setText("*");
 		return true;
 	}
@@ -167,23 +192,20 @@ public class SmallGroupOrderController implements GuiController{
 			VisitorHourNote.setText("* Please select hour");
 			return false;
 		}
+		VisitHour_ComboBox.getStyleClass().remove("error");
 		VisitorHourNote.setText("*");
 		return true;
 	}
 
 	@FXML
-	void AddVisitor_Button_Clicked(ActionEvent event) {		// could the visitor be for different parks? time? date ?
+	void AddVisitor_Button_Clicked(ActionEvent event) { // could the visitor be for different parks? time? date ?
 		if (CheckAllRequiredFields()) {
 			System.out.println("Visitor Edded");
 			String telephone = Phone_textBox.getText();
 			// add to listViewVisitors
 			listViewVisitors.getItems().add("visitor #" + visitorsCounter++ + " " + "(" + telephone + ")");
-		}
-			
-		else
+		} else
 			System.out.println("Visitor not Edded");
-		
-		
 	}
 
 	@FXML

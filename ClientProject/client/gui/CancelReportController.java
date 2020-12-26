@@ -81,6 +81,13 @@ public class CancelReportController implements GuiController{
     private Timestamp[] reportStartAndEndTimes;
     private String parkName;
     
+    
+    @FXML
+    void buttonPrint_OnClick(ActionEvent event) 
+    {
+    	
+    }
+    
     /**
      * impotant Notice:
      * @param parkName
@@ -90,12 +97,15 @@ public class CancelReportController implements GuiController{
     {
     	this.reportStartAndEndTimes = reportStartAndEndTimes;
     	this.parkName = parkName;	
+    	createReport();	
     }  
     
-    @FXML
-    void buttonPrint_OnClick(ActionEvent event) 
+    void createReport() 
     {
-    	ServerRequest serverRequest = new ServerRequest(Manager.Order, "GetAllListOfOrders", "");
+    	String[] _requestData = {ServerRequest.gson.toJson(reportStartAndEndTimes[0], Timestamp.class),
+    			ServerRequest.gson.toJson(reportStartAndEndTimes[1], Timestamp.class), parkName};
+    	String requestData = ServerRequest.gson.toJson(_requestData, String[].class);
+    	ServerRequest serverRequest = new ServerRequest(Manager.Order, "GetOrderListForDate", requestData);
     	String response = clientController.client.sendRequestAndResponse(serverRequest);
     	Order[] allOrders = ServerRequest.gson.fromJson(response, Order[].class);
     	if(allOrders == null)
@@ -133,7 +143,7 @@ public class CancelReportController implements GuiController{
     
     private void AnalyzeOrder(Order order)
     {
-    	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())) || !isTimeInRangeOfStartAndEndTime(order.visitTime))
+    	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())))
     			return; 
     	TotalOrders++;		
     	if( order.orderStatus.equals(OrderStatus.CANCEL) || order.orderStatus.equals(OrderStatus.SEMICANCELED))
@@ -142,11 +152,6 @@ public class CancelReportController implements GuiController{
     		NotCanceledNotUsed++;
     	else
   		   used++; 	   
-    }
-    
-    private boolean isTimeInRangeOfStartAndEndTime(Timestamp time)
-    {
-    	return time.before(reportStartAndEndTimes[1]) && time.after(reportStartAndEndTimes[0]);
     }
 
 }

@@ -90,6 +90,13 @@ public class IncomeReportController implements GuiController, Initializable{
     private Timestamp[] reportStartAndEndTimes;
     private String parkName;
     
+    
+    @FXML
+    void buttonPrint_OnClick(ActionEvent event)
+    {
+    	
+    }
+    
     /**
      * impotant Notice:
      * @param parkName
@@ -99,13 +106,16 @@ public class IncomeReportController implements GuiController, Initializable{
     {
     	this.reportStartAndEndTimes = reportStartAndEndTimes;
     	this.parkName = parkName;
+    	createReport();
     }
     
-    @FXML
-    void buttonPrint_OnClick(ActionEvent event)
+    void createReport()
     {
     	TotalIncome = 0;
-    	ServerRequest serverRequest = new ServerRequest(Manager.Order, "GetAllListOfOrders", "");
+    	String[] _requestData = {ServerRequest.gson.toJson(reportStartAndEndTimes[0], Timestamp.class),
+    			ServerRequest.gson.toJson(reportStartAndEndTimes[1], Timestamp.class), parkName};
+    	String requestData = ServerRequest.gson.toJson(_requestData, String[].class);
+    	ServerRequest serverRequest = new ServerRequest(Manager.Order, "GetOrderListForDate", requestData);
     	String response = clientController.client.sendRequestAndResponse(serverRequest);
     	Order[] allOrders = ServerRequest.gson.fromJson(response, Order[].class);
     	if(allOrders == null)
@@ -153,16 +163,11 @@ public class IncomeReportController implements GuiController, Initializable{
     
     private boolean ValidOrderToReport(Order order)
     {
-      	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())) || !isTimeInRangeOfStartAndEndTime(order.visitTime))
+      	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())))
 			return false; 		
 	    if( order.orderStatus.equals(OrderStatus.CANCEL) || order.orderStatus.equals(OrderStatus.SEMICANCELED))
 	    	return false; 
 	    return true;
-    }
-    
-    private boolean isTimeInRangeOfStartAndEndTime(Timestamp time)
-    {
-    	return time.before(reportStartAndEndTimes[1]) && time.after(reportStartAndEndTimes[0]);
     }
     
     @Override

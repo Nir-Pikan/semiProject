@@ -78,8 +78,9 @@ public class WaitingListController implements IController {
 		// hope no bug is will be found
 		boolean isCreated = dbController.createTable("waitingList(parkSite varchar(20),numberOfVisitors int,orderID int,"
 				+ "priceOfOrder FLOAT, email varchar(20),phone varchar(20), type ENUM('PRIVATE','PRIVATEGROUP','GUIDE','FAMILY'),"
-				+ "orderStatus ENUM('CANCEL','SEMICANCEL','IDLE','CONFIRMED','WAITINGLIST','WAITINGLISTMASSAGESENT'),"
-				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN,ownerID varchar(20), primary key(orderID));");
+				+ "orderStatus ENUM('CANCEL','IDLE','CONFIRMED','WAITINGLIST','WAITINGLISTMASSAGESENT'),"
+				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN,ownerID varchar(20),"
+				+ "numberOfSubscribers int, primary key(orderID));");
 		if (isCreated)
 			System.out.println("Table has been created");
 	}
@@ -111,7 +112,7 @@ public class WaitingListController implements IController {
 	
 	private boolean AddNewOrderTowaitingList(Order ord) {
 		PreparedStatement ps = dbController
-				.getPreparedStatement("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				.getPreparedStatement("INSERT INTO waitingList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 		try {
 			ps.setString(1, ord.parkSite);
 			ps.setInt(2, ord.numberOfVisitors);
@@ -119,12 +120,14 @@ public class WaitingListController implements IController {
 			ps.setFloat(4, ord.priceOfOrder);
 			ps.setString(5, ord.email);
 			ps.setString(6, ord.phone);
-			ps.setString(7, ord.type.toString()); 
-			ps.setString(8, ord.orderStatus.toString());
+			ps.setString(7, ord.type.toString()); // can be stored as enum ?
+			ps.setString(8, ord.orderStatus.toString()); // can be stored as enum ?
 			ps.setTimestamp(9, ord.visitTime);
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setBoolean(11, ord.isUsed);
 			ps.setString(12, ord.ownerID);
+			ps.setInt(13, ord.numberOfSubscribers);
+
 
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
@@ -184,11 +187,11 @@ public class WaitingListController implements IController {
 			e.printStackTrace();
 		}
 		for(Order o : list) {
-//			if(order.isOrderAllowedWaitingList(o,canceled.numberOfVisitors)
-//			{//settimg the Order to sent message
-//			dbController.sendUpdate("UPDATE waitingList SET orderStatus='WAITINGLISTMASSAGESENT' WHARE orderID = "+o.orderID+";");
-//				return o;
-//		}
+			if(order.isOrderAllowedWaitingList(o,canceled.numberOfVisitors))
+			{//setting the Order to sent message
+			dbController.sendUpdate("UPDATE waitingList SET orderStatus='WAITINGLISTMASSAGESENT' WHARE orderID = "+o.orderID+";");
+				return o;
+		}
 //			TODO remove after creation of method
 		}
 		return null;

@@ -76,6 +76,7 @@ public class RegularOrderController implements GuiController {
 		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
 		// last enter time should be 12:00 ?
 		// maybe better to show only relevant hours if today date was selected
+		// TODO decide the entring hours
 		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00");
 		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
 
@@ -178,7 +179,7 @@ public class RegularOrderController implements GuiController {
 	/**
 	 * Check if the email address is filled in appropriate form
 	 * 
-	 * @return ture if email address was filled in appropriate form, false otherwise
+	 * @return true if email address was filled in appropriate form, false otherwise
 	 */
 	private boolean CheckEmail() {
 		String email = Email_textBox.getText();
@@ -279,21 +280,24 @@ public class RegularOrderController implements GuiController {
 //		String response = clientController.client.sendRequestAndResponse(
 //				new ServerRequest(Manager.Order, "CancelOrderByOrderID", ServerRequest.gson.toJson(1, Integer.class)));
 
-
 	// write into the DB
 //		String response = clientController.client.sendRequestAndResponse(
 //				new ServerRequest(Manager.Order, "AddNewOrder", ServerRequest.gson.toJson(o, Order.class)));
 
+	/**
+	 * when Place Order button clicked checks if this order can be booked 
+	 * @param event
+	 */
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
 			ord = createOrderDetails();
-			
+
 //			String response = clientController.client.sendRequestAndResponse(
 //			new ServerRequest(Manager.Order, "SetOrderToIsUsed", ServerRequest.gson.toJson(11, Integer.class)));
 			String response = clientController.client.sendRequestAndResponse(
 					new ServerRequest(Manager.Order, "IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
-			//TODO remove all the not necessary cases after integration (Roman)
+			// TODO remove all the not necessary cases after integration (Roman)
 			switch (response) {
 			case "Order was added successfully":
 				PopUp.showInformation("Order placed success", "Order placed success",
@@ -360,7 +364,12 @@ public class RegularOrderController implements GuiController {
 		ord = order;
 		initFields(ord);
 	}
-
+	
+	/**
+	 * initialize fields by Order entity 
+	 * 
+	 * @param order
+	 */
 	private void initFields(Order order) {
 		Park_ComboBox.setValue(order.parkSite);
 		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());
@@ -391,16 +400,17 @@ public class RegularOrderController implements GuiController {
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
-//		int numberOfSubscribers = isSubscriber(); 
-		int numberOfSubscribers = 0; // for test
+		int numberOfSubscribers = isSubscriber(); 
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
 	}
-	
-//	private boolean isSubscriber() {
-//		return clientController.logedInSunscriber != null;
-//	}
+
+	private int isSubscriber() {
+		if (clientController.logedInSunscriber.getVal() != null)
+			return 1;
+		return 0;
+	}
 
 // how when and why???????????????????????????????????????????????? where is the button, give me the BUTTON!!!!! ????????????????????????????
 	public void setSpontaneous(String ordererId) {

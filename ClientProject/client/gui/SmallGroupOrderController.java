@@ -262,7 +262,7 @@ public class SmallGroupOrderController implements GuiController {
 			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
 					"Please enter appropriate ID");
 		} else if (visitorsIDArray.contains(ordererId) || visitorsIDArray.contains("S" + ordererId) || visitorsIDArray.contains(ordererId.substring(1,ordererId.length())) ) {
-			PopUp.showInformation("This ID already in added", "This ID already in added", "This ID already in added");
+			PopUp.showInformation("This ID already is added", "This ID already is added", "This ID already is added");
 		} else {
 			visitorsIDArray.add(ordererId);
 			System.out.println("Visitor Edded");

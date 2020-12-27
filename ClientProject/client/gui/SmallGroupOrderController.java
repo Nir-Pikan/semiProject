@@ -1,7 +1,13 @@
 package gui;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import entities.Order;
+import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,11 +19,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import module.GuiController;
+import module.Navigator;
+import module.PopUp;
+import modules.ServerRequest;
+import modules.ServerRequest.Manager;
 
 /** the SmallGroupOrder page controller */
 public class SmallGroupOrderController implements GuiController {
 
 	private int visitorsCounter = 1;
+	private List<String> visitorsIDArray = new ArrayList<String>();
+	Order ord;
 
 	@FXML
 	private ComboBox<String> Park_ComboBox;
@@ -199,20 +211,134 @@ public class SmallGroupOrderController implements GuiController {
 
 	@FXML
 	void AddVisitor_Button_Clicked(ActionEvent event) { // could the visitor be for different parks? time? date ?
+		String ordererId = PopUp.getUserInput("private Group Order", "enter Id of the orderer", "id or subscriberId :");
+		if (CheckID(ordererId)) {
+			visitorsIDArray.add(ordererId);
+			System.out.println(ordererId);
 		if (CheckAllRequiredFields()) {
 			System.out.println("Visitor Edded");
 			String telephone = Phone_textBox.getText();
 			// add to listViewVisitors
-			listViewVisitors.getItems().add("visitor #" + visitorsCounter++ + " " + "(" + telephone + ")");
+			listViewVisitors.getItems().add("visitor #" + visitorsCounter++ + " " + "(" + ordererId + ")");
 		} else
 			System.out.println("Visitor not Edded");
+		}
+		else
+			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID", "Please enter appropriate ID");
+	}
+
+	private boolean CheckID(String ID) {
+		if ((!ID.matches("([0-9])+") || ID.length() != 9) && (!ID.matches("S([0-9])+")|| ID.length() != 10)) {
+			return false;
+		}
+		return true;
 	}
 
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
+		if (CheckAllRequiredFields()) {
+			ord = createOrderDetails();
+
+			String response = clientController.client.sendRequestAndResponse(
+					new ServerRequest(Manager.Order, "IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
+			// TODO remove all the not necessary cases after integration (Roman)
+			switch (response) {
+			case "Order was added successfully":
+				PopUp.showInformation("Order placed success", "Order placed success",
+						"Order placed successfully!\n" + "Your Order ID is:\n" + ord.orderID);
+				break;
+
+			case "Order was not found":
+				PopUp.showInformation("Order was not found", "Order was not found", "No such order exists");
+				break;
+
+			case "Failed to add Order":
+				PopUp.showInformation("Order failed", "Order failed", "Order faild!");
+				break;
+
+			case "Order already exists":
+				PopUp.showInformation("Order already exists", "Order already exists", "Order already exists");
+				break;
+			case "Owner with this ID is not found":
+				PopUp.showInformation("Owner not exists", "Owner not exists!", "Owner with this ID not exists");
+				break;
+			case "Failed to cancel an order":
+				PopUp.showInformation("Failed to cancel an order", "Failed to cancel an order",
+						"Failed to cancel an order");
+				break;
+			case "No more orders allowed in this time":
+				PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
+						"No more orders allowed in this time");
+				break;
+			case "Order Canceled":
+				PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");
+				break;
+			case "Order seted as used":
+				PopUp.showInformation("Order seted as used", "Order seted as used", "Order seted as used");
+				break;
+			case "Failed to set order as used":
+				PopUp.showInformation("Failed to set order as used", "Failed to set order as used",
+						"Failed to set order as used");
+				break;
+			case "Order updated":
+				PopUp.showInformation("Order updated", "Order updated", "Order updated");
+				break;
+			case "Failed to update order":
+				PopUp.showInformation("Failed to update order", "Failed to update order", "Failed to update order");
+				break;
+			case "Order can be placed":
+				PopUp.showInformation("Order can be placed", "Order can be placed", "Order can be placed");
+				MoveToTheNextPage(ord);
+				break;
+			case "Error: No such job":
+				PopUp.showInformation("Unexpected error", "Unexpected error!",
+						"server returned an unexpected response");
+			}
+		}
 
 	}
 
+	private void MoveToTheNextPage(Order ord) {
+		Navigator n = Navigator.instance();
+		GuiController g = n.navigate("OrderSummary");
+		((OrderSummaryController) g).addOrderDataToFields(ord);
+	}
+
+	private Order createOrderDetails() {
+		String parkName = Park_ComboBox.getValue();
+		LocalDate date = Date_DatePicker.getValue();
+		int visitHour = Integer.parseInt(VisitHour_ComboBox.getValue().split(":")[0]);
+		Timestamp visitTime = Timestamp.valueOf(date.atTime(LocalTime.of(visitHour, 0)));
+		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
+		int numberOfVisitors = visitorsCounter;
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
+		int orderID = ServerRequest.gson.fromJson(response, Integer.class);
+		int priceOfOrder = 100; // for now, need to be calculated by other controller
+		boolean isUsed = false; // by default
+		Order.IdType type = Order.IdType.PRIVATEGROUP;
+		String email = Email_textBox.getText();
+		String phone = Phone_textBox.getText();
+		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
+		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
+		int numberOfSubscribers = NumberOfSubscribers(); // in a group order this is not relevant
+		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
+				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		return ord;
+	}
+
+	private int NumberOfSubscribers() {
+		int res = 0;
+		for (String i : visitorsIDArray) {
+			String response = clientController.client.sendRequestAndResponse(
+					new ServerRequest(Manager.Subscriber, "GetSubscriberData", i));
+			if (!response.contains("was not found"))
+				res++;
+		}
+		return res;
+	}
+
+	// TODO setSpontaneous need to be implemented but how??
 	public void setSpontaneous(String ordererId) {
 		// TODO Auto-generated method stub
 

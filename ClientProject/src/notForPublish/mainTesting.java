@@ -29,7 +29,7 @@ public class mainTesting extends Application{
 			Scene scene = new Scene(root);
 			MainScreenController cont = loader.getController();
 			primaryStage.setScene(scene);
-			Pane p =cont.init();
+			Pane p =cont.initTesting();
 			primaryStage.show(); 
 			root.getStylesheets().add(LoginController.class.getResource("style.css").toString());
 			Navigator.init(p);
@@ -39,14 +39,14 @@ public class mainTesting extends Application{
 //			GuiController g = n.navigate("SmallGroupOrder");
 //			GuiController g = n.navigate("GroupOrder");
 //			GuiController g = n.navigate("OrderDetails");
-			GuiController g = n.navigate("RegularOrder.fxml");
+//			GuiController g = n.navigate("RegularOrder.fxml");
 //			GuiController g = n.navigate("RegisterAddCreditCard");
 //			GuiController g = n.navigate("RegisterSummary");
 //			GuiController g = n.navigate("VisitorsInThePark");
 //			GuiController g = n.navigate("NewTimeSelection");
 //			GuiController g = n.navigate("ReportExport");
 //			PopUp.showCostumContent("visitor report", "VisitorsReport.fxml");
-//			PopUp.showCostumContent("usage report", "UsageReport.fxml");
+			PopUp.showCostumContent("usage report", "UsageReport.fxml");
 //			PopUp.showCostumContent("income report", "IncomeReport.fxml");
 //			PopUp.showCostumContent("entries report", "EntryReport.fxml");
 //			PopUp.showCostumContent("cancels report", "CancelReport.fxml");

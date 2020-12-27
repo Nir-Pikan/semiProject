@@ -18,8 +18,8 @@ import modules.Property;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
-/** the Login page controller */
-public class LoginController implements GuiController {
+public class LoginController implements GuiController 
+{
 
 	@FXML
 	private GridPane visitorLoginForm;
@@ -40,16 +40,16 @@ public class LoginController implements GuiController {
 	private TextField txtUsername;
 
 	@FXML
-	private PasswordField txtPassword;
+    private PasswordField txtPassword;
 
 	@FXML
 	private CheckBox cbUserWorker;
+	
 
 	/** when clicking on the user/worker check box hide/reveal wanted fields */
 	@FXML
 	void UserWorkerCheckBox(ActionEvent event) {
 		if (cbUserWorker.isSelected()) {
-
 			visitorLoginForm.setManaged(false);
 			visitorLoginForm.setVisible(false);
 			workerLoginForm.setManaged(true);
@@ -101,6 +101,8 @@ public class LoginController implements GuiController {
 		}
 		PopUp.showError("Error", "Faild to identify", "Please check the input:\nID: 9 digit number\nSubscriber ID: need to start with 'S'");
 	}
+
+
 	//return true if success to log in the subscriber
 	private boolean LoginSubscriber(String subscriberID, String ErrorMessageForPopUp, boolean needPopUpForFail)
 	{

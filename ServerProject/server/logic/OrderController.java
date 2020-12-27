@@ -18,6 +18,7 @@ import entities.Subscriber.Type;
 import io.DbController;
 import mail.MyMail;
 import modules.IController;
+import modules.ObservableList;
 import modules.ServerRequest;
 
 public class OrderController implements IController {
@@ -29,8 +30,10 @@ public class OrderController implements IController {
 	private MessageController messageC; 
 	private SubscriberController subscriber;
 	private DiscountController discount;
-
+	
 	private DbController dbController;
+	
+	public ObservableList<Order> canceled; // list of canceled Orders
 
 	public OrderController(ParkController park, MessageController messageC, SubscriberController subscriber,
 			DiscountController discount) {
@@ -40,6 +43,7 @@ public class OrderController implements IController {
 		this.discount = discount;
 		dbController = DbController.getInstance();
 		createTable();
+		canceled = new ObservableList<Order>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -239,7 +243,7 @@ public class OrderController implements IController {
 	 * @param Order to write in the DB
 	 * @return boolean did the function succeed or not
 	 */
-	private boolean AddNewOrder(Order ord) {
+	public boolean AddNewOrder(Order ord) {
 		PreparedStatement ps = dbController
 				.getPreparedStatement("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 		try {
@@ -444,6 +448,7 @@ public class OrderController implements IController {
 	 * @return true if order canceled, false otherwise
 	 */
 	public boolean CancelOrderByOrderID(int orderID) {
+		canceled.add(GetOrderByID(orderID));//add order to canceled list
 		PreparedStatement pstmt = dbController
 				.getPreparedStatement("UPDATE orders SET orderStatus = \"CANCEL\", isUsed = true WHERE orderID = ?;");
 		try {

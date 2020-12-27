@@ -58,7 +58,7 @@ public class OrderController implements IController {
 			System.out.println("Table has been created");
 	}
 
-	/**
+	/**<pre>
 	 * GetOrderByID - returns an Order by ID if the Order exists in the DB
 	 * 
 	 * AddNewOrder - add a new order to the DB .
@@ -80,7 +80,7 @@ public class OrderController implements IController {
 	 * UpdateOrder - Updates all the fields of Order entity with the same orderID,
 	 * how to use: get the Order from DB change all fields you want BUT NOT THE orderID! and send the new Order to this function
 	 * PLEASE use this function ONLY if realy necessary. Don't use it for example to set status of Order to used.
-	 * 
+	 * </pre>
 	 */
 	@Override
 	public String handleRequest(ServerRequest request) {

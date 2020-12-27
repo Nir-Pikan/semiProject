@@ -11,8 +11,8 @@ public class MessageController {
 		
 	}
 	/** Send Email Popup window for SMS**/
-	public void SendEmailAndSMS(String destinationMail,String cellPhoneNum, String massageContent, String subject) { // add also phone number! String
-		mailService.SendEmailAndSMS(destinationMail,cellPhoneNum, massageContent, subject);
+	public void SendEmailAndSMS(String destinationMail,String cellPhoneNum, String messageContent, String subject) { // add also phone number! String
+		mailService.SendEmailAndSMS(destinationMail,cellPhoneNum, messageContent, subject);
 	}
 
 }

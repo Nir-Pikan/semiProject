@@ -179,7 +179,7 @@ public class RegularOrderController implements GuiController {
 	/**
 	 * Check if the email address is filled in appropriate form
 	 * 
-	 * @return ture if email address was filled in appropriate form, false otherwise
+	 * @return true if email address was filled in appropriate form, false otherwise
 	 */
 	private boolean CheckEmail() {
 		String email = Email_textBox.getText();
@@ -284,6 +284,10 @@ public class RegularOrderController implements GuiController {
 //		String response = clientController.client.sendRequestAndResponse(
 //				new ServerRequest(Manager.Order, "AddNewOrder", ServerRequest.gson.toJson(o, Order.class)));
 
+	/**
+	 * when Place Order button clicked checks if this order can be booked 
+	 * @param event
+	 */
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
@@ -360,7 +364,12 @@ public class RegularOrderController implements GuiController {
 		ord = order;
 		initFields(ord);
 	}
-
+	
+	/**
+	 * initialize fields by Order entity 
+	 * 
+	 * @param order
+	 */
 	private void initFields(Order order) {
 		Park_ComboBox.setValue(order.parkSite);
 		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());

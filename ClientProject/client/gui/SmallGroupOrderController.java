@@ -8,6 +8,8 @@ import java.util.List;
 
 import entities.Order;
 import io.clientController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -27,8 +29,9 @@ import modules.ServerRequest.Manager;
 /** the SmallGroupOrder page controller */
 public class SmallGroupOrderController implements GuiController {
 
-	private int visitorsCounter = 1;
+	private int visitorsCounter = 0;
 	private List<String> visitorsIDArray = new ArrayList<String>();
+	ObservableList<String> stringList;
 	Order ord;
 
 	@FXML
@@ -70,22 +73,25 @@ public class SmallGroupOrderController implements GuiController {
 	@FXML
 	private Label PhoneNote;
 
+	@FXML
+	private Button RemoveVisitor_Button;
+
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear(); // for what? maybe not necessary
-		Park_ComboBox.getItems().addAll("#1", "#2", "#3");
+		Park_ComboBox.getItems().addAll("#1", "#2", "#3"); //TODO get the real names from DB (Roman)
 		VisitHour_ComboBox.getItems().clear(); // for what? maybe not necessary
 		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
 		// last enter time should be 12:00 ?
-		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00");
+		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00"); //TODO maybe will be changed (Roman)
 		// CardTypeComboBox.getSelectionModel().select(0);
-		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
 
 		// ===================== delete later ===========================
-		Phone_textBox.setText("0545518526");
+		Phone_textBox.setText("0545518526"); //TODO delete this later  (Roman)
 		Email_textBox.setText("mirage164@gmail.com");
 		// =============================================================
-
+		stringList = FXCollections.observableArrayList(visitorsIDArray);
+		listViewVisitors.setItems(stringList);
 		// set only relevant dates
 		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
 			@Override
@@ -104,7 +110,13 @@ public class SmallGroupOrderController implements GuiController {
 		};
 		Date_DatePicker.setDayCellFactory(callB);
 	}
+	// TODO Remove visitor button length problem
 
+	/**
+	 * Check if all the fields was filled correctly
+	 * 
+	 * @return return true if all the fields are correct, false otherwise
+	 */
 	private boolean CheckAllRequiredFields() {
 		boolean res = true;
 		res &= CheckParkSelection();
@@ -114,7 +126,12 @@ public class SmallGroupOrderController implements GuiController {
 		res &= CheckPhoneNumber();
 		return res;
 	}
-
+	
+	/**
+	 * Check that park site was chosen
+	 * 
+	 * @return true if field is not empty, false otherwise
+	 */
 	private boolean CheckParkSelection() {
 		if (Park_ComboBox.getSelectionModel().isEmpty()) {
 			if (!Park_ComboBox.getStyleClass().contains("error"))
@@ -127,6 +144,12 @@ public class SmallGroupOrderController implements GuiController {
 		return true;
 	}
 
+	/**
+	 * Check if date was selected Only relevant dates are can be chosen, no need to
+	 * check if the date is relevant
+	 * 
+	 * @return return true if the field is not empty, false otherwise
+	 */
 	private boolean CheckDateSelection() {
 		if (Date_DatePicker.getValue() == null) {
 			if (!Date_DatePicker.getStyleClass().contains("error"))
@@ -139,6 +162,11 @@ public class SmallGroupOrderController implements GuiController {
 		return true;
 	}
 
+	/**
+	 * Check if the email address is filled in appropriate form
+	 * 
+	 * @return true if email address was filled in appropriate form, false otherwise
+	 */
 	private boolean CheckEmail() {
 		String email = Email_textBox.getText();
 
@@ -165,6 +193,12 @@ public class SmallGroupOrderController implements GuiController {
 		return true;
 	}
 
+	/**
+	 * Check if the phone number is filled in appropriate form
+	 * 
+	 * @return return true if id phone number filled in appropriate form, false
+	 *         otherwise
+	 */
 	private boolean CheckPhoneNumber() {
 		String phoneNumber = Phone_textBox.getText();
 
@@ -197,6 +231,13 @@ public class SmallGroupOrderController implements GuiController {
 		return true;
 	}
 
+	// TODO Check also the hour if the date that was chosen is today
+	/**
+	 * Check if hour of a visit was selected DONT CHECK IF THE HOUR IS NOT RELEVANT
+	 * IF TODAY WAS CHOSEN
+	 * 
+	 * @return
+	 */
 	private boolean CheckVisitorHour() {
 		if (VisitHour_ComboBox.getValue() == null) {
 			if (!VisitHour_ComboBox.getStyleClass().contains("error"))
@@ -209,31 +250,59 @@ public class SmallGroupOrderController implements GuiController {
 		return true;
 	}
 
+/**
+ * when Add Visitor button clicked the method checks if the ID is entered properly and add the ID to a ListView
+ * @param event
+ */
 	@FXML
 	void AddVisitor_Button_Clicked(ActionEvent event) { // could the visitor be for different parks? time? date ?
 		String ordererId = PopUp.getUserInput("private Group Order", "enter Id of the orderer", "id or subscriberId :");
-		if (CheckID(ordererId)) {
-			visitorsIDArray.add(ordererId);
-			System.out.println(ordererId);
-		if (CheckAllRequiredFields()) {
-			System.out.println("Visitor Edded");
-			String telephone = Phone_textBox.getText();
-			// add to listViewVisitors
-			listViewVisitors.getItems().add("visitor #" + visitorsCounter++ + " " + "(" + ordererId + ")");
-		} else
-			System.out.println("Visitor not Edded");
-		}
-		else
-			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID", "Please enter appropriate ID");
-	}
 
+		if (!CheckID(ordererId)) {
+			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
+					"Please enter appropriate ID");
+		} else if (visitorsIDArray.contains(ordererId) || visitorsIDArray.contains("S" + ordererId) || visitorsIDArray.contains(ordererId.substring(1,ordererId.length())) ) {
+			PopUp.showInformation("This ID already in added", "This ID already in added", "This ID already in added");
+		} else {
+			visitorsIDArray.add(ordererId);
+			System.out.println("Visitor Edded");
+			visitorsCounter++;
+			listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + ordererId + ")");
+			PlaceOrder_Button.setDisable(false);
+			RemoveVisitor_Button.setDisable(false);
+		}
+	}
+/**
+ * When Remove Visitor button clicked remove visitors ID from ListView
+ * @param event
+ */
+	@FXML
+	void RemoveVisitor_Button_Clicked(ActionEvent event) {
+		int index = listViewVisitors.getSelectionModel().getSelectedIndex();
+		if (index == -1) {
+			System.out.println("NOTHING SELECTED!"); //TODO delete latter
+		} else {
+			stringList.remove(listViewVisitors.getSelectionModel().getSelectedItem());
+			visitorsIDArray.remove(index);
+			visitorsCounter--;
+		}
+
+	}
+/**
+ * Checks if the ID is from a type of 9 numbers or S and 9 numbers
+ * @param ID
+ * @return true if ID entered as expected, false otherwise
+ */
 	private boolean CheckID(String ID) {
-		if ((!ID.matches("([0-9])+") || ID.length() != 9) && (!ID.matches("S([0-9])+")|| ID.length() != 10)) {
+		if ((!ID.matches("([0-9])+") || ID.length() != 9) && (!ID.matches("S([0-9])+") || ID.length() != 10)) {
 			return false;
 		}
 		return true;
 	}
-
+/**
+ * When Place Order button clicked the method checks if the Order can be booked 
+ * @param event
+ */
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
@@ -303,7 +372,10 @@ public class SmallGroupOrderController implements GuiController {
 		GuiController g = n.navigate("OrderSummary");
 		((OrderSummaryController) g).addOrderDataToFields(ord);
 	}
-
+/**
+ * Creates Order entity by the data that was entered from GUI 
+ * @return
+ */
 	private Order createOrderDetails() {
 		String parkName = Park_ComboBox.getValue();
 		LocalDate date = Date_DatePicker.getValue();
@@ -326,12 +398,18 @@ public class SmallGroupOrderController implements GuiController {
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
 	}
-
+/**
+ * For each ID that was added, checks if the ID is subscriber. (no matters if S was is a first char)
+ * @return
+ */
 	private int NumberOfSubscribers() {
 		int res = 0;
+		String response = null;
 		for (String i : visitorsIDArray) {
-			String response = clientController.client.sendRequestAndResponse(
-					new ServerRequest(Manager.Subscriber, "GetSubscriberData", i));
+			if (!i.contains("S"))
+				i = "S" + i; // check if this ID without S is also a subscriber
+			response = clientController.client
+					.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", i));
 			if (!response.contains("was not found"))
 				res++;
 		}

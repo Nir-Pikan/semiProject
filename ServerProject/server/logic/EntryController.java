@@ -54,7 +54,7 @@ public class EntryController implements IController {
 		String response = null;
 		switch (job) {
 
-		case "getEntitiesByDate":
+		case "getEntriesByDate":
 			Timestamp[] times = ServerRequest.gson.fromJson(request.data, Timestamp[].class);
 			if (times == null || times.length != 2) {
 				response = "Error: There is no 2 times search between ";
@@ -194,7 +194,7 @@ public class EntryController implements IController {
 		ArrayList<ParkEntry> resultList = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = dbController
-					.getPreparedStatement("select * from parkEntry  where (timestamp(arriveTime) > timestamp( ? )  "
+					.getPreparedStatement("select * from parkEntry  where timestamp(arriveTime) > timestamp( ? )  "
 							+ " and  timestamp(arriveTime) < timestamp( ? ) ;");
 
 			pstmt.setTimestamp(1, fromTime);

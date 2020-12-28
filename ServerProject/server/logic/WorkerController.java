@@ -1,6 +1,7 @@
 package logic;
 
 import java.sql.ResultSet;
+
 import entities.Permission;
 import entities.Permissions;
 import entities.Worker;

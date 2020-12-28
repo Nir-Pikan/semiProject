@@ -4,16 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 import entities.DiscountEntity;
 import entities.Order;
 import entities.Order.IdType;
-import entities.Subscriber;
 import io.DbController;
 import modules.IController;
 import modules.ServerRequest;

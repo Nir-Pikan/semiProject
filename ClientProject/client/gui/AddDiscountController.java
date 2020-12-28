@@ -2,8 +2,6 @@ package gui;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 import entities.DiscountEntity;
 import io.clientController;

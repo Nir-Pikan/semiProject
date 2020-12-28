@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.xml.internal.ws.api.databinding.MappingInfo;
-
 import entities.Permission;
 import entities.Subscriber;
 import entities.Worker;
@@ -17,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import module.JavafxPrinter;
 import module.Navigator;
 
 /** the MainScreen page controller */

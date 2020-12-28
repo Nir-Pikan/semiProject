@@ -3,10 +3,6 @@ package entities;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-
 /**
  * a class containing the data of a single discount
  */

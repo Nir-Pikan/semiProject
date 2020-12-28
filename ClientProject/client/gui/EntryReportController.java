@@ -2,29 +2,19 @@ package gui;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.TreeMap;
 
-import com.sun.javafx.image.impl.IntArgb;
-
-import entities.DiscountEntity;
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
 import io.clientController;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import module.GuiController;
 import module.PopUp;
 import modules.ServerRequest;

@@ -6,14 +6,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.DiscountEntity;
 import entities.Park;
 import entities.ParkNameAndTimes;
 import entities.PendingValueChangeRequest;
 import entities.PendingValueChangeRequest.ParkAttribute;
 import io.DbController;
 import io.IDbController;
-import io.ServerController;
 import modules.IController;
 import modules.ServerRequest;
 

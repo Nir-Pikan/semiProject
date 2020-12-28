@@ -394,8 +394,7 @@ public class RegularOrderController implements GuiController {
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
-		int numberOfSubscribers = 0;
-		//int numberOfSubscribers = isSubscriber(); 
+		int numberOfSubscribers = isSubscriber(); 
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;

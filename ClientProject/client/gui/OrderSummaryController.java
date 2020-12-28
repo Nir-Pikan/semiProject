@@ -83,7 +83,7 @@ public class OrderSummaryController implements GuiController {
 		parkNameTxt.setText(order.parkSite);
 		orderTypeTxt.setText(order.type.toString());
 		noOfVisitorsTxt.setText(String.valueOf(order.numberOfVisitors));
-		noOfSubscribersTxt.setText("0"); // change later
+		noOfSubscribersTxt.setText(String.valueOf(order.numberOfSubscribers)); 
 		emailTxt.setText(order.email);
 		phoneTxt.setText(order.phone);
 		priceTxt.setText(String.valueOf(order.priceOfOrder));

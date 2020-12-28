@@ -265,7 +265,7 @@ public class SmallGroupOrderController implements GuiController {
 			PopUp.showInformation("This ID already is added", "This ID already is added", "This ID already is added");
 		} else {
 			visitorsIDArray.add(ordererId);
-			System.out.println("Visitor Edded");
+			PopUp.showInformation("Visitor Edded","Visitor Edded","Visitor Edded"); // TODO maybe delete
 			visitorsCounter++;
 			listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + ordererId + ")");
 			PlaceOrder_Button.setDisable(false);
@@ -276,17 +276,19 @@ public class SmallGroupOrderController implements GuiController {
  * When Remove Visitor button clicked remove visitors ID from ListView
  * @param event
  */
-	@FXML
+	@FXML //TODO disable buttons when they dont needed
 	void RemoveVisitor_Button_Clicked(ActionEvent event) {
 		int index = listViewVisitors.getSelectionModel().getSelectedIndex();
 		if (index == -1) {
-			System.out.println("NOTHING SELECTED!"); //TODO delete latter
-		} else {
+			System.out.println("NOTHING SELECTED!"); //TODO PopUp
+			return;
+		} else if(index == 0) {
+			PlaceOrder_Button.setDisable(true);
+			RemoveVisitor_Button.setDisable(true);
+		}
 			stringList.remove(listViewVisitors.getSelectionModel().getSelectedItem());
 			visitorsIDArray.remove(index);
 			visitorsCounter--;
-		}
-
 	}
 /**
  * Checks if the ID is from a type of 9 numbers or S and 9 numbers
@@ -402,7 +404,7 @@ public class SmallGroupOrderController implements GuiController {
  * For each ID that was added, checks if the ID is subscriber. (no matters if S was is a first char)
  * @return
  */
-	private int NumberOfSubscribers() {
+	private int NumberOfSubscribers() { //TODO make it work
 		int res = 0;
 		String response = null;
 		for (String i : visitorsIDArray) {

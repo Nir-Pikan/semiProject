@@ -400,17 +400,18 @@ public class RegularOrderController implements GuiController {
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
-		int numberOfSubscribers = isSubscriber(); 
+		int numberOfSubscribers = 0;
+		//int numberOfSubscribers = isSubscriber(); 
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
 	}
 
-	private int isSubscriber() {
-		if (clientController.logedInSunscriber.getVal() != null)
-			return 1;
-		return 0;
-	}
+//	private int isSubscriber() {
+//		if (clientController.logedInSunscriber.getVal() != null)
+//			return 1;
+//		return 0;
+//	}
 
 // how when and why???????????????????????????????????????????????? where is the button, give me the BUTTON!!!!! ????????????????????????????
 	public void setSpontaneous(String ordererId) {

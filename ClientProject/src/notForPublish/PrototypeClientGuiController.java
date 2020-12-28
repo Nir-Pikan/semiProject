@@ -6,10 +6,8 @@ import entities.Visitor;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import modules.ServerRequest;
-import modules.ServerRequest.Manager;
 
 public class PrototypeClientGuiController {
 

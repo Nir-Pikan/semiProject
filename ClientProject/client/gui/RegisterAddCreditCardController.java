@@ -5,13 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import entities.Subscriber;
-import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,8 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
 import module.Navigator;
-import modules.ServerRequest;
-import modules.ServerRequest.Manager;
 
 /** the RegisterAddCreditCard page controller */
 public class RegisterAddCreditCardController implements GuiController {

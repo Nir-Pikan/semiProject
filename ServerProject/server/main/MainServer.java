@@ -2,9 +2,6 @@ package main;
 
 import gui.ServerGuiController;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -35,8 +32,12 @@ public class MainServer extends Application {
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			    @Override
 			    public void handle(WindowEvent event) {
-			    	if(ServerGuiController.isServerRunning == true)//if the server is running do not close window
+			    	if(ServerGuiController.isServerRunning == true) {//if the server is running do not close window
 			    		event.consume();
+			    	}else {
+			    		System.exit(0);
+			    	}
+			    		
 			    }
 			});
 			

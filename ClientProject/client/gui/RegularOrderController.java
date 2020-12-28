@@ -3,14 +3,8 @@ package gui;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
-
-import com.google.gson.Gson;
 
 import entities.Order;
-import entities.Subscriber;
-import entities.Order.IdType;
-import entities.Order.OrderStatus;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -407,11 +401,12 @@ public class RegularOrderController implements GuiController {
 		return ord;
 	}
 
-//	private int isSubscriber() {
-//		if (clientController.logedInSunscriber.getVal() != null)
-//			return 1;
-//		return 0;
-//	}
+
+	private int isSubscriber() {
+		if (clientController.client.logedInSunscriber.getVal() != null)
+			return 1;
+		return 0;
+	}
 
 // how when and why???????????????????????????????????????????????? where is the button, give me the BUTTON!!!!! ????????????????????????????
 	public void setSpontaneous(String ordererId) {

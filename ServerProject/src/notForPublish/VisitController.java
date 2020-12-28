@@ -8,7 +8,6 @@ import entities.Visitor;
 import io.DbController;
 import modules.IController;
 import modules.ServerRequest;
-import ocsf.server.ConnectionToClient;
 
 //TODO example not to publish
 public class VisitController implements IController {

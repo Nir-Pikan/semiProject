@@ -1,6 +1,7 @@
 package logic;
 
 import java.sql.ResultSet;
+
 import entities.Permission;
 import entities.Permissions;
 import entities.Worker;
@@ -16,6 +17,8 @@ public class WorkerController implements IController {
 	public WorkerController() {
 		dbController = DbController.getInstance();
 		createTable();
+		
+		dbController.sendUpdate("UPDATE worker SET isLogged=false WHERE username<>\"\"");//disconnect all clients
 	}
 
 	/**
@@ -30,14 +33,14 @@ public class WorkerController implements IController {
 	}
 
 	/**
-	 * Request: 1. (request.job = LogInWorker), (request.data = userName password (seprated by space)) 
+	 * Request: 1. (request.job = LogInWorker), (request.data = [userName , password])as String[] 
 	 * Request: 2. (request.job = LogOutWorker), (request.data = userName)
 	 */
 	@Override
 	public String handleRequest(ServerRequest request)
     {
 		if (request.job.equals("LogInWorker")) {
-			String[] parameters = request.data.split(" ");
+			String[] parameters = ServerRequest.gson.fromJson(request.data, String[].class);
 			String userName = parameters[0];
 			String password = parameters[1];
 			Worker worker = LogInWorker(userName, password);

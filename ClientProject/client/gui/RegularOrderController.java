@@ -407,7 +407,7 @@ public class RegularOrderController implements GuiController {
 	}
 
 	private int isSubscriber() {
-		if (clientController.logedInSunscriber.getVal() != null)
+		if (clientController.client.logedInSunscriber.getVal() != null)
 			return 1;
 		return 0;
 	}

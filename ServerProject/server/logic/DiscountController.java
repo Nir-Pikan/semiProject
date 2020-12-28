@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import entities.DiscountEntity;
+import entities.Order;
+import entities.Order.IdType;
 import entities.Subscriber;
 import io.DbController;
 import modules.IController;
@@ -61,11 +63,20 @@ public class DiscountController implements IController {
 			break;
 		// TODO Michael
 		case "CalculatePriceForEntryByOrder": // to orderController
-
+			 Order order =ServerRequest.gson.fromJson(request.data, Order.class);
+			 if(order==null) {
+				 response = "Failed to Calculate Price of Order got Null";
+			 }
+			 else {
+				float price = CalculatePriceForEntryByOrder(order.numberOfVisitors,order.numberOfSubscribers,order.type==IdType.GUIDE,order.timeOfOrder);
+				response=ServerRequest.gson.toJson(discounts, Float.class);
+			 }
 			break;
 
-		// TODO Michael
+		// TODO Michael need to implement
 		case "CalculatePriceForEntryCasual":// to entryController
+		
+			
 			break;
 
 		case "AddNewDiscount":

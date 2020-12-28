@@ -36,15 +36,15 @@ public class MyMail {
 	}
 
 	/** send Mail and SMS as Pop up window. return true if mail sending succeeded **/
-	public boolean SendEmailAndSMS(String destinationMail,String cellPhoneNum, String massageContent, String subject) {
-		infoBox("subject: " + subject + "\n\n" +massageContent, "SMS send", "SMS sent to : "+ cellPhoneNum); //use cell phone number as a header (only for vision)
+	public boolean SendEmailAndSMS(String destinationMail,String cellPhoneNum, String messageContent, String subject) {
+		infoBox("subject: " + subject + "\n\n" +messageContent, "SMS send", "SMS sent to : "+ cellPhoneNum); //use cell phone number as a header (only for vision)
 		if(!isValidEmailAddress(destinationMail))
 			return false;  // if destination Mail address is invalid return false
-		return SendEmaill(destinationMail, massageContent, subject);
+		return SendEmaill(destinationMail, messageContent, subject);
 		
 	}
 
-	private boolean SendEmaill(String destinationMail, String massageContent, String subject) { 
+	private boolean SendEmaill(String destinationMail, String messageContent, String subject) { 
 		
 		try {
 			// Create a default MimeMessage object.
@@ -59,7 +59,7 @@ public class MyMail {
 			message.setSubject(subject);
 
 			// Now set the actual message
-			message.setText(massageContent);
+			message.setText(messageContent);
 			// Send message
 			Transport.send(message);
 			System.out.println("Sent message successfully...."); //TODO remove later (Roman)

@@ -1,6 +1,8 @@
 package io;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import entities.ParkNameAndTimes;
 import entities.Subscriber;
@@ -26,7 +28,7 @@ public class clientController extends AbstractClient {
 	public static clientController client = null;
 
 	// common data
-	public ParkNameAndTimes[] openingTimes;
+	public Map<String,ParkNameAndTimes> openingTimes;
 	public String[] parkNames;
 	public Property<Worker> logedInWorker = new Property<>();
 	public Property<Subscriber> logedInSunscriber = new Property<>();
@@ -47,10 +49,13 @@ public class clientController extends AbstractClient {
 		// save the names and opening hours for all of the parks
 
 		String response = sendRequestAndResponse(new ServerRequest(Manager.Park, "get all parks data", ""));
-		openingTimes = ServerRequest.gson.fromJson(response, ParkNameAndTimes[].class);
-		parkNames = new String[openingTimes.length];
-		for (int i = 0; i < openingTimes.length; i++) {
-			parkNames[i] = openingTimes[i].parkID;// ParkID for key
+		ParkNameAndTimes[] tmp = ServerRequest.gson.fromJson(response, ParkNameAndTimes[].class);
+		openingTimes = new HashMap<String, ParkNameAndTimes>();
+		for(ParkNameAndTimes p : tmp)
+			openingTimes.put(p.parkID, p);
+		parkNames = new String[tmp.length];
+		for (int i = 0; i < tmp.length; i++) {
+			parkNames[i] = tmp[i].parkID;// ParkID for key
 		}
 	}
 

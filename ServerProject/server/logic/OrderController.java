@@ -16,7 +16,9 @@ import entities.Order.IdType;
 import entities.Order.OrderStatus;
 import entities.Subscriber.Type;
 import io.DbController;
+import mail.MyMail;
 import modules.IController;
+import modules.ObservableList;
 import modules.ServerRequest;
 
 public class OrderController implements IController {
@@ -25,11 +27,13 @@ public class OrderController implements IController {
 	private int closeHour = 16; // take the data from DB
 	private int AVGvisitTime = 4; // take the data from DB
 	private ParkController park;
-	private MessageController messageC; // TODO send a mail if order placed
+	private MessageController messageC; 
 	private SubscriberController subscriber;
 	private DiscountController discount;
-
+	
 	private DbController dbController;
+	
+	public ObservableList<Order> canceled; // list of canceled Orders
 
 	public OrderController(ParkController park, MessageController messageC, SubscriberController subscriber,
 			DiscountController discount) {
@@ -39,6 +43,7 @@ public class OrderController implements IController {
 		this.discount = discount;
 		dbController = DbController.getInstance();
 		createTable();
+		canceled = new ObservableList<Order>();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -51,11 +56,36 @@ public class OrderController implements IController {
 		boolean isCreated = dbController.createTable("orders(parkSite varchar(20),numberOfVisitors int,orderID int,"
 				+ "priceOfOrder FLOAT, email varchar(20),phone varchar(20), type ENUM('PRIVATE','PRIVATEGROUP','GUIDE','FAMILY'),"
 				+ "orderStatus ENUM('CANCEL','IDLE','CONFIRMED','WAITINGLIST','WAITINGLISTMASSAGESENT'),"
-				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN,ownerID varchar(20), primary key(orderID));");
+				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN,ownerID varchar(20),"
+				+ "numberOfSubscribers int, primary key(orderID));");
 		if (isCreated)
 			System.out.println("Table has been created");
 	}
 
+	/**<pre>
+	 * GetOrderByID - returns an Order by ID if the Order exists in the DB
+	 * 
+	 * AddNewOrder - add a new order to the DB .
+	 * IsOrderAllowed - checks if order can be booked(is park is not full) my checking the number of orders that exists
+	 * in a DB for that park in this time range.
+	 * 
+	 * NextOrderID - generates the orderID of a next order.
+	 * 
+	 * GetOrderListForDate - returns Orders in that range of time in specific park.
+	 * 
+	 * GetAllListOfOrders - returns all the orders from DB.
+	 * 
+	 * GetOrderByVisitorID - get Order by ID of an owner (ownerID).
+	 * 
+	 * CancelOrderByOrderID - set isUsed field of an Order entity to true and OrderStatus enum to CANCEL.
+	 * 
+	 * SetOrderToIsUsed - set isUsed field of an Order entity to true.
+	 * 
+	 * UpdateOrder - Updates all the fields of Order entity with the same orderID,
+	 * how to use: get the Order from DB change all fields you want BUT NOT THE orderID! and send the new Order to this function
+	 * PLEASE use this function ONLY if realy necessary. Don't use it for example to set status of Order to used.
+	 * </pre>
+	 */
 	@Override
 	public String handleRequest(ServerRequest request) {
 		String job = request.job;
@@ -85,6 +115,26 @@ public class OrderController implements IController {
 			ord = ServerRequest.gson.fromJson(request.data, Order.class);
 
 			// first check if order already exists
+			if (GetOrderByID(ord.orderID) != null) { // TODO this checking is duplicated, but better not to delete in my
+														// opinion (Roman)
+				response = "Order already exists";
+				break;
+			}
+			// second check if Order Allowed
+			if (!IsOrderAllowed(ord)) { // TODO this checking is duplicated, but better not to delete in my opinion
+										// (Roman)
+				response = "No more orders allowed in this time";
+				break;
+			}
+			// try to add order
+			if (AddNewOrder(ord)) // now this part is duplicated line 103
+				response = "Order was added successfully";
+			else
+				response = "Failed to add Order";
+			break;
+		case "IsOrderAllowed":
+			ord = ServerRequest.gson.fromJson(request.data, Order.class);
+			// first check if order already exists
 			if (GetOrderByID(ord.orderID) != null) {
 				response = "Order already exists";
 				break;
@@ -94,11 +144,7 @@ public class OrderController implements IController {
 				response = "No more orders allowed in this time";
 				break;
 			}
-			// try to add order
-			if (AddNewOrder(ord))
-				response = "Order was added successfully";
-			else
-				response = "Failed to add Order";
+			response = "Order can be placed"; // not realy necessary
 			break;
 		case "NextOrderID":
 			nextOrderID = NextOrderID();
@@ -178,7 +224,8 @@ public class OrderController implements IController {
 				// Print out the values
 				o = new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4), res.getString(5),
 						res.getString(6), IdType.valueOf(res.getString(7)), OrderStatus.valueOf(res.getString(8)),
-						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12));
+						res.getTimestamp(9), res.getTimestamp(10), res.getBoolean(11), res.getString(12),
+						res.getInt(13));
 			}
 			res.close();
 			return o;
@@ -196,9 +243,9 @@ public class OrderController implements IController {
 	 * @param Order to write in the DB
 	 * @return boolean did the function succeed or not
 	 */
-	private boolean AddNewOrder(Order ord) {
+	public boolean AddNewOrder(Order ord) {
 		PreparedStatement ps = dbController
-				.getPreparedStatement("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				.getPreparedStatement("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 		try {
 			ps.setString(1, ord.parkSite);
 			ps.setInt(2, ord.numberOfVisitors);
@@ -212,6 +259,7 @@ public class OrderController implements IController {
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setBoolean(11, ord.isUsed);
 			ps.setString(12, ord.ownerID);
+			ps.setInt(13, ord.numberOfSubscribers);
 
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
@@ -233,21 +281,53 @@ public class OrderController implements IController {
 		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
 		int muxPreOrder = 4; // for test only
 		int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
-		Timestamp threeHoursBefor = addTimeInHours(ord.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after visit time
-		Timestamp fourHoursAfter = addTimeInHours(ord.visitTime, AVGvisitTime); // calculate 3 hours before  
+		Timestamp threeHoursBefor = addTimeInHours(ord.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after visit
+																						// // time
+		Timestamp fourHoursAfter = addTimeInHours(ord.visitTime, AVGvisitTime); // calculate 3 hours before
 		try {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
-					"SELECT COUNT(parkSite)\r\n" + " FROM orders \r\n" + " WHERE visitTime > \"" + threeHoursBefor
-							+ "\" && visitTime < \"" + fourHoursAfter + "\" && parkSite = \"" + ord.parkSite + "\";");
+					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + threeHoursBefor
+							+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + ord.parkSite
+							+ "\" && orderStatus <> \"CANCEL\";"); // TODO test this (Roman)
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();
-			if (resInt < muxPreOrder)
+			if (resInt + ord.numberOfVisitors <= muxPreOrder)
 				return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
+		return false;
+	}
+
+	/**
+	 * Method only for waiting list
+	 * 
+	 * @param order
+	 * @param numberOfVisitorsCanceled
+	 * @return
+	 */
+	public boolean IsOrderAllowedWaitingList(Order order, int numberOfVisitorsCanceled) {
+		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
+		int muxPreOrder = 4; // for test only
+		int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
+		Timestamp threeHoursBefor = addTimeInHours(order.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after
+																							// visit // time
+		Timestamp fourHoursAfter = addTimeInHours(order.visitTime, AVGvisitTime); // calculate 3 hours before
+		try {
+			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
+					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + threeHoursBefor
+							+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + order.parkSite
+							+ "\" && orderStatus <> \"CANCEL\";"); // TODO test this (Roman)
+			if (ps.next())
+				resInt = ps.getInt(1);
+			ps.close();
+			if (resInt + order.numberOfVisitors - numberOfVisitorsCanceled <= muxPreOrder)
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -264,12 +344,19 @@ public class OrderController implements IController {
 		return res;
 	}
 
-	// TODO GetAvailableSlots() (Roman)
-	// TODO send a messages to all the owner that booked visit tomorrow (Roman)
-	private void InItMassagerReminder() {
-
+	// TODO test and use this (Roman)
+	private void InItMassagerReminder(Order order) {
+		messageC.SendEmailAndSMS(order.email, order.phone, genereteMessage(order), "GoNature Remainder");
 	}
 
+	private String genereteMessage(Order order) {
+		return "Your booking indformation:\n" +
+	"OrderId: " + order.orderID +"\n" +
+				"visit time: " + order.visitTime.getDate() + " " + order.visitTime.getTime() + "\n" +
+				"number of visitors: " + order.numberOfVisitors + "\n" +
+				"Price: "+ order.priceOfOrder + 
+				"Thank for using GoNature";
+	}
 	/**
 	 * Method that return all the Orders entity from DB that in a range of time (
 	 * start < visit time < end ) and date and from chosen park site
@@ -291,7 +378,7 @@ public class OrderController implements IController {
 				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
 						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
 						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
-						res.getBoolean(11), res.getString(12)));
+						res.getBoolean(11), res.getString(12), res.getInt(13)));
 			}
 
 			res.close();
@@ -307,7 +394,7 @@ public class OrderController implements IController {
 	 * 
 	 * @return
 	 */
-	public Order[] GetAllListOfOrders() {
+	public Order[] GetAllListOfOrders() { //TODO maybe not necessary (Roman)
 		ResultSet res = dbController.sendQuery("SELECT * FROM orders");
 		if (res == null)
 			return null;
@@ -317,7 +404,7 @@ public class OrderController implements IController {
 				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
 						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
 						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
-						res.getBoolean(11), res.getString(12)));
+						res.getBoolean(11), res.getString(12), res.getInt(13)));
 			}
 
 			res.close();
@@ -333,7 +420,7 @@ public class OrderController implements IController {
 	 * @param ID
 	 * @return Array of Orders
 	 */
-	//TODO should we add more conditions?
+	// TODO should we add more conditions?
 	public Order[] GetOrdersByVisitorID(String ID) {
 		ResultSet res = dbController.sendQuery("SELECT * FROM orders WHERE ownerID =" + ID + "");
 		if (res == null)
@@ -344,7 +431,7 @@ public class OrderController implements IController {
 				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
 						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
 						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
-						res.getBoolean(11), res.getString(12)));
+						res.getBoolean(11), res.getString(12), res.getInt(13)));
 
 			res.close();
 		} catch (SQLException e) {
@@ -361,8 +448,9 @@ public class OrderController implements IController {
 	 * @return true if order canceled, false otherwise
 	 */
 	public boolean CancelOrderByOrderID(int orderID) {
+		canceled.add(GetOrderByID(orderID));//add order to canceled list
 		PreparedStatement pstmt = dbController
-				.getPreparedStatement("UPDATE orders SET orderStatus = \"CANCEL\" WHERE orderID = ?;");
+				.getPreparedStatement("UPDATE orders SET orderStatus = \"CANCEL\", isUsed = true WHERE orderID = ?;");
 		try {
 			pstmt.setInt(1, orderID);
 			return pstmt.executeUpdate() == 1;
@@ -381,7 +469,8 @@ public class OrderController implements IController {
 	 * @return true if order changed to used, false otherwise
 	 */
 	public boolean SetOrderToIsUsed(int orderID) {
-		PreparedStatement pstmt = dbController.getPreparedStatement("UPDATE orders SET isUsed = true WHERE orderID = ?;");
+		PreparedStatement pstmt = dbController
+				.getPreparedStatement("UPDATE orders SET isUsed = true WHERE orderID = ?;");
 		try {
 			pstmt.setInt(1, orderID);
 			return pstmt.executeUpdate() == 1;
@@ -394,8 +483,9 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Update the order with the same orderID
-	 * DO NOT CAHNGE orderID !!!!!!!!!!!!!!!!!!!!!
+	 * Update the order with the same orderID DO NOT CAHNGE orderID
+	 * !!!!!!!!!!!!!!!!!!!!!
+	 * 
 	 * @param ord
 	 * @return true if the order was updated, false otherwise
 	 */
@@ -403,7 +493,7 @@ public class OrderController implements IController {
 		PreparedStatement ps = dbController.getPreparedStatement(
 				"UPDATE orders SET isUsed = ?, parkSite = ? , numberOfVisitors = ?, priceOfOrder = ?,"
 						+ " email = ?, phone = ?,type = ?, orderStatus = ?, visitTime = ?, timeOfOrder = ?,\r\n"
-						+ "ownerID = ?  WHERE orderID = ?");
+						+ "ownerID = ?,numberOfSubscribers = ?, WHERE orderID = ?");
 		try {
 			ps.setBoolean(1, ord.isUsed);
 			ps.setString(2, ord.parkSite);
@@ -417,6 +507,7 @@ public class OrderController implements IController {
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setString(11, ord.ownerID);
 			ps.setLong(12, ord.orderID);
+			ps.setInt(13, ord.numberOfSubscribers);
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -431,7 +522,7 @@ public class OrderController implements IController {
 	 * @param orderID
 	 * @return true if Order was found and deleted, false otherwise
 	 */
-	//TODO  check if needed
+	// TODO check if needed
 	public boolean deleteOrder(int orderID) {
 		PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM orders WHERE orderID = ?;");
 		try {
@@ -453,14 +544,16 @@ public class OrderController implements IController {
 	 * @return
 	 */
 	private Timestamp addTimeInHours(Timestamp stamp, int hours) {
+		long tempTimeLong = stamp.getTime();
+		Timestamp temp = new Timestamp(tempTimeLong);
 		int tempHours = stamp.getHours() + hours;
 		if (tempHours < openingHour)
-			stamp.setHours(openingHour);
+			temp.setHours(openingHour);
 		else if (tempHours > closeHour)
-			stamp.setHours(closeHour);
+			temp.setHours(closeHour);
 		else
-			stamp.setHours(stamp.getHours() + hours);
-		return stamp;
+			temp.setHours(stamp.getHours() + hours);
+		return temp;
 	}
 
 }

@@ -3,7 +3,8 @@ package logic;
 import modules.IController;
 import modules.ServerRequest;
 
-public class ReportController implements IController {
+public class ReportController implements IController
+{
 
 	private OrderController order;
 	private EntryController entry;

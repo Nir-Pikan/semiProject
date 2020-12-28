@@ -161,6 +161,7 @@ public class ParkController implements IController {
 		Park p = getPark(parkId);
 		if (p == null)
 			return -1;
+		//TODO or check
 		PreparedStatement setValue = db
 				.getPreparedStatement("UPDATE park SET currentNumOfVisitors = ? WHERE parkId = ?");
 		int newVal = p.currentNumOfVisitors + delta;
@@ -202,7 +203,7 @@ public class ParkController implements IController {
 	private Park getPark(String parkId) {
 		try {
 
-			ResultSet rs = db.sendQuery("SELECT * FROM park WHERE parkId = " + parkId);
+			ResultSet rs = db.sendQuery("SELECT * FROM park WHERE parkId =\"" + parkId+"\";");
 			if (rs.next()) {
 				return new Park(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5),
 						rs.getDouble(6), rs.getInt(7), rs.getInt(8), rs.getInt(9));

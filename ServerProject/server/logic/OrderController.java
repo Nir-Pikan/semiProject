@@ -311,8 +311,8 @@ public class OrderController implements IController {
 	public boolean IsOrderAllowedWaitingList(Order order, int numberOfVisitorsCanceled) {
 		int AVGvisitTime = Double.valueOf(park.getAVGvisitTime(order.parkSite)).intValue(); 
 		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
-		int muxPreOrder = 4; // for test only
-		int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
+		int maxPreOrder = 4; // for test only
+		int resInt = 10000; // to be sure that by default we don't have place in the park, STUPID......
 		Timestamp threeHoursBefor = addTimeInHours(order.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after
 																							// visit // time
 		Timestamp fourHoursAfter = addTimeInHours(order.visitTime, AVGvisitTime); // calculate 3 hours before
@@ -321,10 +321,12 @@ public class OrderController implements IController {
 					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + threeHoursBefor
 							+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + order.parkSite
 							+ "\" && orderStatus <> \"CANCEL\";"); // TODO test this (Roman)
+//			if (ps == null)
+//				return false;
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();
-			if (resInt + order.numberOfVisitors - numberOfVisitorsCanceled <= muxPreOrder)
+			if (resInt + order.numberOfVisitors - numberOfVisitorsCanceled <= maxPreOrder)
 				return true;
 		} catch (SQLException e) {
 			e.printStackTrace();

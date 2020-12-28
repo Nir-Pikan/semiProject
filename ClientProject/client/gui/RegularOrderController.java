@@ -400,6 +400,7 @@ public class RegularOrderController implements GuiController {
 		return ord;
 	}
 
+
 	private int isSubscriber() {
 		if (clientController.client.logedInSunscriber.getVal() != null)
 			return 1;

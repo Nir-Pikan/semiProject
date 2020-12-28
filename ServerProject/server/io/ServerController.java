@@ -87,6 +87,12 @@ public class ServerController extends AbstractServer{
 					response = waitingList.handleRequest(sr);
 					break;
 				case Worker:
+					//On login or logout change the data stored in the server
+					if(sr.job.equals("LogOutWorker")) {
+						client.setInfo("workerUsername", null);
+					}else if(sr.job.equals("LogInWorker")) {
+						client.setInfo("workerUsername", ServerRequest.gson.fromJson(sr.data, String[].class)[0]);
+					}
 					response = worker.handleRequest(sr);
 					break;
 				default:
@@ -123,7 +129,10 @@ public class ServerController extends AbstractServer{
 	protected synchronized void clientDisconnected(ConnectionToClient client) {
 		super.clientDisconnected(client);
 		System.out.println("client disconnected: "+client);
-		//TODO add disconnect to client
+		//Disconnect client
+		Object obj = client.getInfo("workerUsername");
+		if(obj!=null && obj instanceof String)
+			worker.updateWorkerLogginDB((String)obj, false);
 		//TODO prototype only code
 		gui.setDisconnected();
 	}

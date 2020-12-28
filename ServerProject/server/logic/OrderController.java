@@ -345,6 +345,12 @@ public class OrderController implements IController {
 			if (ps.next())
 				res = ps.getInt(1) + 1; // + for next ID in the DB
 			ps.close();
+			
+			ps = dbController.sendQuery("SELECT MAX(orderID) FROM waitingList");
+			if (ps.next())
+				res = Math.max(ps.getInt(1) + 1,res); // + for next ID in the DB
+			ps.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

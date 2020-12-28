@@ -7,6 +7,8 @@ import java.util.Map;
 import entities.ParkNameAndTimes;
 import entities.Subscriber;
 import entities.Worker;
+import javafx.application.Platform;
+import module.Navigator;
 import modules.Property;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
@@ -26,7 +28,8 @@ public class clientController extends AbstractClient {
 
 	// instance of the connection for the client
 	public static clientController client = null;
-
+	private static Thread con;
+	
 	// common data
 	public Map<String,ParkNameAndTimes> openingTimes;
 	public String[] parkNames;
@@ -133,4 +136,26 @@ public class clientController extends AbstractClient {
 		response = "";
 		return msg;
 	}
+	
+	
+	/**
+	 * when connection closed, logOut
+	 */
+	@Override
+	protected void connectionEstablished() {
+		con= Thread.currentThread();
+		new Thread(()-> {
+			while(con.isAlive()) {
+				try {
+					con.join();
+				}catch (InterruptedException e) {
+				}
+			}
+			Platform.runLater(()->{
+			Navigator.instance().clearHistory();
+			Navigator.instance().navigate("login");
+			});
+		}).start();
+	}
+	
 }

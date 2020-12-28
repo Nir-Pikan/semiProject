@@ -4,7 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,13 +22,14 @@ import io.DbController;
 import mail.MyMail;
 import modules.IController;
 import modules.ObservableList;
+import modules.PeriodicallyRunner;
 import modules.ServerRequest;
 
 public class OrderController implements IController {
 
 	private int openingHour = 8; // take the data from DB
 	private int closeHour = 16; // take the data from DB
-	private int AVGvisitTime = 4; // take the data from DB
+	
 	private ParkController park;
 	private MessageController messageC; 
 	private SubscriberController subscriber;
@@ -44,7 +48,7 @@ public class OrderController implements IController {
 		dbController = DbController.getInstance();
 		createTable();
 		canceled = new ObservableList<Order>();
-		// TODO Auto-generated constructor stub
+		initMessageReminder();
 	}
 
 	/**
@@ -127,9 +131,10 @@ public class OrderController implements IController {
 				break;
 			}
 			// try to add order
-			if (AddNewOrder(ord)) // now this part is duplicated line 103
+			if (AddNewOrder(ord)) { // now this part is duplicated line 103
+				messageC.SendEmailAndSMS(ord.email, ord.phone, genereteMessage(ord), "GoNature New Order");
 				response = "Order was added successfully";
-			else
+			}else
 				response = "Failed to add Order";
 			break;
 		case "IsOrderAllowed":
@@ -278,6 +283,7 @@ public class OrderController implements IController {
 	 */
 	// TODO check
 	private boolean IsOrderAllowed(Order ord) {
+		int AVGvisitTime = Double.valueOf(park.getAVGvisitTime(ord.parkSite)).intValue(); 
 		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
 		int muxPreOrder = 4; // for test only
 		int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
@@ -309,6 +315,7 @@ public class OrderController implements IController {
 	 * @return
 	 */
 	public boolean IsOrderAllowedWaitingList(Order order, int numberOfVisitorsCanceled) {
+		int AVGvisitTime = Double.valueOf(park.getAVGvisitTime(order.parkSite)).intValue(); 
 		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
 		int muxPreOrder = 4; // for test only
 		int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
@@ -338,25 +345,102 @@ public class OrderController implements IController {
 			if (ps.next())
 				res = ps.getInt(1) + 1; // + for next ID in the DB
 			ps.close();
+			
+			ps = dbController.sendQuery("SELECT MAX(orderID) FROM waitingList");
+			if (ps.next())
+				res = Math.max(ps.getInt(1) + 1,res); // + for next ID in the DB
+			ps.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return res;
 	}
 
-	// TODO test and use this (Roman)
-	private void InItMassagerReminder(Order order) {
-		messageC.SendEmailAndSMS(order.email, order.phone, genereteMessage(order), "GoNature Remainder");
+	private void initMessageReminder() {
+	
+		//run this every day at 10AM
+		PeriodicallyRunner.runEveryDayAt(10, 00, ()->{
+			ArrayList<Order> resultList = getTomorrowOrders();
+			
+			for(Order order : resultList) {
+				messageC.SendEmailAndSMS(order.email, order.phone, genereteApprovalRequestMessage(order), "GoNature Remainder");
+			}
+			
+		});
+		
+		//run this every day at 12AM
+				PeriodicallyRunner.runEveryDayAt(12, 00, ()->{
+					ArrayList<Order> resultList = getTomorrowOrders();
+					
+					for(Order order : resultList) {
+						messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order), "GoNature Order Canceled");
+					}
+					
+				});
+		System.out.println("Message Remainder initiated");
 	}
 
-	private String genereteMessage(Order order) {
-		return "Your booking indformation:\n" +
+	/**
+	 * @return
+	 */
+	private ArrayList<Order> getTomorrowOrders() {
+		LocalDate tomorow = LocalDate.now().plusDays(1);
+		LocalTime startOfDay = LocalTime.of(00, 00);
+		Timestamp start = Timestamp.valueOf(LocalDateTime.of(tomorow, startOfDay));
+		Timestamp end = Timestamp.valueOf(LocalDateTime.of(tomorow.plusDays(1), startOfDay));
+		
+		//get all orders
+		ResultSet res = dbController.sendQuery("SELECT *\r\n" + " FROM orders \r\n" + " WHERE visitTime >= \"" + start
+				+ "\" && visitTime < \"" + end + "\" &&  orderStatus = \"IDLE\";");
+
+		if (res == null)
+			return null;
+		ArrayList<Order> resultList = new ArrayList<>();
+		try {
+			while (res.next()) {
+				resultList.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4),
+						res.getString(5), res.getString(6), IdType.valueOf(res.getString(7)),
+						OrderStatus.valueOf(res.getString(8)), res.getTimestamp(9), res.getTimestamp(10),
+						res.getBoolean(11), res.getString(12), res.getInt(13)));
+			}
+
+			res.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resultList;
+	}
+
+	private String genereteApprovalRequestMessage(Order order) {
+		return "Please Approve or Cancel this order:\n" +
 	"OrderId: " + order.orderID +"\n" +
-				"visit time: " + order.visitTime.getDate() + " " + order.visitTime.getTime() + "\n" +
+				"visit time: " + order.visitTime.toLocalDateTime().toLocalDate() + " " + order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n" +
 				"number of visitors: " + order.numberOfVisitors + "\n" +
-				"Price: "+ order.priceOfOrder + 
+				"Price: "+ order.priceOfOrder+"\n" + 
+				"If not accepted until 12:00, the order will be cancelrd automaticly\n"+
 				"Thank for using GoNature";
 	}
+	
+	private String genereteMessage(Order order) {
+		return "Your New Order:\n" +
+	"OrderId: " + order.orderID +"\n" +
+				"visit time: " + order.visitTime.toLocalDateTime().toLocalDate() + " " + order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n" +
+				"number of visitors: " + order.numberOfVisitors + "\n" +
+				"Price: "+ order.priceOfOrder+"\n" + 
+				"Thank for using GoNature";
+	}
+	
+	private String genereteCanceldMessage(Order order) {
+		return "Your Order Canceld:\n" +
+	"OrderId: " + order.orderID +"\n" +
+				"visit time: " + order.visitTime.toLocalDateTime().toLocalDate() + " " + order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n" +
+				"number of visitors: " + order.numberOfVisitors + "\n" +
+				"Price: "+ order.priceOfOrder+"\n" + 
+				"Thank for using GoNature";
+	}
+	
+	
 	/**
 	 * Method that return all the Orders entity from DB that in a range of time (
 	 * start < visit time < end ) and date and from chosen park site

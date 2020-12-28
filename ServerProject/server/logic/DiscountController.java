@@ -69,7 +69,7 @@ public class DiscountController implements IController {
 			 }
 			 else {
 				float price = CalculatePriceForEntryByOrder(order.numberOfVisitors,order.numberOfSubscribers,order.type==IdType.GUIDE,order.timeOfOrder);
-				response=ServerRequest.gson.toJson(discounts, Float.class);
+				response=ServerRequest.gson.toJson(price, Float.class);
 			 }
 			break;
 

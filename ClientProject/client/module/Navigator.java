@@ -84,7 +84,7 @@ public class Navigator {
 			return current.controller;
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}catch(NavigationInterruption e) {}
 		return null;
 	}
 
@@ -122,5 +122,14 @@ public class Navigator {
 			super();
 		}
 
+	}
+	
+	/**navigation Interruption*/
+	public static class NavigationInterruption extends RuntimeException{
+
+		private static final long serialVersionUID = 3626458317670172388L;
+
+		
+		
 	}
 }

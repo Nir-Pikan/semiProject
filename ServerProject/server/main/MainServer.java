@@ -32,8 +32,12 @@ public class MainServer extends Application {
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			    @Override
 			    public void handle(WindowEvent event) {
-			    	if(ServerGuiController.isServerRunning == true)//if the server is running do not close window
+			    	if(ServerGuiController.isServerRunning == true) {//if the server is running do not close window
 			    		event.consume();
+			    	}else {
+			    		System.exit(0);
+			    	}
+			    		
 			    }
 			});
 			

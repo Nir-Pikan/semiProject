@@ -16,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import module.Navigator;
+import modules.ServerRequest;
+import modules.ServerRequest.Manager;
 
 /** the MainScreen page controller */
 public class MainScreenController {
@@ -61,6 +63,7 @@ public class MainScreenController {
 			return;
 		}
 		if(clientController.client.logedInWorker.getVal() != null) {
+			clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Worker,"LogOutWorker",clientController.client.logedInWorker.getVal().getUserName()));
 			clientController.client.logedInWorker.silentSet(null);
 			return;
 		}

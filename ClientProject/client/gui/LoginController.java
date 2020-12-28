@@ -65,10 +65,11 @@ public class LoginController implements GuiController
 	@FXML
 	void WorkerLogin(ActionEvent event)
 	{
-		String userName = txtUsername.getText();
-		String password = txtPassword.getText();
+		String[] data = new String[2];
+		data[0] = txtUsername.getText();
+		data[1] = txtPassword.getText();
 		ServerRequest serverRequest = new ServerRequest(Manager.Worker,
-				"LogInWorker", userName + " " + password);
+				"LogInWorker", ServerRequest.gson.toJson(data,String[].class));
 		String response = clientController.client.sendRequestAndResponse(serverRequest);
 		Worker worker = ServerRequest.gson.fromJson(response, Worker.class);
 		if(worker == null)

@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.mysql.cj.protocol.ServerSession;
+
 import entities.Order;
 import entities.Order.IdType;
 import entities.Order.OrderStatus;
@@ -208,7 +210,7 @@ public class WaitingListController implements IController {
 				Order acceptedOrder = getwaitingOrder(orderId);
 				
 		acceptedOrder.orderStatus = OrderStatus.IDLE;
-				order.AddNewOrder(acceptedOrder);
+				order.AddNewOrder(acceptedOrder);//TODO Or check if the time is after the approval time and set to confirmed if passed
 				deleteFromWaitingList(acceptedOrder);
 				
 			currentWaitingCancelation.remove(orderId);
@@ -240,7 +242,13 @@ public class WaitingListController implements IController {
 		case "acceptWaitingOrder":
 			acceptWaitingOrder(Integer.parseInt(request.data));
 			return "accepted";
-			
+		case "GetOrderByID":
+			try {
+			Order o = getwaitingOrder(Integer.parseInt(request.data));
+			return ServerRequest.gson.toJson(o, Order.class);
+			}catch (NumberFormatException e) {
+				return request.data + " not Found";
+			}
 		case "cancelWaitingOrder":
 			deleteFromWaitingList(getwaitingOrder(Integer.parseInt(request.data)));
 			WakeableThread waitingT = currentWaitingCancelation.get(Integer.parseInt(request.data));

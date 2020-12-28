@@ -2,23 +2,18 @@ package gui;
 
 import java.time.LocalDate;
 
-import com.oracle.webservices.internal.api.EnvelopeStyle.Style;
-
 import entities.DiscountEntity;
 import io.clientController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
 import javafx.util.Callback;
 import module.GuiController;
 import module.PopUp;

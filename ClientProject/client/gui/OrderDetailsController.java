@@ -13,12 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import module.GuiController;
-import module.Navigator;
-import module.PopUp;
-import modules.ServerRequest;
-import modules.ServerRequest.Manager;
 
 /** the OrderDetails page controller */
 public class OrderDetailsController implements GuiController {

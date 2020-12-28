@@ -7,13 +7,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
-
 import entities.Order;
 import entities.Order.OrderStatus;
 import io.clientController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 
 /**
@@ -22,14 +18,11 @@ import javafx.event.ActionEvent;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import mocks.Card;
 import module.GuiController;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;

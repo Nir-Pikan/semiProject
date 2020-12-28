@@ -4,8 +4,6 @@ package gui;
 import java.sql.Timestamp;
 
 import entities.Order;
-import entities.Worker;
-import entities.Order.IdType;
 import entities.Order.OrderStatus;
 import io.clientController;
 import javafx.collections.FXCollections;
@@ -15,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import module.GuiController;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;

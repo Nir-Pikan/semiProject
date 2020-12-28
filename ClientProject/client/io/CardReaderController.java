@@ -3,16 +3,9 @@ package io;
 import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
-import entities.DiscountEntity;
 import entities.Order;
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import mocks.CardReaderSystem;
 import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;

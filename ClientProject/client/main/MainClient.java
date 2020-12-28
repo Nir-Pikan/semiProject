@@ -2,19 +2,13 @@ package main;
 
 import java.io.IOException;
 
-import com.sun.media.jfxmedia.events.NewFrameEvent;
-
-import entities.Subscriber;
-import entities.Subscriber.Type;
 import gui.LoginController;
 import gui.MainScreenController;
-import gui.ParkManagerParametersUpdateController;
 import io.clientController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 //import mocks.CardReaderMock;

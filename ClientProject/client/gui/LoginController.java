@@ -2,7 +2,6 @@ package gui;
 
 import entities.Subscriber;
 import entities.Worker;
-
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +13,6 @@ import javafx.scene.layout.GridPane;
 import module.GuiController;
 import module.Navigator;
 import module.PopUp;
-import modules.Property;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

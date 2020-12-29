@@ -6,11 +6,13 @@ package gui;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 
 import entities.ParkEntry;
 import entities.ParkNameAndTimes;
+import gui.UsageReportController.UsageRow;
 import io.clientController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -19,7 +21,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import module.GuiController;
 import module.JavafxPrinter;
 import module.Report;
@@ -27,7 +33,7 @@ import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the UsageReport page controller */
-public class UsageReportController implements GuiController ,Report{
+public class UsageReportController implements GuiController, Report {
 
 	@FXML
 	private Label labelDateToday;
@@ -69,6 +75,18 @@ public class UsageReportController implements GuiController ,Report{
 	private TableColumn<UsageRow, Double> usageColumn;
 
 	@FXML
+	private TreeTableView<UsageRow> usageTreeTable;
+
+	@FXML
+	private TreeTableColumn<UsageRow, String> DateCol;
+
+	@FXML
+	private TreeTableColumn<UsageRow, Integer> visitorsCol;
+
+	@FXML
+	private TreeTableColumn<UsageRow, Double> usageCol;
+
+	@FXML
 	private Button buttonPrint;
 
 	@FXML
@@ -88,7 +106,8 @@ public class UsageReportController implements GuiController ,Report{
 	public void initReport(String parkName, String parkID, Timestamp[] reportDate) {
 		textDateToday.setText(LocalDate.now().toString());
 		textParkName.setText(parkName);
-		textReportDate.setText("from " + reportDate[0].toLocalDateTime().toLocalDate().toString() + " to " + reportDate[1].toLocalDateTime().toLocalDate().toString());
+		textReportDate.setText("from " + reportDate[0].toLocalDateTime().toLocalDate().toString() + " to "
+				+ reportDate[1].toLocalDateTime().toLocalDate().toString());
 
 		// send request to get park entries to clientController
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Entry,
@@ -138,6 +157,7 @@ public class UsageReportController implements GuiController ,Report{
 //=================================================================================================================		
 
 //=========== create the table ==================================================================================== 			
+		/*
 			dateColumn.setCellValueFactory(new PropertyValueFactory<UsageRow, String>("date"));
 			visitorsColumn.setCellValueFactory(new PropertyValueFactory<UsageRow, Integer>("visitors"));
 			usageColumn.setCellValueFactory(new PropertyValueFactory<UsageRow, Double>("usage"));
@@ -146,17 +166,79 @@ public class UsageReportController implements GuiController ,Report{
 
 			// create all rows
 			for (int i = 0; i < amountOfDays; i++) {
-				String day = i+1 + "." + reportDate[0].toLocalDateTime().getMonth().getValue();
+				String day = i + 1 + "." + reportDate[0].toLocalDateTime().getMonth().getValue();
 				ParkNameAndTimes p = clientController.client.openingTimes.get(parkID);
-				double usage = ((double) visitorsPerDay[i]) / (maxCapacity * (p.closeTime - p.openTime)/Double.parseDouble(parkParameters[2]));
+				double usage = ((double) visitorsPerDay[i])
+						/ (maxCapacity * (p.closeTime - p.openTime) / Double.parseDouble(parkParameters[2]));
 				usage *= 100;
 				UsageRow row = new UsageRow(day, visitorsPerDay[i], usage);
 				rows.add(row);
 			}
 
 			visitorUsageTable.setItems(FXCollections.observableArrayList(rows));
+			
+			*/
 //=================================================================================================================
+			TreeTableView<UsageRow> usageTreeTable = new TreeTableView<UsageRow>();
+
+			TreeTableColumn<UsageRow, String> DateCol = new TreeTableColumn<>("Date");
+			TreeTableColumn<UsageRow, Integer> visitorsCol = new TreeTableColumn<>("Visitors");
+			TreeTableColumn<UsageRow, Double> usageCol = new TreeTableColumn<>("Usage %");
+
+			DateCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("date"));
+			visitorsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("visitors"));
+			usageCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("usage"));
+
+			ParkNameAndTimes p = clientController.client.openingTimes.get(parkID);
+
+			String dates = reportDate[0].toLocalDateTime().toLocalDate().toString() + " to "
+					+ reportDate[1].toLocalDateTime().toLocalDate().toString();
+			int totalVisitors = 0;
+			double totalusage = 0;
+			for (int i = 0; i < visitorsPerDay.length; i++) {
+				totalVisitors += visitorsPerDay[i];
+				double usage = ((double) visitorsPerDay[i])
+						/ (maxCapacity * (p.closeTime - p.openTime) / Double.parseDouble(parkParameters[2]));
+				totalusage += usage;
+			}
+			totalusage /= amountOfDays;
+			TreeItem<UsageRow> rootData = new TreeItem<UsageRow>(new UsageRow(dates, totalVisitors, totalusage));
+
+			for (int i = 0; i < amountOfDays; i++) {
+				// define day item
+				String day = i + 1 + "." + reportDate[0].toLocalDateTime().getMonth().getValue();
+				double usage = ((double) visitorsPerDay[i])
+						/ (maxCapacity * (p.closeTime - p.openTime) / Double.parseDouble(parkParameters[2]));
+				usage *= 100;
+
+				TreeItem<UsageRow> dayItem = new TreeItem<UsageRow>(new UsageRow(day, visitorsPerDay[i], usage));
+				int[] visitorsAtHour = new int[24];
+				for (int j = 0; j < visitorsAtHour.length; j++) {
+					visitorsAtHour[j] = 0;
+				}
+				for (int j = 0; j < visitorsAtHour.length; j++) {
+					String hourString = j + ":00";
+					int visitors = 0;
+					for (ParkEntry entry : entries) {
+						// only for wanted park and hour
+						if (entry.parkID.equals(parkID) && entry.arriveTime.toLocalDateTime().getHour() <= j
+								&& entry.exitTime.toLocalDateTime().getHour() >= j)
+							visitors += entry.numberOfVisitors;
+					}
+					usage = ((double) visitors)
+							/ (maxCapacity * (p.closeTime - p.openTime) / Double.parseDouble(parkParameters[2]));
+					usage *= 100;
+
+					TreeItem<UsageRow> hourItem = new TreeItem<UsageRow>(new UsageRow(hourString, visitors, usage));
+					dayItem.getChildren().add(hourItem);
+
+				}
+				rootData.getChildren().add(dayItem);
+			}
+			
+			usageTreeTable.setRoot(rootData);
 		}
+
 	}
 
 	/**
@@ -193,7 +275,6 @@ public class UsageReportController implements GuiController ,Report{
 		public double getUsage() {
 			return usage;
 		}
-		
-		
+
 	}
 }

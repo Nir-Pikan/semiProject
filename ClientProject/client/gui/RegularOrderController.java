@@ -64,7 +64,7 @@ public class RegularOrderController implements GuiController {
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear();
-		Park_ComboBox.getItems().addAll("#1", "#2", "#3"); // TODO give a names from a DB (Roman) exist in a client
+		Park_ComboBox.getItems().addAll("Silver", "Gold", "Platinum"); // TODO give a names from a DB (Roman) exist in a client
 
 		VisitHour_ComboBox.getItems().clear();
 		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the

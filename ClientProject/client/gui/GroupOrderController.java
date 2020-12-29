@@ -75,7 +75,7 @@ public class GroupOrderController implements GuiController {
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear(); // for what? maybe not necessary
-		Park_ComboBox.getItems().addAll("#1", "#2", "#3"); //TODO get from DB
+		Park_ComboBox.getItems().addAll("Silver", "Gold", "Platinum"); //TODO get from DB
 		VisitHour_ComboBox.getItems().clear(); // for what? maybe not necessary
 		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
 		// last enter time should be 12:00 ?

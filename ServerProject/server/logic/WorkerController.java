@@ -19,8 +19,8 @@ public class WorkerController implements IController {
 	public WorkerController() {
 		dbController = DbController.getInstance();
 		createTable();
-		
-		dbController.sendUpdate("UPDATE worker SET isLogged=\"NO\" WHERE username<>\"\"");//disconnect all clients
+
+		dbController.sendUpdate("UPDATE workers SET isLogged=\"NO\" WHERE username<>\"\"");// disconnect all clients
 	}
 
 	/**
@@ -29,18 +29,18 @@ public class WorkerController implements IController {
 	 * table of {@link Worker}s
 	 */
 	private void createTable() {
-		dbController.createTable("worker(FirstName varchar(20),LastName varchar(20),WorkerID varchar(12),"
-				+ "Email varchar(30),UserName varchar(20),WorkerType varchar(20),Password varchar(20),"
-				+ "isLogged varchar(4),permissions varchar(200)," + "primary key(UserName));");
+		dbController.createTable("workers(firstName varchar(20),lastName varchar(20),workerID varchar(12),"
+				+ "email varchar(30),userName varchar(20),workerType varchar(20),password varchar(20),"
+				+ "isLogged varchar(4),permissions varchar(200)," + "primary key(userName));");
 	}
 
 	/**
-	 * Request: 1. (request.job = LogInWorker), (request.data = [userName , password])as String[] 
-	 * Request: 2. (request.job = LogOutWorker), (request.data = userName)
+	 * Request: 1. (request.job = LogInWorker), (request.data = [userName ,
+	 * password])as String[] Request: 2. (request.job = LogOutWorker), (request.data
+	 * = userName)
 	 */
 	@Override
-	public String handleRequest(ServerRequest request)
-    {
+	public String handleRequest(ServerRequest request) {
 		if (request.job.equals("LogInWorker")) {
 			String[] parameters = ServerRequest.gson.fromJson(request.data, String[].class);
 			String userName = parameters[0];
@@ -48,15 +48,14 @@ public class WorkerController implements IController {
 			Worker worker = LogInWorker(userName, password);
 			return ServerRequest.gson.toJson(worker, Worker.class);
 		}
-		if (request.job.equals("LogOutWorker")) 
-		{
+		if (request.job.equals("LogOutWorker")) {
 			String userName = request.data;
 			boolean logoutSucceded = updateWorkerLogginDB(userName, false);
 			return ServerRequest.gson.toJson(logoutSucceded, boolean.class);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * add worker to DB
 	 * 
@@ -66,7 +65,7 @@ public class WorkerController implements IController {
 	public boolean AddWorker(Worker worker) {
 		worker.setIsLogged(false);
 		PreparedStatement ps = dbController
-				.getPreparedStatement("INSERT IGNORE INTO worker VALUES (?,?,?,?,?,?,?,?,?);");
+				.getPreparedStatement("INSERT IGNORE INTO workers VALUES (?,?,?,?,?,?,?,?,?);");
 		try {
 			ps.setString(1, worker.getFirstName());
 			ps.setString(2, worker.getLastName());
@@ -83,8 +82,8 @@ public class WorkerController implements IController {
 			return false;
 		}
 		return true;
-		
-		//TODO delete, bugged ~Nir Pikan~
+
+		// TODO delete, bugged ~Nir Pikan~
 //		return dbController.sendUpdate("INSERT INTO worker VALUES (" + worker.getFirstName() + ","
 //				+ worker.getLastName() + "," + worker.getWorkerID() + "," + worker.getEmail() + ","
 //				+ worker.getUserName() + "," + worker.getWorkerType() + "," + worker.getPassword() + ","
@@ -101,8 +100,8 @@ public class WorkerController implements IController {
 	 * @return if successes return logged in worker, null otherwise
 	 */
 	public Worker LogInWorker(String userName, String password) {
-		ResultSet result = dbController
-				.sendQuery("select * from worker where UserName=\"" + userName + "\" AND Password=\"" + password + "\"");
+		ResultSet result = dbController.sendQuery(
+				"select * from workers where userName=\"" + userName + "\" AND password=\"" + password + "\"");
 		try {
 			if (!result.next())
 				return null;
@@ -128,15 +127,14 @@ public class WorkerController implements IController {
 
 	/**
 	 * update the worker log in status in DB
-
+	 * 
 	 * @param workerUserName the worker we want update
-	 * @param status the new status we want to update to
+	 * @param status         the new status we want to update to
 	 * @return true if success, false otherwise
 	 */
-	public boolean updateWorkerLogginDB(String workerUserName, boolean status) 
-	{
-		return dbController.sendUpdate("UPDATE worker SET isLogged=" + ParseIsLoginBoolToString(status)
-				+ " WHERE UserName=" + workerUserName);
+	public boolean updateWorkerLogginDB(String workerUserName, boolean status) {
+		return dbController.sendUpdate("UPDATE workers SET isLogged=\"" + ParseIsLoginBoolToString(status)
+				+ "\" WHERE UserName=\"" + workerUserName + "\"");
 	}
 
 	/**

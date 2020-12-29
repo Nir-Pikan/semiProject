@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import entities.Order;
 import entities.Order.IdType;
 import entities.Order.OrderStatus;
+import entities.Park;
 import io.DbController;
 import modules.IController;
 import modules.ObservableList;
@@ -21,16 +22,13 @@ import modules.ServerRequest;
 
 public class OrderController implements IController {
 
-	private int openingHour = 8; // take the data from DB
-	private int closeHour = 16; // take the data from DB
-	
 	private ParkController park;
-	private MessageController messageC; 
+	private MessageController messageC;
 	private SubscriberController subscriber;
 	private DiscountController discount;
-	
+
 	private DbController dbController;
-	
+
 	public ObservableList<Order> canceled; // list of canceled Orders
 
 	public OrderController(ParkController park, MessageController messageC, SubscriberController subscriber,
@@ -60,7 +58,8 @@ public class OrderController implements IController {
 			System.out.println("Table has been created");
 	}
 
-	/**<pre>
+	/**
+	 * <pre>
 	 * GetOrderByID - returns an Order by ID if the Order exists in the DB
 	 * 
 	 * AddNewOrder - add a new order to the DB .
@@ -128,7 +127,7 @@ public class OrderController implements IController {
 			if (AddNewOrder(ord)) { // now this part is duplicated line 103
 				messageC.SendEmailAndSMS(ord.email, ord.phone, genereteMessage(ord), "GoNature New Order");
 				response = "Order was added successfully";
-			}else
+			} else
 				response = "Failed to add Order";
 			break;
 		case "IsOrderAllowed":
@@ -277,22 +276,27 @@ public class OrderController implements IController {
 	 */
 	// TODO check
 	private boolean IsOrderAllowed(Order ord) {
-		int AVGvisitTime = Double.valueOf(park.getAVGvisitTime(ord.parkSite)).intValue(); 
+		// int AVGvisitTime =
+		// Double.valueOf(park.getAVGvisitTime(ord.parkSite)).intValue();
 		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
-		int muxPreOrder = 4; // for test only
+		// int muxPreOrder = 4; // for test only
+		Park prk = park.getPark(ord.parkSite);
+		int maxPreOrder = prk.maxPreOrders;
 		int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
-		Timestamp threeHoursBefor = addTimeInHours(ord.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after visit
-																						// // time
-		Timestamp fourHoursAfter = addTimeInHours(ord.visitTime, AVGvisitTime); // calculate 3 hours before
+		Timestamp[] hoursRange = new Timestamp[2];
+		hoursRange = calcHoursRange(ord, prk);
+//		Timestamp threeHoursBefor = addTimeInHours(ord.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after visit
+//																						// // time
+//		Timestamp fourHoursAfter = addTimeInHours(ord.visitTime, AVGvisitTime); // calculate 3 hours before
 		try {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
-					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + threeHoursBefor
-							+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + ord.parkSite
+					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + hoursRange[0]
+							+ "\" && visitTime <= \"" + hoursRange[1] + "\" && parkSite = \"" + ord.parkSite
 							+ "\" && orderStatus <> \"CANCEL\";"); // TODO test this (Roman)
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();
-			if (resInt + ord.numberOfVisitors <= muxPreOrder)
+			if (resInt + ord.numberOfVisitors <= maxPreOrder)
 				return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -309,17 +313,21 @@ public class OrderController implements IController {
 	 * @return
 	 */
 	public boolean IsOrderAllowedWaitingList(Order order, int numberOfVisitorsCanceled) {
-		int AVGvisitTime = Double.valueOf(park.getAVGvisitTime(order.parkSite)).intValue(); 
+		int AVGvisitTime = Double.valueOf(park.getAVGvisitTime(order.parkSite)).intValue();
 		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
-		int maxPreOrder = 4; // for test only
+		// int maxPreOrder = 4; // for test only
+		Park prk = park.getPark(order.parkSite);
+		int maxPreOrder = prk.maxPreOrders;
 		int resInt = 10000; // to be sure that by default we don't have place in the park, STUPID......
-		Timestamp threeHoursBefor = addTimeInHours(order.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after
-																							// visit // time
-		Timestamp fourHoursAfter = addTimeInHours(order.visitTime, AVGvisitTime); // calculate 3 hours before
+		Timestamp[] hoursRange = new Timestamp[2];
+		hoursRange = calcHoursRange(order, prk);
+//		Timestamp threeHoursBefor = addTimeInHours(order/*order.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after
+//																							// visit // time
+//		Timestamp fourHoursAfter = addTimeInHours(order/*order.visitTime, AVGvisitTime*/); // calculate 3 hours before
 		try {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
-					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + threeHoursBefor
-							+ "\" && visitTime <= \"" + fourHoursAfter + "\" && parkSite = \"" + order.parkSite
+					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + hoursRange[0]
+							+ "\" && visitTime <= \"" + hoursRange[1] + "\" && parkSite = \"" + order.parkSite
 							+ "\" && orderStatus <> \"CANCEL\";"); // TODO test this (Roman)
 //			if (ps == null)
 //				return false;
@@ -341,12 +349,12 @@ public class OrderController implements IController {
 			if (ps.next())
 				res = ps.getInt(1) + 1; // + for next ID in the DB
 			ps.close();
-			
+
 			ps = dbController.sendQuery("SELECT MAX(orderID) FROM waitingList");
 			if (ps.next())
-				res = Math.max(ps.getInt(1) + 1,res); // + for next ID in the DB
+				res = Math.max(ps.getInt(1) + 1, res); // + for next ID in the DB
 			ps.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -354,26 +362,28 @@ public class OrderController implements IController {
 	}
 
 	private void initMessageReminder() {
-	
-		//run this every day at 10AM
-		PeriodicallyRunner.runEveryDayAt(10, 00, ()->{
+
+		// run this every day at 10AM
+		PeriodicallyRunner.runEveryDayAt(10, 00, () -> {
 			ArrayList<Order> resultList = getTomorrowOrders();
-			
-			for(Order order : resultList) {
-				messageC.SendEmailAndSMS(order.email, order.phone, genereteApprovalRequestMessage(order), "GoNature Remainder");
+
+			for (Order order : resultList) {
+				messageC.SendEmailAndSMS(order.email, order.phone, genereteApprovalRequestMessage(order),
+						"GoNature Remainder");
 			}
-			
+
 		});
-		
-		//run this every day at 12AM
-				PeriodicallyRunner.runEveryDayAt(12, 00, ()->{
-					ArrayList<Order> resultList = getTomorrowOrders();
-					
-					for(Order order : resultList) {
-						messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order), "GoNature Order Canceled");
-					}
-					
-				});
+
+		// run this every day at 12AM
+		PeriodicallyRunner.runEveryDayAt(12, 00, () -> {
+			ArrayList<Order> resultList = getTomorrowOrders();
+
+			for (Order order : resultList) {
+				messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order),
+						"GoNature Order Canceled");
+			}
+
+		});
 		System.out.println("Message Remainder initiated");
 	}
 
@@ -385,8 +395,8 @@ public class OrderController implements IController {
 		LocalTime startOfDay = LocalTime.of(00, 00);
 		Timestamp start = Timestamp.valueOf(LocalDateTime.of(tomorow, startOfDay));
 		Timestamp end = Timestamp.valueOf(LocalDateTime.of(tomorow.plusDays(1), startOfDay));
-		
-		//get all orders
+
+		// get all orders
 		ResultSet res = dbController.sendQuery("SELECT *\r\n" + " FROM orders \r\n" + " WHERE visitTime >= \"" + start
 				+ "\" && visitTime < \"" + end + "\" &&  orderStatus = \"IDLE\";");
 
@@ -409,34 +419,29 @@ public class OrderController implements IController {
 	}
 
 	private String genereteApprovalRequestMessage(Order order) {
-		return "Please Approve or Cancel this order:\n" +
-	"OrderId: " + order.orderID +"\n" +
-				"visit time: " + order.visitTime.toLocalDateTime().toLocalDate() + " " + order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n" +
-				"number of visitors: " + order.numberOfVisitors + "\n" +
-				"Price: "+ order.priceOfOrder+"\n" + 
-				"If not accepted until 12:00, the order will be cancelrd automaticly\n"+
-				"Thank for using GoNature";
+		return "Please Approve or Cancel this order:\n" + "OrderId: " + order.orderID + "\n" + "visit time: "
+				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
+				+ order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n"
+				+ "number of visitors: " + order.numberOfVisitors + "\n" + "Price: " + order.priceOfOrder + "\n"
+				+ "If not accepted until 12:00, the order will be cancelrd automaticly\n" + "Thank for using GoNature";
 	}
-	
+
 	private String genereteMessage(Order order) {
-		return "Your New Order:\n" +
-	"OrderId: " + order.orderID +"\n" +
-				"visit time: " + order.visitTime.toLocalDateTime().toLocalDate() + " " + order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n" +
-				"number of visitors: " + order.numberOfVisitors + "\n" +
-				"Price: "+ order.priceOfOrder+"\n" + 
-				"Thank for using GoNature";
+		return "Your New Order:\n" + "OrderId: " + order.orderID + "\n" + "visit time: "
+				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
+				+ order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n"
+				+ "number of visitors: " + order.numberOfVisitors + "\n" + "Price: " + order.priceOfOrder + "\n"
+				+ "Thank for using GoNature";
 	}
-	
+
 	private String genereteCanceldMessage(Order order) {
-		return "Your Order Canceld:\n" +
-	"OrderId: " + order.orderID +"\n" +
-				"visit time: " + order.visitTime.toLocalDateTime().toLocalDate() + " " + order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n" +
-				"number of visitors: " + order.numberOfVisitors + "\n" +
-				"Price: "+ order.priceOfOrder+"\n" + 
-				"Thank for using GoNature";
+		return "Your Order Canceld:\n" + "OrderId: " + order.orderID + "\n" + "visit time: "
+				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
+				+ order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n"
+				+ "number of visitors: " + order.numberOfVisitors + "\n" + "Price: " + order.priceOfOrder + "\n"
+				+ "Thank for using GoNature";
 	}
-	
-	
+
 	/**
 	 * Method that return all the Orders entity from DB that in a range of time (
 	 * start < visit time < end ) and date and from chosen park site
@@ -474,7 +479,7 @@ public class OrderController implements IController {
 	 * 
 	 * @return
 	 */
-	public Order[] GetAllListOfOrders() { //TODO maybe not necessary (Roman)
+	public Order[] GetAllListOfOrders() { // TODO maybe not necessary (Roman)
 		ResultSet res = dbController.sendQuery("SELECT * FROM orders");
 		if (res == null)
 			return null;
@@ -528,7 +533,7 @@ public class OrderController implements IController {
 	 * @return true if order canceled, false otherwise
 	 */
 	public boolean CancelOrderByOrderID(int orderID) {
-		canceled.add(GetOrderByID(orderID));//add order to canceled list
+		canceled.add(GetOrderByID(orderID));// add order to canceled list
 		PreparedStatement pstmt = dbController
 				.getPreparedStatement("UPDATE orders SET orderStatus = \"CANCEL\", isUsed = true WHERE orderID = ?;");
 		try {
@@ -623,17 +628,17 @@ public class OrderController implements IController {
 	 * @param hours
 	 * @return
 	 */
-	private Timestamp addTimeInHours(Timestamp stamp, int hours) {
-		long tempTimeLong = stamp.getTime();
-		Timestamp temp = new Timestamp(tempTimeLong);
-		int tempHours = stamp.getHours() + hours;
-		if (tempHours < openingHour)
-			temp.setHours(openingHour);
-		else if (tempHours > closeHour)
-			temp.setHours(closeHour);
-		else
-			temp.setHours(stamp.getHours() + hours);
-		return temp;
+	private Timestamp[] calcHoursRange(Order order, Park prk) {
+		Timestamp[] res = new Timestamp[2];
+		// Park prk = park.getPark(order.parkSite);
+		long tempTimeLong = order.visitTime.getTime();
+		Timestamp temp1 = new Timestamp(tempTimeLong); // to not change the original visitTime
+		Timestamp temp2 = new Timestamp(tempTimeLong); // to not change the original visitTime
+		temp1.setHours(order.visitTime.getHours() - ((int) prk.avgVisitTime) - 2); // -2 because of <=,>= in IsOrderAllowed
+		temp2.setHours(order.visitTime.getHours() + ((int)prk.avgVisitTime -1)); // -1 because of <=,>= in IsOrderAllowed
+		res[0] = temp1;
+		res[1] = temp2;
+		return res;
 	}
 
 }

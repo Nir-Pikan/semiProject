@@ -38,7 +38,7 @@
             <Font name="System Bold Italic" size="28.0" />
          </font>
       </Label>
-      <ComboBox fx:id="Park_ComboBox" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <ComboBox fx:id="Park_ComboBox" onAction="#parkWasChosen" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <DatePicker fx:id="Date_DatePicker" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <ComboBox fx:id="VisitHour_ComboBox" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <ComboBox fx:id="NumberOfVisitors_ComboBox" prefHeight="25.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />

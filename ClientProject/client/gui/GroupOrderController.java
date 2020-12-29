@@ -3,8 +3,10 @@ package gui;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Map;
 
 import entities.Order;
+import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +26,9 @@ import modules.ServerRequest.Manager;
 
 /** the GroupOrder page controller */
 public class GroupOrderController implements GuiController {
+
+	public Map<String, ParkNameAndTimes> openingTimes  =  clientController.client.openingTimes;
+	public String[] parkNames = clientController.client.parkNames;
 
 	Order ord;
 
@@ -75,11 +80,15 @@ public class GroupOrderController implements GuiController {
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear(); // for what? maybe not necessary
-		Park_ComboBox.getItems().addAll("#1", "#2", "#3");
-		VisitHour_ComboBox.getItems().clear(); // for what? maybe not necessary
-		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
-		// last enter time should be 12:00 ?
-		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00","12:00");
+		VisitHour_ComboBox.getItems().clear();
+		for (int i = 0; i < parkNames.length; i++) {
+			Park_ComboBox.getItems().add(parkNames[i]);
+		}
+//		Park_ComboBox.getItems().addAll("#1", "#2", "#3");
+//		VisitHour_ComboBox.getItems().clear(); // for what? maybe not necessary
+//		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
+//		// last enter time should be 12:00 ?
+//		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00","12:00");
 		// CardTypeComboBox.getSelectionModel().select(0);
 		NumberOfVisitors_ComboBox.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
 				"14", "15");
@@ -108,6 +117,27 @@ public class GroupOrderController implements GuiController {
 		};
 		Date_DatePicker.setDayCellFactory(callB);
 	}
+	
+	
+	private String[] CreateWorkingHours(ParkNameAndTimes parkDetails) {
+		VisitHour_ComboBox.getItems().clear();
+		int numberOfWorkingHours = parkDetails.closeTime - parkDetails.openTime;
+		String[] res = new String[numberOfWorkingHours];
+		for (int i = parkDetails.openTime; i < parkDetails.closeTime; i++) {
+			res[i - parkDetails.openTime] = i + ":00";
+		}
+		return res;
+	}
+
+	@FXML
+	void parkWasChosen(ActionEvent event) {
+		ParkNameAndTimes temp = null;
+		for (int i = 0; i < parkNames.length; i++)
+			if (parkNames[i].equals(Park_ComboBox.getValue()))
+				temp = openingTimes.get(parkNames[i]);
+		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
+	}
+	
 
 	private boolean CheckAllRequiredFields() {
 		boolean res = true;
@@ -233,7 +263,7 @@ public class GroupOrderController implements GuiController {
 
 			String response = clientController.client.sendRequestAndResponse(
 					new ServerRequest(Manager.Order, "IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
-			//TODO remove all the not necessary cases after integration (Roman)
+			// TODO remove all the not necessary cases after integration (Roman)
 			switch (response) {
 			case "Order was added successfully":
 				PopUp.showInformation("Order placed success", "Order placed success",
@@ -320,7 +350,7 @@ public class GroupOrderController implements GuiController {
 		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
 		int numberOfSubscribers = 0; // in a group order this is not relevant
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
-				visitTime, timeOfOrder, isUsed, ownerID,numberOfSubscribers);
+				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
 	}
 
@@ -335,7 +365,7 @@ public class GroupOrderController implements GuiController {
 		GuiController g = n.navigate("OrderSummary");
 		((OrderSummaryController) g).addOrderDataToFields(ord);
 	}
-	
+
 	public void addOrderDataToFields(Order order) {
 		ord = order;
 		initFields(ord);
@@ -350,6 +380,5 @@ public class GroupOrderController implements GuiController {
 		Email_textBox.setText(order.email);
 		Phone_textBox.setText(order.phone);
 	}
-	
 
 }

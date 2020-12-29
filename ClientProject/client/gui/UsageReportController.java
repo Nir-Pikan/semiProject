@@ -22,11 +22,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import module.GuiController;
 import module.JavafxPrinter;
+import module.Report;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the UsageReport page controller */
-public class UsageReportController implements GuiController {
+public class UsageReportController implements GuiController ,Report{
 
 	@FXML
 	private Label labelDateToday;

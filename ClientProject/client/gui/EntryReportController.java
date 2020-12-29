@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
+import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,11 +18,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
 import module.PopUp;
+import module.Report;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the EntryReport page controller */
-public class EntryReportController implements GuiController {
+public class EntryReportController implements GuiController ,Report{
 
 	@FXML
 	private Label labelDateToaday;
@@ -69,19 +71,10 @@ public class EntryReportController implements GuiController {
 	
 	@FXML
 	void ExtractReport(ActionEvent event) {
-		//TODO need to delete this
-		Timestamp fromTimestamp = new Timestamp(System.currentTimeMillis());
-		fromTimestamp = Timestamp.valueOf(fromTimestamp.toLocalDateTime().minusMonths(1));
-		Timestamp toTimestamp = Timestamp.valueOf(fromTimestamp.toLocalDateTime().plusMonths(2));
-		Timestamp[] dates = new Timestamp[2];
-		dates[0] = fromTimestamp;
-		dates[1] = toTimestamp;
-
-		initReport(dates);
 
 	}
 
-	public void initReport(Timestamp[] dates) {
+	public void initReport(String parkName, String parkID,Timestamp[] dates) {
 		if(isDataShown)
 			return;
 		isDataShown=true;
@@ -109,6 +102,7 @@ public class EntryReportController implements GuiController {
 		}
 
 		for (ParkEntry parkEntry : entries) {
+			if(!parkEntry.parkID.equals(parkID))continue;
 			long stay = Math.abs(parkEntry.exitTime.getTime() - parkEntry.arriveTime.getTime());
 			double duration = stay / (1000 * 60);
 			avgStayArray[parkEntry.entryType.ordinal()] += (duration * parkEntry.numberOfVisitors);
@@ -172,13 +166,6 @@ public class EntryReportController implements GuiController {
 	@Override
 	public void init() {
 
-		Timestamp fromTimestamp = new Timestamp(System.currentTimeMillis());
-		fromTimestamp = Timestamp.valueOf(fromTimestamp.toLocalDateTime().minusMonths(1));
-		Timestamp toTimestamp = Timestamp.valueOf(fromTimestamp.toLocalDateTime().plusMonths(2));
-		Timestamp[] dates = new Timestamp[2];
-		dates[0] = fromTimestamp;
-		dates[1] = toTimestamp;
-		initReport(dates);
 	}
 
 }

@@ -20,11 +20,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import module.GuiController;
 import module.JavafxPrinter;
+import module.Report;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the VisitorsReport page controller */
-public class VisitorsReportController implements GuiController {
+public class VisitorsReportController implements GuiController,Report {
 
 	@FXML
 	private Label labelDateToaday;

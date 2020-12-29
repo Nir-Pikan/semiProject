@@ -1,6 +1,8 @@
 package logic;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import entities.Permission;
 import entities.Permissions;
@@ -63,11 +65,31 @@ public class WorkerController implements IController {
 	 */
 	public boolean AddWorker(Worker worker) {
 		worker.setIsLogged(false);
-		return dbController.sendUpdate("INSERT INTO worker() VALUES (" + worker.getFirstName() + ","
-				+ worker.getLastName() + "," + worker.getWorkerID() + "," + worker.getEmail() + ","
-				+ worker.getUserName() + "," + worker.getWorkerType() + "," + "" + worker.getPassword() + ","
-				+ ParseIsLoginBoolToString(worker.getIsLogged()) + ","
-				+ ParsePermissionsToString(worker.getPermissions()) + ");");
+		PreparedStatement ps = dbController
+				.getPreparedStatement("INSERT INTO worker VALUES (?,?,?,?,?,?,?,?,?);");
+		try {
+			ps.setString(1, worker.getFirstName());
+			ps.setString(2, worker.getLastName());
+			ps.setString(3, worker.getWorkerID());
+			ps.setString(4, worker.getEmail());
+			ps.setString(5, worker.getUserName());
+			ps.setString(6, worker.getWorkerType());
+			ps.setString(7, worker.getPassword());
+			ps.setString(8, ParseIsLoginBoolToString(worker.getIsLogged()));
+			ps.setString(9, ParsePermissionsToString(worker.getPermissions()));
+			ps.executeUpdate();
+		} catch (SQLException e) { // if adding the worker failed
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+		//TODO delete, bugged ~Nir Pikan~
+//		return dbController.sendUpdate("INSERT INTO worker VALUES (" + worker.getFirstName() + ","
+//				+ worker.getLastName() + "," + worker.getWorkerID() + "," + worker.getEmail() + ","
+//				+ worker.getUserName() + "," + worker.getWorkerType() + "," + worker.getPassword() + ","
+//				+ ParseIsLoginBoolToString(worker.getIsLogged()) + ","
+//				+ ParsePermissionsToString(worker.getPermissions()) + ");");
 	}
 
 	/**

@@ -24,11 +24,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import module.GuiController;
+import module.Report;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the IncomeReport page controller */
-public class IncomeReportController implements GuiController, Initializable{
+public class IncomeReportController implements GuiController,Report{
 
     @FXML
     private Label labelDateToday;
@@ -95,7 +96,7 @@ public class IncomeReportController implements GuiController, Initializable{
      * @param parkName
      * @param reportStartAndEndTimes: [0]: start, [1]: end 
      */ 
-    public void initReport(String parkName, Timestamp[] reportStartAndEndTimes)            
+    public void initReport(String parkName, String parkID, Timestamp[] reportStartAndEndTimes)            
     {
     	this.reportStartAndEndTimes = reportStartAndEndTimes;
     	this.parkName = parkName;
@@ -164,7 +165,7 @@ public class IncomeReportController implements GuiController, Initializable{
     }
     
     @Override
-	public void initialize(URL arg0, ResourceBundle arg1) { // needed for appropriate working of TableView
+	public void init() { // needed for appropriate working of TableView
     	dateColumn.setCellValueFactory(new PropertyValueFactory<Cell,String>("date"));
     	visitorsColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("visitors"));
     	incomeColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("price"));

@@ -20,7 +20,6 @@
   <rowConstraints>
       <RowConstraints />
       <RowConstraints />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -42,7 +41,7 @@
   </rowConstraints>
    <children>
       <Label fx:id="labelDateToaday" text="Date:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-      <Label fx:id="labelVisitorsReport" text="Visitors Report" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
+      <Label fx:id="labelVisitorsReport" text="Visitors Report" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.valignment="CENTER">
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
@@ -50,37 +49,37 @@
             <Font size="48.0" />
          </font>
       </Label>
-      <Label fx:id="labelParkName" text="Park Name :" GridPane.rowIndex="5">
+      <Label fx:id="labelParkName" text="Park Name :" GridPane.rowIndex="4">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="labelReportDate" text="Report Date :" GridPane.rowIndex="6">
+      <Label fx:id="labelReportDate" text="Report Date :" GridPane.rowIndex="5">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="labelNumSingleVisitors" text="No. Single Visitors :" GridPane.rowIndex="7">
+      <Label fx:id="labelNumSingleVisitors" text="No. Single Visitors :" GridPane.rowIndex="6">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="labelNumGroupVisitors" text="No. Group Visitors :" GridPane.rowIndex="8">
+      <Label fx:id="labelNumGroupVisitors" text="No. Group Visitors :" GridPane.rowIndex="7">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="labelNumSubscriberVisitors" text="No. Subscriber Visitors :" GridPane.rowIndex="9">
+      <Label fx:id="labelNumSubscriberVisitors" text="No. Subscriber Visitors :" GridPane.rowIndex="8">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="labelTotalVisitors" text="Total Number of Visitors : " GridPane.rowIndex="10">
+      <Label fx:id="labelTotalVisitors" text="Total Number of Visitors : " GridPane.rowIndex="9">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <BarChart fx:id="VisitorsChart" animated="false" title="Number of visitors for each type" GridPane.columnSpan="3" GridPane.rowIndex="11" GridPane.rowSpan="8">
+      <BarChart fx:id="VisitorsChart" animated="false" title="Number of visitors for each type" GridPane.columnSpan="3" GridPane.rowIndex="10" GridPane.rowSpan="8">
         <xAxis>
           <CategoryAxis fx:id="CharVisitorsTypeX" label="Visitors Type" side="BOTTOM" />
         </xAxis>
@@ -94,13 +93,13 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin>
       </BarChart>
-      <Button fx:id="buttonPrint" mnemonicParsing="false" onAction="#buttonPrint_OnClick" text="Print Report" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="19" />
-      <Label fx:id="textParkName" text="textParkName" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Label fx:id="textReportDate" text="textReportDate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <Label fx:id="textNumSingleVisitors" text="textNumSingleVisitors" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <Label fx:id="textNumGroupVisitors" text="textNumGroupVisitors" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <Label fx:id="textNumSubscriberVisitors" text="textNumSubscriberVisitors" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-      <Label fx:id="textTotalVisitors" text="textTotalVisitors" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+      <Button fx:id="buttonPrint" mnemonicParsing="false" onAction="#buttonPrint_OnClick" text="Print Report" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="18" />
+      <Label fx:id="textParkName" text="textParkName" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label fx:id="textReportDate" text="textReportDate" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Label fx:id="textNumSingleVisitors" text="textNumSingleVisitors" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Label fx:id="textNumGroupVisitors" text="textNumGroupVisitors" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <Label fx:id="textNumSubscriberVisitors" text="textNumSubscriberVisitors" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <Label fx:id="textTotalVisitors" text="textTotalVisitors" GridPane.columnIndex="1" GridPane.rowIndex="9" />
       <Label fx:id="textDateToday" text="textDateToday" GridPane.columnIndex="2" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="10.0" />

@@ -34,7 +34,7 @@ public class clientController extends AbstractClient {
 	public Map<String,ParkNameAndTimes> openingTimes;
 	public String[] parkNames;
 	public Property<Worker> logedInWorker = new Property<>();
-	public Property<Subscriber> logedInSunscriber = new Property<>();
+	public Property<Subscriber> logedInSunscriber = new Property<>();//TODO sunscriber -> subscriber ~Nir Pikan~
 	public Property<String> visitorID = new Property<>();
 
 	/**

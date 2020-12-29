@@ -14,11 +14,12 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import module.GuiController;
+import module.Report;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the CancelReport page controller */
-public class CancelReportController implements GuiController{
+public class CancelReportController implements GuiController,Report{
 
     @FXML
     private Label labelDateToday;
@@ -90,7 +91,7 @@ public class CancelReportController implements GuiController{
      * @param parkName
      * @param reportStartAndEndTimes: [0]: start, [1]: end 
      */ 
-    public void initReport(String parkName, Timestamp[] reportStartAndEndTimes)            
+    public void initReport(String parkName,String parkID, Timestamp[] reportStartAndEndTimes)            
     {
     	this.reportStartAndEndTimes = reportStartAndEndTimes;
     	this.parkName = parkName;	

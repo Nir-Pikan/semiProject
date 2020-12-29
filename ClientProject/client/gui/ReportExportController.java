@@ -1,8 +1,17 @@
 package gui;
+
 /**
  * Sample Skeleton for 'ReportExportWindowBoundary.fxml' Controller Class
  */
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import entities.ParkNameAndTimes;
+import entities.Worker;
+import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,46 +19,97 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
+import module.Navigator;
+import module.Report;
 
 /** the ReportExport page controller */
-public class ReportExportController implements GuiController{
+public class ReportExportController implements GuiController {
 
-    @FXML
-    private Label labelDateToday;
+	@FXML
+	private Label labelDateToday;
 
-    @FXML
-    private TextField textDateToday;
+	@FXML
+	private Label textDateToday;
 
-    @FXML
-    private Label labelParkManager;
+	@FXML
+	private Label labelParkManager;
 
-    @FXML
-    private Label labelParkName;
+	@FXML
+	private Label labelParkName;
 
-    @FXML
-    private Button buttonParkSettings;
+	@FXML
+	private ComboBox<ReportType> ReportSelectionComboBox;
 
-    @FXML
-    private ComboBox<?> ReportSelectionComboBox;
+	@FXML
+	private Label labelReportSelection;
 
-    @FXML
-    private Label labelReportSelection;
+	@FXML
+	private Button buttonGetReport;
 
-    @FXML
-    private Button buttonGetReport;
+	@FXML
+	private ComboBox<String> ParkSelectionComboBox;
 
-    @FXML
-    private ComboBox<?> ParkSelectionComboBox;
+	@FXML
+	private Label LabelParkId;
 
-    @FXML
-    private Label LabelParkId;
+	@FXML
+	private TextField textParkId;
 
-    @FXML
-    private TextField textParkId;
+	@FXML
+	void getReoprt_OnClick(ActionEvent event) {
+		LocalDate startOfMonthDay = LocalDate.now().withDayOfMonth(1);
+		Timestamp startOfMonth = Timestamp.valueOf(startOfMonthDay.atTime(0, 0));
+		Timestamp endOfMonth = Timestamp.valueOf(startOfMonthDay.plusMonths(1).atTime(0, 0));
+		Report r;
+		switch (ReportSelectionComboBox.getValue()) {
+		case Cancel:
+			r = (Report) Navigator.instance().navigate("CancelReport.fxml");
+			break;
+		case Entry:
+			r = (Report) Navigator.instance().navigate("EntryReport.fxml");
+			break;
+		case Income:
+			r = (Report) Navigator.instance().navigate("IncomeReport.fxml");
+			break;
+		case Usage:
+			r = (Report) Navigator.instance().navigate("UsageReport.fxml");
+			break;
+		case Visitor:
+			r = (Report) Navigator.instance().navigate("VisitorsReport.fxml");
+			break;
+		default:
+			return;
+		}
+		Timestamp[] dates = new Timestamp[] {startOfMonth,endOfMonth};
+		r.initReport(textParkId.getText(),ParkSelectionComboBox.getValue(), dates);
+	}
 
-    @FXML
-    void getReoprt_OnClick(ActionEvent event) {
+	@Override
+	public void init() {
+		Worker w = clientController.client.logedInWorker.getVal();
+		ParkSelectionComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+			ParkNameAndTimes p = clientController.client.openingTimes.get(newVal);
+			if (p == null) {
+				LabelParkId.setText("");
+				return;
+			}
+			LabelParkId.setText(p.parkID);
+		});
+		if (w.getWorkerType().equals("Devision Manager")) {
+			ParkSelectionComboBox.getItems().addAll(clientController.client.parkNames);
+			ReportSelectionComboBox.getItems().addAll(ReportType.Entry, ReportType.Cancel);
 
-    }
+		} else {
+			ParkSelectionComboBox.getItems().add(w.getPermissions().GetParkID());
+			ParkSelectionComboBox.getSelectionModel().clearAndSelect(0);
+			ParkSelectionComboBox.setDisable(true);
+			LabelParkId.setText(w.getPermissions().GetParkID());
+			ReportSelectionComboBox.getItems().addAll(ReportType.Visitor, ReportType.Usage, ReportType.Income);
+		}
+		textDateToday.setText(LocalDate.now().toString());
+	}
 
+	private enum ReportType {
+		Visitor, Entry, Usage, Income, Cancel
+	}
 }

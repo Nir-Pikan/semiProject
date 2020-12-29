@@ -239,7 +239,7 @@ public class ServerController extends AbstractServer {
 				"parkWorker", "Aa123456", false, parkGoldWorker);
 		Worker platinumWorker = new Worker("platinumWorker", "Jotaro", "Kujo", "000000007", "jotaro@gmail.com",
 				"parkWorker", "Aa123456", false, parkPlatinumWorker);
-		
+
 		worker.AddWorker(departmentManager);
 		worker.AddWorker(silverManager);
 		worker.AddWorker(goldManager);

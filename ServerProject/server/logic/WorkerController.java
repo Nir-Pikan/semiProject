@@ -20,7 +20,7 @@ public class WorkerController implements IController {
 		dbController = DbController.getInstance();
 		createTable();
 		
-		dbController.sendUpdate("UPDATE worker SET isLogged=false WHERE username<>\"\"");//disconnect all clients
+		dbController.sendUpdate("UPDATE worker SET isLogged=\"NO\" WHERE username<>\"\"");//disconnect all clients
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class WorkerController implements IController {
 	public boolean AddWorker(Worker worker) {
 		worker.setIsLogged(false);
 		PreparedStatement ps = dbController
-				.getPreparedStatement("INSERT INTO worker VALUES (?,?,?,?,?,?,?,?,?);");
+				.getPreparedStatement("INSERT IGNORE INTO worker VALUES (?,?,?,?,?,?,?,?,?);");
 		try {
 			ps.setString(1, worker.getFirstName());
 			ps.setString(2, worker.getLastName());
@@ -102,7 +102,7 @@ public class WorkerController implements IController {
 	 */
 	public Worker LogInWorker(String userName, String password) {
 		ResultSet result = dbController
-				.sendQuery("select * from worker where UserName=" + userName + " AND Password=" + password + ";");
+				.sendQuery("select * from worker where UserName=\"" + userName + "\" AND Password=\"" + password + "\"");
 		try {
 			if (!result.next())
 				return null;

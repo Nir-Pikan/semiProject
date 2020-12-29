@@ -195,7 +195,7 @@ public class ServerController extends AbstractServer {
 		depManager.AddPermission(reg);
 		depManager.AddPermission(visitorsView);
 		depManager.AddPermission(reportExport);
-		depManager.AddPermission(editParameters);
+//		depManager.AddPermission(editParameters);
 		depManager.AddPermission(new Permission("ApproveParameters"));
 		depManager.AddPermission(new Permission("ApproveDiscounts"));
 

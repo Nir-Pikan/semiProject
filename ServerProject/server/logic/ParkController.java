@@ -198,7 +198,7 @@ public class ParkController implements IController {
 	 * @param parkId the Id of the wanted Park
 	 * @return the park entity of the given ID or null if failed
 	 */
-	private Park getPark(String parkId) {
+	protected Park getPark(String parkId) { 
 		try {
 
 			ResultSet rs = db.sendQuery("SELECT * FROM park WHERE parkId =\"" + parkId+"\";");

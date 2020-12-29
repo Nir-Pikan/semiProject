@@ -3,8 +3,11 @@ package gui;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Map;
 
 import entities.Order;
+import entities.Park;
+import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,8 +27,8 @@ import modules.ServerRequest.Manager;
 /** the RegularOrder page controller */
 public class RegularOrderController implements GuiController {
 
-	// the hours when the parks is working
-
+	public Map<String, ParkNameAndTimes> openingTimes  =  clientController.client.openingTimes;
+	public String[] parkNames = clientController.client.parkNames;
 	private Order ord;
 
 	@FXML
@@ -64,14 +67,10 @@ public class RegularOrderController implements GuiController {
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear();
-		Park_ComboBox.getItems().addAll("Silver", "Gold", "Platinum"); // TODO give a names from a DB (Roman) exist in a client
-
 		VisitHour_ComboBox.getItems().clear();
-		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
-		// last enter time should be 12:00 ?
-		// maybe better to show only relevant hours if today date was selected
-		// TODO decide the entring hours
-		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00");
+		for (int i = 0; i < parkNames.length; i++) {
+			Park_ComboBox.getItems().add(parkNames[i]);
+		}
 		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
 
 		// ===================== delete later ===========================
@@ -97,6 +96,25 @@ public class RegularOrderController implements GuiController {
 		};
 		Date_DatePicker.setDayCellFactory(callB);
 
+	}
+
+	private String[] CreateWorkingHours(ParkNameAndTimes parkDetails) {
+		VisitHour_ComboBox.getItems().clear();
+		int numberOfWorkingHours = parkDetails.closeTime - parkDetails.openTime;
+		String[] res = new String[numberOfWorkingHours];
+		for (int i = parkDetails.openTime; i < parkDetails.closeTime; i++) {
+			res[i - parkDetails.openTime] = i + ":00";
+		}
+		return res;
+	}
+
+	@FXML
+	void parkWasChosen(ActionEvent event) {
+		ParkNameAndTimes temp = null;
+		for (int i = 0; i < parkNames.length; i++)
+			if (parkNames[i].equals(Park_ComboBox.getValue()))
+				temp = openingTimes.get(parkNames[i]);
+		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
 	}
 
 	// TODO error messages length visual
@@ -279,7 +297,8 @@ public class RegularOrderController implements GuiController {
 //				new ServerRequest(Manager.Order, "AddNewOrder", ServerRequest.gson.toJson(o, Order.class)));
 
 	/**
-	 * when Place Order button clicked checks if this order can be booked 
+	 * when Place Order button clicked checks if this order can be booked
+	 * 
 	 * @param event
 	 */
 	@FXML
@@ -358,9 +377,9 @@ public class RegularOrderController implements GuiController {
 		ord = order;
 		initFields(ord);
 	}
-	
+
 	/**
-	 * initialize fields by Order entity 
+	 * initialize fields by Order entity
 	 * 
 	 * @param order
 	 */
@@ -393,13 +412,24 @@ public class RegularOrderController implements GuiController {
 		String email = Email_textBox.getText();
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
-		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
-		int numberOfSubscribers = isSubscriber(); 
+		// String ownerID = "323533745"; // TODO the real ownerID will be provided from
+		// previous page (popUp)
+		String ownerID = getIdentificationString();
+		int numberOfSubscribers = isSubscriber();
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
 	}
 
+	private String getIdentificationString() {
+		if (clientController.client.visitorID.getVal() != null)
+			return clientController.client.visitorID.getVal().intern();
+		if (clientController.client.logedInSunscriber.getVal() != null)
+			return clientController.client.logedInSunscriber.getVal().personalID;
+//		if(clientController.client.logedInWorker.getVal() != null)
+//			return clientController.client.logedInWorker.getVal().getWorkerID();
+		return null;
+	}
 
 	private int isSubscriber() {
 		if (clientController.client.logedInSunscriber.getVal() != null)

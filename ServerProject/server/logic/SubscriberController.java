@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import entities.Subscriber;
+import entities.Subscriber.CreditCard;
 import entities.Subscriber.Type;
 import io.DbController;
 import modules.IController;
@@ -148,7 +149,25 @@ public class SubscriberController implements IController {
 				ps.setString(5, sub.creditCard.expirationDateMonth);
 				ps.setString(6, sub.creditCard.expirationDateYear);
 				ps.setString(7, sub.creditCard.cardType.toString());
-				ps.executeUpdate();
+				if(ps.executeUpdate()==0) {
+					String statment2 = "SELECT * FROM creditcards WHERE creditCardNumber = " + sub.creditCardNumber + ";";
+					ResultSet res2 = dbController.sendQuery(statment2);
+
+					if (res2 != null)
+						try {
+							if (res2.next()) {
+								CreditCard c = new CreditCard(res2.getString(1), res2.getString(2), res2.getString(3),
+										res2.getString(4), res2.getString(5), res2.getString(6),
+										Subscriber.CardType.valueOf(res2.getString(7)));
+							if(!c.equals(sub.creditCard))
+								return false;
+							}
+							res2.close();
+							
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+				}
 			} catch (SQLException e) { // if adding the credit card failed
 				e.printStackTrace();
 			}

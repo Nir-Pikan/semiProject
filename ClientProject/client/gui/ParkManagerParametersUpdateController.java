@@ -188,7 +188,7 @@ public class ParkManagerParametersUpdateController implements GuiController {
 	@Override
 	public void init() {
 		textDateToday.setText(LocalDate.now().format(DateTimeFormatter.ISO_DATE));
-		// TODO call setPark with the manager park
+		setPark(clientController.client.logedInWorker.getVal().getPermissions().GetParkID());
 	}
 
 	public void setPark(String ParkId) {

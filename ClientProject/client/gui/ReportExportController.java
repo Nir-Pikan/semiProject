@@ -58,8 +58,8 @@ public class ReportExportController implements GuiController {
 	@FXML
 	void getReoprt_OnClick(ActionEvent event) {
 		LocalDate startOfMonthDay = LocalDate.now().withDayOfMonth(1);
-		Timestamp startOfMonth = Timestamp.valueOf(startOfMonthDay.atTime(0, 0));
-		Timestamp endOfMonth = Timestamp.valueOf(startOfMonthDay.plusMonths(1).atTime(0, 0));
+		Timestamp startOfMonth = Timestamp.valueOf(startOfMonthDay.atStartOfDay());
+		Timestamp endOfMonth = Timestamp.valueOf(startOfMonthDay.plusMonths(1).atStartOfDay());
 		Report r;
 		switch (ReportSelectionComboBox.getValue()) {
 		case Cancel:
@@ -95,7 +95,7 @@ public class ReportExportController implements GuiController {
 			}
 			LabelParkId.setText(p.parkID);
 		});
-		if (w.getWorkerType().equals("Devision Manager")) {
+		if (w.getWorkerType().equals("departmentManager")) {
 			ParkSelectionComboBox.getItems().addAll(clientController.client.parkNames);
 			ReportSelectionComboBox.getItems().addAll(ReportType.Entry, ReportType.Cancel);
 

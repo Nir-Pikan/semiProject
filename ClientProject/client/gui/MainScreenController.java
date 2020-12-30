@@ -137,9 +137,9 @@ public class MainScreenController {
 		Map<String, MenuItem> res = new HashMap<String, MenuItem>();
 
 		res.put("Registration", new MenuItem("Subscriber registration", "RegisterCommonDetails"));
-		res.put("VistitorsView", new MenuItem("check current visitors number", "VisitorsInThePark"));
+		res.put("VistitorsView", new MenuItem("Casual Orders & View visitors", "VisitorsInThePark"));
 		res.put("ReportExport", new MenuItem("Generate Reports", "ReportExport"));
-		res.put("EditParameters", new MenuItem("change Park Parameters", "ParkManagerParametersUpdate"));
+		res.put("EditParameters", new MenuItem("Change Park Parameters", "ParkManagerParametersUpdate"));
 		res.put("ApproveParameters", new MenuItem("Approve Park Parameters", "DevisionManagerParksDetailsApprove"));
 		res.put("ApproveDiscounts", new MenuItem("Approve Discounts", "DevisionManagerDiscount"));
 		return res;

@@ -94,8 +94,8 @@
 .default-color3.chart-bar { -fx-bar-fill: #41a9c9; }
 .axis  { -fx-tick-label-fill: white; }
 
-.chart-legend {
-   -fx-background-color:  transparent;
+.chart-legend .label {
+    -fx-text-fill: black;
 }
 
 .default-color0.chart-pie { -fx-pie-color: #83C1D0; }

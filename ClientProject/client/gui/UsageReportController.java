@@ -6,26 +6,23 @@ package gui;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.util.ArrayList;
-
 import entities.ParkEntry;
 import entities.ParkNameAndTimes;
-import gui.UsageReportController.UsageRow;
 import io.clientController;
-import javafx.collections.FXCollections;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.util.Callback;
 import module.GuiController;
 import module.JavafxPrinter;
 import module.Report;
@@ -61,7 +58,7 @@ public class UsageReportController implements GuiController, Report {
 
 	@FXML
 	private Label textMaxCapacity;
-
+/*
 	@FXML
 	private TableView<UsageRow> visitorUsageTable;
 
@@ -74,6 +71,7 @@ public class UsageReportController implements GuiController, Report {
 	@FXML
 	private TableColumn<UsageRow, Double> usageColumn;
 
+*/
 	@FXML
 	private TreeTableView<UsageRow> usageTreeTable;
 
@@ -81,10 +79,10 @@ public class UsageReportController implements GuiController, Report {
 	private TreeTableColumn<UsageRow, String> DateCol;
 
 	@FXML
-	private TreeTableColumn<UsageRow, Integer> visitorsCol;
+	private TreeTableColumn<UsageRow, Number> visitorsCol;
 
 	@FXML
-	private TreeTableColumn<UsageRow, Double> usageCol;
+	private TreeTableColumn<UsageRow, Number> usageCol;
 
 	@FXML
 	private Button buttonPrint;
@@ -179,16 +177,49 @@ public class UsageReportController implements GuiController, Report {
 			
 			*/
 //=================================================================================================================
-			TreeTableView<UsageRow> usageTreeTable = new TreeTableView<UsageRow>();
+	//		TreeTableView<UsageRow> usageTreeTable = new TreeTableView<UsageRow>();
 
-			TreeTableColumn<UsageRow, String> DateCol = new TreeTableColumn<>("Date");
-			TreeTableColumn<UsageRow, Integer> visitorsCol = new TreeTableColumn<>("Visitors");
-			TreeTableColumn<UsageRow, Double> usageCol = new TreeTableColumn<>("Usage %");
+	//		TreeTableColumn<UsageRow, String> DateCol = new TreeTableColumn<>("Date");
+	//		TreeTableColumn<UsageRow, Number> visitorsCol = new TreeTableColumn<>("Visitors");
+	//		TreeTableColumn<UsageRow, Number> usageCol = new TreeTableColumn<>("Usage %");
 
-			DateCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("date"));
-			visitorsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("visitors"));
-			usageCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("usage"));
+		//	DateCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("date"));
+		//	visitorsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("visitors"));
+		//	usageCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("usage"));
 
+	
+			DateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,String>, ObservableValue<String>>() {
+				
+				@Override
+				public ObservableValue<String> call(CellDataFeatures<UsageRow, String> param) {
+					// TODO Auto-generated method stub
+					return param.getValue().getValue().getDate();
+				}
+			});
+			
+
+			visitorsCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,Number>, ObservableValue<Number>>() {
+				
+				@Override
+				public ObservableValue<Number> call(CellDataFeatures<UsageRow, Number> param) {
+					// TODO Auto-generated method stub
+					return param.getValue().getValue().getVisitors();
+				}
+			});
+			
+
+			usageCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,Number>, ObservableValue<Number>>() {
+				
+		
+				@Override
+				public ObservableValue<Number> call(CellDataFeatures<UsageRow, Number> param) {
+					// TODO Auto-generated method stub
+					return param.getValue().getValue().getUsage();
+				}
+			});
+			
+			
+			
 			ParkNameAndTimes p = clientController.client.openingTimes.get(parkID);
 
 			String dates = reportDate[0].toLocalDateTime().toLocalDate().toString() + " to "
@@ -222,13 +253,12 @@ public class UsageReportController implements GuiController, Report {
 					for (ParkEntry entry : entries) {
 						// only for wanted park and hour
 						if (entry.parkID.equals(parkID) && entry.arriveTime.toLocalDateTime().getHour() <= j
-								&& entry.exitTime.toLocalDateTime().getHour() >= j)
+								&& entry.exitTime.toLocalDateTime().getHour() >= j && entry.arriveTime.toLocalDateTime().toLocalDate().getDayOfMonth()==(i+1))
 							visitors += entry.numberOfVisitors;
 					}
 					usage = ((double) visitors)
-							/ (maxCapacity * (p.closeTime - p.openTime) / Double.parseDouble(parkParameters[2]));
+							/ (maxCapacity ) ;
 					usage *= 100;
-
 					TreeItem<UsageRow> hourItem = new TreeItem<UsageRow>(new UsageRow(hourString, visitors, usage));
 					dayItem.getChildren().add(hourItem);
 
@@ -236,7 +266,10 @@ public class UsageReportController implements GuiController, Report {
 				rootData.getChildren().add(dayItem);
 			}
 			
+			  
 			usageTreeTable.setRoot(rootData);
+			usageTreeTable.setShowRoot(false);
+			
 		}
 
 	}
@@ -245,34 +278,49 @@ public class UsageReportController implements GuiController, Report {
 	 * private class to create rows for the usage table
 	 */
 	public static class UsageRow {
-		protected String date;
-		protected int visitors;
-		protected double usage;
+		//public String date;
+	//	public int visitors;
+	//	public double usage;
 
+		SimpleStringProperty date;
+		SimpleIntegerProperty visitors;
+		SimpleDoubleProperty usage;
+		
 		public UsageRow(String date, int visitors, double usage) {
-			this.date = date;
-			this.visitors = visitors;
-			this.usage = usage;
+			this.date = new SimpleStringProperty(date);
+			this.visitors =  new SimpleIntegerProperty(visitors);
+			this.usage = new SimpleDoubleProperty(usage);
+		}
+		public void setDate(String date) {
+			this.date = new SimpleStringProperty(date);;
+		}
+		
+		public void setVisitors(int visitors) {
+			this.visitors = new SimpleIntegerProperty(visitors);
+		}
+		
+		public void setUsage(double usage) {
+			this.usage = new SimpleDoubleProperty(usage);
 		}
 
 		/**
 		 * @return the date
 		 */
-		public String getDate() {
+		public SimpleStringProperty getDate() {
 			return date;
 		}
 
 		/**
 		 * @return the visitors
 		 */
-		public int getVisitors() {
+		public SimpleIntegerProperty getVisitors() {
 			return visitors;
 		}
 
 		/**
 		 * @return the usage
 		 */
-		public double getUsage() {
+		public SimpleDoubleProperty getUsage() {
 			return usage;
 		}
 

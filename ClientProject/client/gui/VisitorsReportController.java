@@ -1,14 +1,12 @@
 package gui;
 
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import entities.ParkEntry;
+import entities.ParkEntry.EntryType;
 import io.clientController;
-
-/**
- * Sample Skeleton for 'VisitorsReportBoundary.fxml' Controller Class
- */
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +23,7 @@ import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the VisitorsReport page controller */
-public class VisitorsReportController implements GuiController,Report {
+public class VisitorsReportController implements GuiController, Report {
 
 	@FXML
 	private Label labelDateToaday;
@@ -73,7 +71,7 @@ public class VisitorsReportController implements GuiController,Report {
 	private Label textTotalVisitors;
 
 	@FXML
-	private BarChart<String, Number> VisitorsChart;
+	private BarChart<String, Integer> VisitorsChart;
 
 	@FXML
 	private CategoryAxis CharVisitorsTypeX;
@@ -89,8 +87,8 @@ public class VisitorsReportController implements GuiController,Report {
 	 */
 	@FXML
 	void buttonPrint_OnClick(ActionEvent event) {
-		 JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
-		 
+		JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
+
 	}
 
 	/**
@@ -105,7 +103,8 @@ public class VisitorsReportController implements GuiController,Report {
 	public void initReport(String parkName, String parkID, Timestamp[] reportDate) {
 		textDateToday.setText(LocalDate.now().toString());
 		textParkName.setText(parkName);
-		textReportDate.setText("from " + reportDate[0].toLocalDateTime().toLocalDate().toString() + " to " + reportDate[1].toLocalDateTime().toLocalDate().toString());
+		textReportDate.setText("from " + reportDate[0].toLocalDateTime().toLocalDate().toString() + " to "
+				+ reportDate[1].toLocalDateTime().toLocalDate().toString());
 
 		// send request to get park entries to clientController
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Entry,
@@ -141,27 +140,27 @@ public class VisitorsReportController implements GuiController,Report {
 					if (entry.entryType.equals(ParkEntry.EntryType.Personal)) {
 						singleVisitorsCounter++;
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
-						totalVisitorsCounter+=entry.numberOfVisitors;
+						totalVisitorsCounter += entry.numberOfVisitors;
 					}
 
 					// subscriber
 					if (entry.entryType.equals(ParkEntry.EntryType.Subscriber)) {
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
-						totalVisitorsCounter+=entry.numberOfVisitors;
+						totalVisitorsCounter += entry.numberOfVisitors;
 					}
 
 					// group
 					if (entry.entryType.equals(ParkEntry.EntryType.Group)) {
 						groupVisitorsCounter += entry.numberOfVisitors;
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
-						totalVisitorsCounter+=entry.numberOfVisitors;
+						totalVisitorsCounter += entry.numberOfVisitors;
 					}
 
 					// privateGroup
 					if (entry.entryType.equals(ParkEntry.EntryType.PrivateGroup)) {
 						singleVisitorsCounter += entry.numberOfVisitors;
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
-						totalVisitorsCounter+=entry.numberOfVisitors;
+						totalVisitorsCounter += entry.numberOfVisitors;
 					}
 				}
 			}
@@ -169,18 +168,28 @@ public class VisitorsReportController implements GuiController,Report {
 			textNumSingleVisitors.setText(String.valueOf(singleVisitorsCounter));
 			textNumGroupVisitors.setText(String.valueOf(groupVisitorsCounter));
 			textNumSubscriberVisitors.setText(String.valueOf(subscriberVisitorsCounter));
-			textTotalVisitors
-					.setText(String.valueOf(totalVisitorsCounter));
+			textTotalVisitors.setText(String.valueOf(totalVisitorsCounter));
 
-	
-			//update the bar chart
-			//TODO Work on how this looks ~Nir Pikan~
-			XYChart.Series series1 = new XYChart.Series();
-			series1.setName("Num of visitors");
-			series1.getData().add(new XYChart.Data("Single",singleVisitorsCounter));
-			series1.getData().add(new XYChart.Data("Group",groupVisitorsCounter));
-			series1.getData().add(new XYChart.Data("Subscribers",subscriberVisitorsCounter));
-			VisitorsChart.getData().add(series1);
+			// update the bar chart
+			// TODO Work on how this looks ~Nir Pikan~ ~Michael Gindin~
+			for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
+				XYChart.Series<String, Integer> addSeries = new XYChart.Series<String, Integer>();
+				addSeries.setName(dayOfWeek.toString());
+				for (EntryType entryType : EntryType.values()) {
+					int counter = 0;
+					for (ParkEntry parkEntry : entries) {
+						if (parkEntry.parkID.equals(parkID) && parkEntry.entryType.equals(entryType)
+								&& parkEntry.arriveTime.toLocalDateTime().toLocalDate().getDayOfWeek()
+										.equals(dayOfWeek)) {
+							counter++;
+						}
+					}
+					addSeries.getData().add(new XYChart.Data<String, Integer>(entryType.toString(), counter));
+				}
+
+				VisitorsChart.getData().add(addSeries);
+			}
+
 		}
 	}
 

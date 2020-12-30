@@ -67,7 +67,10 @@ public class VisitorsInTheParkPageController implements GuiController {
 			}
 			visitorsAmountText.setText(response);
 		});
-		// TODO call set Park for worker and park manager
+		if(!clientController.client.logedInWorker.getVal().getWorkerType().equals("departmentManager")) {
+			parkNumChoise.getSelectionModel().select(clientController.client.logedInWorker.getVal().getPermissions().GetParkID());
+			parkNumChoise.setDisable(true);
+		};
 	}
 
 	public void setPark(String parkId) {

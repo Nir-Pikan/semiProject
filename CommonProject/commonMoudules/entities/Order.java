@@ -12,7 +12,7 @@ public class Order {
 	// Identification Number // not for now
 	public String parkSite;
 	public int numberOfVisitors;
-	public int orderID = 0; // change letter serial number of the order
+	public int orderID;
 	public float priceOfOrder; // should be calculated
 	public String email, phone;
 	public IdType type;
@@ -22,6 +22,10 @@ public class Order {
 	public boolean isUsed; // by default false
 	public String ownerID;
 	public int numberOfSubscribers;
+	
+	public Order() { //TODO check!! (Roman)
+		
+	}
 	
 	public Order(String parkSite, int numberOfVisitors, int orderID, float priceOfOrder, String email, String phone,
 			IdType type, OrderStatus orderStatus, Timestamp visitTime, Timestamp timeOfOrder, boolean isUsed, String ownerID,int numberOfSubscribers) {

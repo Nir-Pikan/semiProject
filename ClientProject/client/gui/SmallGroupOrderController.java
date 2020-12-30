@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import entities.Order;
+import entities.ParkEntry;
 import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.collections.FXCollections;
@@ -34,10 +35,12 @@ public class SmallGroupOrderController implements GuiController {
 	public Map<String, ParkNameAndTimes> openingTimes = clientController.client.openingTimes;
 	public String[] parkNames = clientController.client.parkNames;
 
-	private int visitorsCounter = 0;
+	private int visitorsCounter = 1;
 	private List<String> visitorsIDArray = new ArrayList<String>();
 	ObservableList<String> stringList;
-	Order ord;
+	private Order ord = new Order();
+	private ParkEntry parkEntry;
+	private boolean spontaneous = false;
 
 	@FXML
 	private ComboBox<String> Park_ComboBox;
@@ -85,23 +88,21 @@ public class SmallGroupOrderController implements GuiController {
 	public void init() {
 		Park_ComboBox.getItems().clear(); // for what? maybe not necessary
 		VisitHour_ComboBox.getItems().clear();
-		for (int i = 0; i < parkNames.length; i++) {
-			Park_ComboBox.getItems().add(parkNames[i]);
+		Park_ComboBox.getItems().addAll(parkNames);
+		String IdentificationID = getIdentificationString();
+		if (IdentificationID != null) {
+			listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + IdentificationID + ")");
+			visitorsIDArray.add(IdentificationID);
 		}
-
-		visitorsIDArray.add(getIdentificationString());
-		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
-		// last enter time should be 12:00 ?
-		// VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00",
-		// "12:00"); //TODO maybe will be changed (Roman)
-		// CardTypeComboBox.getSelectionModel().select(0);
 
 		// ===================== delete later ===========================
 		Phone_textBox.setText("0545518526"); // TODO delete this later (Roman)
 		Email_textBox.setText("mirage164@gmail.com");
 		// =============================================================
+
 		stringList = FXCollections.observableArrayList(visitorsIDArray);
 		listViewVisitors.setItems(stringList);
+
 		// set only relevant dates
 		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
 			@Override
@@ -281,7 +282,7 @@ public class SmallGroupOrderController implements GuiController {
 	}
 
 	/**
-	 * when Add Visitor button clicked the method checks if the ID is entered
+	 * When Add Visitor button clicked the method checks if the ID is entered
 	 * properly and add the ID to a ListView
 	 * 
 	 * @param event
@@ -347,6 +348,12 @@ public class SmallGroupOrderController implements GuiController {
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
+			if (spontaneous == true) {
+				ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);
+				parkEntry = createParkEntry(ord);
+				MoveToTheNextPage(ord, parkEntry);
+				return;
+			}
 			ord = createOrderDetails();
 
 			String response = clientController.client.sendRequestAndResponse(
@@ -398,7 +405,7 @@ public class SmallGroupOrderController implements GuiController {
 				break;
 			case "Order can be placed":
 				PopUp.showInformation("Order can be placed", "Order can be placed", "Order can be placed");
-				MoveToTheNextPage(ord);
+				MoveToTheNextPage(ord, null); // if its preorder entry = null
 				break;
 			case "Error: No such job":
 				PopUp.showInformation("Unexpected error", "Unexpected error!",
@@ -408,10 +415,10 @@ public class SmallGroupOrderController implements GuiController {
 
 	}
 
-	private void MoveToTheNextPage(Order ord) {
+	private void MoveToTheNextPage(Order ord, ParkEntry entry) {
 		Navigator n = Navigator.instance();
 		GuiController g = n.navigate("OrderSummary");
-		((OrderSummaryController) g).addOrderDataToFields(ord);
+		((OrderSummaryController) g).addOrderDataToFields(ord, entry);
 	}
 
 	/**
@@ -426,9 +433,7 @@ public class SmallGroupOrderController implements GuiController {
 		Timestamp visitTime = Timestamp.valueOf(date.atTime(LocalTime.of(visitHour, 0)));
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
 		int numberOfVisitors = visitorsCounter;
-		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
-		int orderID = ServerRequest.gson.fromJson(response, Integer.class);
+		int orderID = getNextOrderID();
 		int priceOfOrder = 100; // for now, need to be calculated by other controller
 		boolean isUsed = false; // by default
 		Order.IdType type = Order.IdType.PRIVATEGROUP;
@@ -436,9 +441,7 @@ public class SmallGroupOrderController implements GuiController {
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = getIdentificationString();
-		// String ownerID = "323533745"; // TODO the real ownerID will be provided from
-		// previous page (popUp)
-		int numberOfSubscribers = NumberOfSubscribers(ownerID); // in a group order this is not relevant
+		int numberOfSubscribers = NumberOfSubscribers(); // in a group order this is not relevant
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
@@ -446,25 +449,21 @@ public class SmallGroupOrderController implements GuiController {
 
 	private String getIdentificationString() {
 		if (clientController.client.visitorID.getVal() != null)
-			return "visitor #" + ++visitorsCounter + " " + "(" + clientController.client.visitorID.getVal().intern()
-					+ ")";
+			return clientController.client.visitorID.getVal().intern();
 		if (clientController.client.logedInSunscriber.getVal() != null)
-			return "visitor #" + ++visitorsCounter + " " + "("
-					+ clientController.client.logedInSunscriber.getVal().personalID + ")";
+			return clientController.client.logedInSunscriber.getVal().personalID;
 //		if(clientController.client.logedInWorker.getVal() != null)
 //			return clientController.client.logedInWorker.getVal().getWorkerID();
 		return null;
 	}
 
-	// "visitor #" + visitorsCounter + " " + "(" +
-	// clientController.client.logedInSunscriber.getVal().personalID + ")"
 	/**
 	 * For each ID that was added, checks if the ID is subscriber. (no matters if S
 	 * was is a first char)
 	 * 
 	 * @return
 	 */
-	private int NumberOfSubscribers(String ownerID) { // TODO make it work
+	private int NumberOfSubscribers() { // TODO make it work
 		int res = 0;
 		String response = null;
 		for (String i : visitorsIDArray) {
@@ -478,10 +477,49 @@ public class SmallGroupOrderController implements GuiController {
 		return res;
 	}
 
-	// TODO setSpontaneous need to be implemented but how??
-	public void setSpontaneous(String ordererId) {
-		// TODO Auto-generated method stub
+	public void setSpontaneous(String ownerID, String parkName) {
+		spontaneous = true;
+		visitorsIDArray.add(ownerID);
+		listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + ownerID + ")");
+		Park_ComboBox.setValue(parkName);
+		VisitHour_ComboBox.setValue(LocalTime.now().withSecond(0).withNano(0).toString()); 
+		ord.ownerID = ownerID;	
+		ord.parkSite = parkName;
+		Date_DatePicker.setValue(LocalDate.now()); // get the date of today
+		// disable the fields, visitor don't have the choice of park,date and time
+		Park_ComboBox.setDisable(true);
+		VisitHour_ComboBox.setDisable(true);
+		Date_DatePicker.setDisable(true);
 
+	}
+
+	private ParkEntry createParkEntry(Order spOrder) {
+		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.PrivateGroup, spOrder.ownerID, spOrder.parkSite,
+				spOrder.visitTime, null, spOrder.numberOfVisitors, spOrder.numberOfSubscribers, true,
+				spOrder.priceOfOrder);
+		return entry;
+	}
+
+	private Order createSpontaneousOrderDetails(String ownerID, String parkName) {
+		int orderID = getNextOrderID();
+		int priceOfOrder = 100;
+		int numberOfVisitors = visitorsCounter;
+		String email = Email_textBox.getText();
+		String phone = Phone_textBox.getText();
+		Order.IdType type = Order.IdType.PRIVATEGROUP; // by default
+		Order.OrderStatus orderStatus = Order.OrderStatus.CONFIRMED;
+		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
+		boolean isUsed = true;
+		int numberOfSubscribers = NumberOfSubscribers();
+		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
+				timeOfOrder, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		return ord;
+	}
+
+	private int getNextOrderID() {
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
+		return ServerRequest.gson.fromJson(response, Integer.class);
 	}
 
 }

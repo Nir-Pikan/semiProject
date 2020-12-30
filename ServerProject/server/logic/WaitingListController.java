@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,6 +145,18 @@ public class WaitingListController implements IController {
 				"Your Order No: "+nextWaiting.orderID+ " can be accepted,\n"//content
 						+ " Please Go to GoNature and approve/cancel this order."
 						+ "This offer is for one hour only!",
+						"Order "+nextWaiting.orderID+" out if waiting list");//subject
+		
+	}
+	
+	private void notifyNewOrder(Order nextWaiting) {
+		messageC.SendEmailAndSMS(nextWaiting.email, nextWaiting.phone,
+				"Your Order Added to the waiting list:\n" +
+						"OrderId: " + nextWaiting.orderID +"\n" +
+									"visit time: " + nextWaiting.visitTime.toLocalDateTime().toLocalDate() + " " + nextWaiting.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n" +
+									"number of visitors: " + nextWaiting.numberOfVisitors + "\n" +
+									"Price: "+ nextWaiting.priceOfOrder+"\n" + 
+									"Thank for using GoNature",
 						"Order "+nextWaiting.orderID+" out if waiting list");//subject
 		
 	}

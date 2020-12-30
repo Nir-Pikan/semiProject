@@ -73,7 +73,7 @@ public class Subscriber {
 	 * <p>
 	 * a Credit card may be used by multiple {@link Subscriber}s
 	 */
-	public class CreditCard {
+	public static class CreditCard {
 
 		public String creditCardNumber;
 		public String ownerID;
@@ -105,5 +105,65 @@ public class Subscriber {
 			this.expirationDateYear = expirationDateYear;
 			this.cardType = cardType;
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((cardType == null) ? 0 : cardType.hashCode());
+			result = prime * result + ((creditCardNumber == null) ? 0 : creditCardNumber.hashCode());
+			result = prime * result + ((cvv == null) ? 0 : cvv.hashCode());
+			result = prime * result + ((expirationDateMonth == null) ? 0 : expirationDateMonth.hashCode());
+			result = prime * result + ((expirationDateYear == null) ? 0 : expirationDateYear.hashCode());
+			result = prime * result + ((nameOnCard == null) ? 0 : nameOnCard.hashCode());
+			result = prime * result + ((ownerID == null) ? 0 : ownerID.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			CreditCard other = (CreditCard) obj;
+			if (cardType != other.cardType)
+				return false;
+			if (creditCardNumber == null) {
+				if (other.creditCardNumber != null)
+					return false;
+			} else if (!creditCardNumber.equals(other.creditCardNumber))
+				return false;
+			if (cvv == null) {
+				if (other.cvv != null)
+					return false;
+			} else if (!cvv.equals(other.cvv))
+				return false;
+			if (expirationDateMonth == null) {
+				if (other.expirationDateMonth != null)
+					return false;
+			} else if (!expirationDateMonth.equals(other.expirationDateMonth))
+				return false;
+			if (expirationDateYear == null) {
+				if (other.expirationDateYear != null)
+					return false;
+			} else if (!expirationDateYear.equals(other.expirationDateYear))
+				return false;
+			if (nameOnCard == null) {
+				if (other.nameOnCard != null)
+					return false;
+			} else if (!nameOnCard.equals(other.nameOnCard))
+				return false;
+			if (ownerID == null) {
+				if (other.ownerID != null)
+					return false;
+			} else if (!ownerID.equals(other.ownerID))
+				return false;
+			return true;
+		}
+		
+		
 	}
 }

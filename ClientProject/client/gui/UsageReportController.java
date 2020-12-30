@@ -58,20 +58,7 @@ public class UsageReportController implements GuiController, Report {
 
 	@FXML
 	private Label textMaxCapacity;
-/*
-	@FXML
-	private TableView<UsageRow> visitorUsageTable;
 
-	@FXML
-	private TableColumn<UsageRow, String> dateColumn;
-
-	@FXML
-	private TableColumn<UsageRow, Integer> visitorsColumn;
-
-	@FXML
-	private TableColumn<UsageRow, Double> usageColumn;
-
-*/
 	@FXML
 	private TreeTableView<UsageRow> usageTreeTable;
 
@@ -155,38 +142,6 @@ public class UsageReportController implements GuiController, Report {
 //=================================================================================================================		
 
 //=========== create the table ==================================================================================== 			
-		/*
-			dateColumn.setCellValueFactory(new PropertyValueFactory<UsageRow, String>("date"));
-			visitorsColumn.setCellValueFactory(new PropertyValueFactory<UsageRow, Integer>("visitors"));
-			usageColumn.setCellValueFactory(new PropertyValueFactory<UsageRow, Double>("usage"));
-
-			ArrayList<UsageRow> rows = new ArrayList<>();
-
-			// create all rows
-			for (int i = 0; i < amountOfDays; i++) {
-				String day = i + 1 + "." + reportDate[0].toLocalDateTime().getMonth().getValue();
-				ParkNameAndTimes p = clientController.client.openingTimes.get(parkID);
-				double usage = ((double) visitorsPerDay[i])
-						/ (maxCapacity * (p.closeTime - p.openTime) / Double.parseDouble(parkParameters[2]));
-				usage *= 100;
-				UsageRow row = new UsageRow(day, visitorsPerDay[i], usage);
-				rows.add(row);
-			}
-
-			visitorUsageTable.setItems(FXCollections.observableArrayList(rows));
-			
-			*/
-//=================================================================================================================
-	//		TreeTableView<UsageRow> usageTreeTable = new TreeTableView<UsageRow>();
-
-	//		TreeTableColumn<UsageRow, String> DateCol = new TreeTableColumn<>("Date");
-	//		TreeTableColumn<UsageRow, Number> visitorsCol = new TreeTableColumn<>("Visitors");
-	//		TreeTableColumn<UsageRow, Number> usageCol = new TreeTableColumn<>("Usage %");
-
-		//	DateCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("date"));
-		//	visitorsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("visitors"));
-		//	usageCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("usage"));
-
 	
 			DateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,String>, ObservableValue<String>>() {
 				
@@ -278,10 +233,6 @@ public class UsageReportController implements GuiController, Report {
 	 * private class to create rows for the usage table
 	 */
 	public static class UsageRow {
-		//public String date;
-	//	public int visitors;
-	//	public double usage;
-
 		SimpleStringProperty date;
 		SimpleIntegerProperty visitors;
 		SimpleDoubleProperty usage;

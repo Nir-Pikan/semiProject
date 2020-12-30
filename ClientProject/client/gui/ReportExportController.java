@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
 import module.Navigator;
+import module.PopUp;
 import module.Report;
 
 /** the ReportExport page controller */
@@ -63,19 +64,19 @@ public class ReportExportController implements GuiController {
 		Report r;
 		switch (ReportSelectionComboBox.getValue()) {
 		case Cancel:
-			r = (Report) Navigator.instance().navigate("CancelReport.fxml");
+			r = (Report) PopUp.showCostumContent("CancelReport","CancelReport.fxml");
 			break;
 		case Entry:
-			r = (Report) Navigator.instance().navigate("EntryReport.fxml");
+			r = (Report) PopUp.showCostumContent("EntryReport","EntryReport.fxml");
 			break;
 		case Income:
-			r = (Report) Navigator.instance().navigate("IncomeReport.fxml");
+			r = (Report) PopUp.showCostumContent("IncomeReport","IncomeReport.fxml");
 			break;
 		case Usage:
-			r = (Report) Navigator.instance().navigate("UsageReport.fxml");
+			r = (Report) PopUp.showCostumContent("UsageReport","UsageReport.fxml");
 			break;
 		case Visitor:
-			r = (Report) Navigator.instance().navigate("VisitorsReport.fxml");
+			r = (Report) PopUp.showCostumContent("VisitorsReport","VisitorsReport.fxml");
 			break;
 		default:
 			return;
@@ -90,10 +91,10 @@ public class ReportExportController implements GuiController {
 		ParkSelectionComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 			ParkNameAndTimes p = clientController.client.openingTimes.get(newVal);
 			if (p == null) {
-				LabelParkId.setText("");
+				textParkId.setText("");
 				return;
 			}
-			LabelParkId.setText(p.parkID);
+			textParkId.setText(p.parkID);
 		});
 		if (w.getWorkerType().equals("departmentManager")) {
 			ParkSelectionComboBox.getItems().addAll(clientController.client.parkNames);

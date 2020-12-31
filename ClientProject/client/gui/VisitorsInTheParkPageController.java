@@ -30,27 +30,27 @@ public class VisitorsInTheParkPageController implements GuiController {
 	@FXML
 	void familyOrder(ActionEvent event) {
 		String ordererId = PopUp.getUserInput("family/Group Order", "enter Id of the orderer", "id or subscriberId :");
-		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ordererId));
-		Subscriber s = ServerRequest.gson.fromJson(response, Subscriber.class);
+//		String response = clientController.client
+//				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ordererId));
+//		Subscriber s = ServerRequest.gson.fromJson(response, Subscriber.class);
 		GroupOrderController g = (GroupOrderController) Navigator.instance().navigate("GroupOrder");
-		g.setSpontaneous(ordererId);
-		if (s.type == Type.SUBSCRIBER)
-			g.setFamilyOrderOnly();
+		g.setSpontaneous(ordererId,parkNumChoise.getValue());
+//		if (s.type == Type.SUBSCRIBER)
+//			g.setFamilyOrderOnly();
 
 	}
 
 	@FXML
 	void privateGroupOrder(ActionEvent event) {
 		String ordererId = PopUp.getUserInput("private Group Order", "enter Id of the orderer", "id or subscriberId :");
-		((SmallGroupOrderController) Navigator.instance().navigate("SmallGroupOrder")).setSpontaneous(ordererId);
+		((SmallGroupOrderController) Navigator.instance().navigate("SmallGroupOrder")).setSpontaneous(ordererId,parkNumChoise.getValue());
 	}
 
 	@FXML
 	void regularOrder(ActionEvent event) {
 		String ordererId = PopUp.getUserInput("regular Order", "enter Id of the orderer", "id or subscriberId :");
 
-		((RegularOrderController) Navigator.instance().navigate("RegularOrder")).setSpontaneous(ordererId);
+		((RegularOrderController) Navigator.instance().navigate("RegularOrder")).setSpontaneous(ordererId,parkNumChoise.getValue());
 	}
 
 

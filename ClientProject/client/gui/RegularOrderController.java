@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import java.util.Map;
 
 import entities.Order;
+import entities.Park;
+import entities.ParkEntry;
 import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.event.ActionEvent;
@@ -26,10 +28,11 @@ import modules.ServerRequest.Manager;
 /** the RegularOrder page controller */
 public class RegularOrderController implements GuiController {
 
-	public Map<String, ParkNameAndTimes> openingTimes  =  clientController.client.openingTimes;
+	public Map<String, ParkNameAndTimes> openingTimes = clientController.client.openingTimes;
 	public String[] parkNames = clientController.client.parkNames;
-	private Order ord;
-
+	private Order ord = new Order();
+	private ParkEntry parkEntry;
+	private boolean spontaneous = false;
 	@FXML
 	private ComboBox<String> Park_ComboBox;
 
@@ -67,11 +70,9 @@ public class RegularOrderController implements GuiController {
 	public void init() {
 		Park_ComboBox.getItems().clear();
 		VisitHour_ComboBox.getItems().clear();
-		for (int i = 0; i < parkNames.length; i++) {
-			Park_ComboBox.getItems().add(parkNames[i]);
-		}
+		// parkEntry = null; // to be sure
+		Park_ComboBox.getItems().addAll(parkNames);
 		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
-
 		// ===================== delete later ===========================
 		Phone_textBox.setText("0545518526");
 		Email_textBox.setText("mirage164@gmail.com");
@@ -303,92 +304,97 @@ public class RegularOrderController implements GuiController {
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
-			ord = createOrderDetails();
-
+			if (spontaneous == true) {
+				ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);
+				parkEntry = createParkEntry(ord);
+				MoveToTheNextPage(ord, parkEntry);
+				return;
+			} 
+				ord = createOrderDetails();
 //			String response = clientController.client.sendRequestAndResponse(
 //			new ServerRequest(Manager.Order, "SetOrderToIsUsed", ServerRequest.gson.toJson(11, Integer.class)));
-			String response = clientController.client.sendRequestAndResponse(
-					new ServerRequest(Manager.Order, "IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
-			// TODO remove all the not necessary cases after integration (Roman)
-			switch (response) {
-			case "Order was added successfully":
-				PopUp.showInformation("Order placed success", "Order placed success",
-						"Order placed successfully!\n" + "Your Order ID is:\n" + ord.orderID);
-				break;
+				String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order,
+						"IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
+				// TODO remove all the not necessary cases after integration (Roman)
+				switch (response) {
+				case "Order was added successfully":
+					PopUp.showInformation("Order placed success", "Order placed success",
+							"Order placed successfully!\n" + "Your Order ID is:\n" + ord.orderID);
+					break;
 
-			case "Order was not found":
-				PopUp.showInformation("Order was not found", "Order was not found", "No such order exists");
-				break;
+				case "Order was not found":
+					PopUp.showInformation("Order was not found", "Order was not found", "No such order exists");
+					break;
 
-			case "Failed to add Order":
-				PopUp.showInformation("Order failed", "Order failed", "Order faild!");
-				break;
+				case "Failed to add Order":
+					PopUp.showInformation("Order failed", "Order failed", "Order faild!");
+					break;
 
-			case "Order already exists":
-				PopUp.showInformation("Order already exists", "Order already exists", "Order already exists");
-				break;
-			case "Owner with this ID is not found":
-				PopUp.showInformation("Owner not exists", "Owner not exists!", "Owner with this ID not exists");
-				break;
-			case "Failed to cancel an order":
-				PopUp.showInformation("Failed to cancel an order", "Failed to cancel an order",
-						"Failed to cancel an order");
-				break;
-			case "No more orders allowed in this time":
-				PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
-						"No more orders allowed in this time");
-				break;
-			case "Order Canceled":
-				PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");
-				break;
-			case "Order seted as used":
-				PopUp.showInformation("Order seted as used", "Order seted as used", "Order seted as used");
-				break;
-			case "Failed to set order as used":
-				PopUp.showInformation("Failed to set order as used", "Failed to set order as used",
-						"Failed to set order as used");
-				break;
-			case "Order updated":
-				PopUp.showInformation("Order updated", "Order updated", "Order updated");
-				break;
-			case "Failed to update order":
-				PopUp.showInformation("Failed to update order", "Failed to update order", "Failed to update order");
-				break;
-			case "Order can be placed":
-				PopUp.showInformation("Order can be placed", "Order can be placed", "Order can be placed");
-				MoveToTheNextPage(ord);
-				break;
-			case "Error: No such job":
-				PopUp.showInformation("Unexpected error", "Unexpected error!",
-						"server returned an unexpected response");
-			}
+				case "Order already exists":
+					PopUp.showInformation("Order already exists", "Order already exists", "Order already exists");
+					break;
+				case "Owner with this ID is not found":
+					PopUp.showInformation("Owner not exists", "Owner not exists!", "Owner with this ID not exists");
+					break;
+				case "Failed to cancel an order":
+					PopUp.showInformation("Failed to cancel an order", "Failed to cancel an order",
+							"Failed to cancel an order");
+					break;
+				case "No more orders allowed in this time":
+					PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
+							"No more orders allowed in this time");
+					break;
+				case "Order Canceled":
+					PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");
+					break;
+				case "Order seted as used":
+					PopUp.showInformation("Order seted as used", "Order seted as used", "Order seted as used");
+					break;
+				case "Failed to set order as used":
+					PopUp.showInformation("Failed to set order as used", "Failed to set order as used",
+							"Failed to set order as used");
+					break;
+				case "Order updated":
+					PopUp.showInformation("Order updated", "Order updated", "Order updated");
+					break;
+				case "Failed to update order":
+					PopUp.showInformation("Failed to update order", "Failed to update order", "Failed to update order");
+					break;
+				case "Order can be placed":
+					PopUp.showInformation("Order can be placed", "Order can be placed", "Order can be placed");
+					MoveToTheNextPage(ord, null);
+					break;
+				case "Error: No such job":
+					PopUp.showInformation("Unexpected error", "Unexpected error!",
+							"server returned an unexpected response");
+				}
 		}
 
 	}
 
-	private void MoveToTheNextPage(Order ord) {
+	private void MoveToTheNextPage(Order ord, ParkEntry entry) {
 		Navigator n = Navigator.instance();
 		GuiController g = n.navigate("OrderSummary");
-		((OrderSummaryController) g).addOrderDataToFields(ord);
+		((OrderSummaryController) g).addOrderDataToFields(ord, entry);
 	}
 
-	public void addOrderDataToFields(Order order) {
-		ord = order;
-		initFields(ord);
-	}
-
-	/**
-	 * initialize fields by Order entity
-	 * 
-	 * @param order
-	 */
-	private void initFields(Order order) {
-		Park_ComboBox.setValue(order.parkSite);
-		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());
-		VisitHour_ComboBox.setValue(order.visitTime.getHours() + ":" + order.visitTime.getMinutes() + "0");
-		Email_textBox.setText(order.email);
-		Phone_textBox.setText(order.phone);
-	}
+//	public void addOrderDataToFields(Order order) {
+//		ord = order;
+//		initFields(ord);
+//	}
+//
+//	/**
+//	 * initialize fields by Order entity
+//	 * 
+//	 * @param order
+//	 */
+//	private void initFields(Order order) {
+//		Park_ComboBox.setValue(order.parkSite);
+//		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());
+//		VisitHour_ComboBox.setValue(order.visitTime.getHours() + ":" + order.visitTime.getMinutes() + "0");
+//		Email_textBox.setText(order.email);
+//		Phone_textBox.setText(order.phone);
+//	}
 
 	/**
 	 * Create Order Entity from the fields that was willed by the user on a GUI
@@ -402,23 +408,20 @@ public class RegularOrderController implements GuiController {
 		Timestamp visitTime = Timestamp.valueOf(date.atTime(LocalTime.of(visitHour, 0)));
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
 		int numberOfVisitors = 1; // by default
-		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
-		int orderID = ServerRequest.gson.fromJson(response, Integer.class);
-		int priceOfOrder = 100; // for now, need to be calculated by other controller
+		int orderID = getNextOrderID();
+		float priceOfOrder = 100;
 		boolean isUsed = false; // by default
 		Order.IdType type = Order.IdType.PRIVATE; // by default
 		String email = Email_textBox.getText();
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
-		// String ownerID = "323533745"; // TODO the real ownerID will be provided from
-		// previous page (popUp)
 		String ownerID = getIdentificationString();
 		int numberOfSubscribers = isSubscriber();
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
 	}
+	
 
 	private String getIdentificationString() {
 		if (clientController.client.visitorID.getVal() != null)
@@ -429,17 +432,62 @@ public class RegularOrderController implements GuiController {
 //			return clientController.client.logedInWorker.getVal().getWorkerID();
 		return null;
 	}
-
+ 
+	private int checkIfSubscriberInDB(String id) {
+		if (!id.contains("S"))
+			id = "S" + id;
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", id));
+		if (!response.contains("was not found"))
+			return 1;
+		return 0;
+	}
 	private int isSubscriber() {
 		if (clientController.client.logedInSunscriber.getVal() != null)
 			return 1;
 		return 0;
 	}
 
-// how when and why???????????????????????????????????????????????? where is the button, give me the BUTTON!!!!! ????????????????????????????
-	public void setSpontaneous(String ordererId) {
-		// TODO Auto-generated method stub
+	public void setSpontaneous(String ownerID, String parkName) {
+		spontaneous = true;
+		Park_ComboBox.setValue(parkName);
+		VisitHour_ComboBox.setValue(LocalTime.now().withSecond(0).withNano(0).toString()); 
+		Date_DatePicker.setValue(LocalDate.now()); // get the date of today
+		// disable the fields, visitor don't have the choice of park,date and time
+		Park_ComboBox.setDisable(true);
+		VisitHour_ComboBox.setDisable(true);
+		Date_DatePicker.setDisable(true);
+		ord.ownerID = ownerID;
+		ord.parkSite = parkName;
+	}
 
+	private ParkEntry createParkEntry(Order spOrder) {
+		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.Personal, spOrder.ownerID, spOrder.parkSite,
+				spOrder.visitTime, null, spOrder.numberOfVisitors, spOrder.numberOfSubscribers, true,
+				spOrder.priceOfOrder);
+		return entry;
+	}
+
+
+	private Order createSpontaneousOrderDetails(String ownerID, String parkName) {
+		int orderID = getNextOrderID();
+		int priceOfOrder = 100;
+		String email = Email_textBox.getText();
+		String phone = Phone_textBox.getText();
+		Order.IdType type = Order.IdType.PRIVATE; // by default
+		Order.OrderStatus orderStatus = Order.OrderStatus.CONFIRMED;
+		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
+		boolean isUsed = true;
+		int numberOfSubscribers = checkIfSubscriberInDB(ownerID);
+		Order ord = new Order(parkName, 1, orderID, priceOfOrder, email, phone, type, orderStatus, timeOfOrder,
+				timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		return ord;
+	}
+
+	private int getNextOrderID() {
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
+		return ServerRequest.gson.fromJson(response, Integer.class);
 	}
 
 }

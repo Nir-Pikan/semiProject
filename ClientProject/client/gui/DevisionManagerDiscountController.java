@@ -43,7 +43,7 @@ public class DevisionManagerDiscountController implements GuiController {
 
 	@Override
 	public void init() {
-		discountsTable.getStyleClass().add("michael-tree-table-view");
+		discountsTable.getStyleClass().add("table-view-M");
 		discountID.setCellValueFactory(new PropertyValueFactory<DiscountEntity, String>("DiscountID"));
 		discountInPercentage.setCellValueFactory(new PropertyValueFactory<DiscountEntity, Float>("DiscountValue"));
 		discountStartDate.setCellValueFactory(new PropertyValueFactory<DiscountEntity, LocalDate>("startDateShow"));

@@ -409,7 +409,7 @@ public class RegularOrderController implements GuiController {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
 		int numberOfVisitors = 1; // by default
 		int orderID = getNextOrderID();
-		int priceOfOrder = 100; // for now, need to be calculated by other controller
+		float priceOfOrder = 100;
 		boolean isUsed = false; // by default
 		Order.IdType type = Order.IdType.PRIVATE; // by default
 		String email = Email_textBox.getText();
@@ -421,6 +421,7 @@ public class RegularOrderController implements GuiController {
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
 	}
+	
 
 	private String getIdentificationString() {
 		if (clientController.client.visitorID.getVal() != null)

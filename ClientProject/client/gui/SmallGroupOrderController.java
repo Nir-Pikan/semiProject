@@ -90,11 +90,6 @@ public class SmallGroupOrderController implements GuiController {
 		VisitHour_ComboBox.getItems().clear();
 		Park_ComboBox.getItems().addAll(parkNames);
 		String IdentificationID = getIdentificationString();
-		if (IdentificationID != null) {
-			listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + IdentificationID + ")");
-			visitorsIDArray.add(IdentificationID);
-		}
-
 		// ===================== delete later ===========================
 		Phone_textBox.setText("0545518526"); // TODO delete this later (Roman)
 		Email_textBox.setText("mirage164@gmail.com");
@@ -102,6 +97,10 @@ public class SmallGroupOrderController implements GuiController {
 
 		stringList = FXCollections.observableArrayList(visitorsIDArray);
 		listViewVisitors.setItems(stringList);
+		if (IdentificationID != null) {
+			listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + IdentificationID + ")");
+			visitorsIDArray.add(IdentificationID);
+		}
 
 		// set only relevant dates
 		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {

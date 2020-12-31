@@ -104,7 +104,14 @@ public class OrderSummaryController implements GuiController {
 		noOfSubscribersTxt.setText(String.valueOf(order.numberOfSubscribers));
 		emailTxt.setText(order.email);
 		phoneTxt.setText(order.phone);
-		priceTxt.setText(String.valueOf(order.priceOfOrder));
+		float price = calcOrderPrice(order);
+		priceTxt.setText(String.valueOf(price));
+	}
+	
+	private float calcOrderPrice(Order order) {
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Discount, "CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
+		return ServerRequest.gson.fromJson(response, Float.class);
 	}
 
 }

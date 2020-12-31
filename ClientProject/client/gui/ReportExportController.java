@@ -104,7 +104,7 @@ public class ReportExportController implements GuiController {
 			ParkSelectionComboBox.getItems().add(w.getPermissions().GetParkID());
 			ParkSelectionComboBox.getSelectionModel().clearAndSelect(0);
 			ParkSelectionComboBox.setDisable(true);
-			LabelParkId.setText(w.getPermissions().GetParkID());
+			textParkId.setText(w.getPermissions().GetParkID());
 			ReportSelectionComboBox.getItems().addAll(ReportType.Visitor, ReportType.Usage, ReportType.Income);
 		}
 		textDateToday.setText(LocalDate.now().toString());

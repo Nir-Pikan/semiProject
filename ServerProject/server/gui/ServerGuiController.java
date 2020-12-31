@@ -1,17 +1,25 @@
 package gui;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import io.ServerController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import modules.TextAreaPrintStream;
 import util.UIupdate;
 
-public class ServerGuiController {
+public class ServerGuiController implements Initializable{
 
 	/** main window wont close if this is true */
 	public static boolean isServerRunning = false;
@@ -35,9 +43,13 @@ public class ServerGuiController {
 	@FXML
 	private TextField serverPort;
 
+    @FXML
+    private TextArea log;
+    
 	@FXML
 	void StartServer(ActionEvent event) {
 		int port;
+		
 		if (serverPort.getText().contentEquals("")) {
 			port = ServerController.DEFAULT_SERVER_PORT;
 			serverPort.setText(Integer.toString(ServerController.DEFAULT_SERVER_PORT));
@@ -90,5 +102,19 @@ public class ServerGuiController {
 		DbStatus.setText("connected");
 
 	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		TextAreaPrintStream t ;
+	System.setOut(t = new TextAreaPrintStream(log, new OutputStream() {
+		
+		@Override
+		public void write(int arg0) throws IOException {
+		}
+	}));
+	t.setShowInOriginalSystemOut();
+	}
+	
+	
 
 }

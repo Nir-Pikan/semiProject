@@ -18,6 +18,7 @@ import entities.Order;
 import entities.Order.IdType;
 import entities.Order.OrderStatus;
 import io.DbController;
+import javafx.application.Platform;
 import modules.IController;
 import modules.PeriodicallyRunner;
 import modules.ServerRequest;
@@ -55,6 +56,7 @@ public class WaitingListController implements IController {
 				 currentCancelation.remove(myThread);//finish with the cancellation
 				 order.canceled.remove(newVal);
 				});
+			 t.start();
 			 currentCancelation.put(t, newVal);
 			});
 		InitWaitingListCleaner();
@@ -62,7 +64,6 @@ public class WaitingListController implements IController {
 
 	private void InitWaitingListCleaner() {
 		PeriodicallyRunner.runEveryDayAt(23, 00, ()->{
-			dbController.sendUpdate("");
 			PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM waitingList WHERE visitTime < ?;");
 			
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
@@ -94,7 +95,8 @@ public class WaitingListController implements IController {
 		order.UpdateOrder(canceled);
 		Order nextWaiting;
 		while((nextWaiting = getNextOrder(canceled))!=null) {
-			notifyWaitingOrder(nextWaiting);
+			final Order orderToNotify = nextWaiting;
+			Platform.runLater(()->{notifyWaitingOrder(orderToNotify);});
 			
 			if(thread.sleepUntillWoken(TimeUnit.HOURS, 1)) {
 				//if woken by user interaction
@@ -115,6 +117,7 @@ public class WaitingListController implements IController {
 	
 	
 	private boolean AddNewOrderTowaitingList(Order ord) {
+		Platform.runLater(()->{notifyNewOrder(ord);});
 		PreparedStatement ps = dbController
 				.getPreparedStatement("INSERT INTO waitingList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 		try {
@@ -182,7 +185,7 @@ public class WaitingListController implements IController {
 	private synchronized Order getNextOrder(Order canceled) {
 		Timestamp minimum = Timestamp.valueOf(canceled.visitTime.toLocalDateTime().minusSeconds(TimeUnit.HOURS.toSeconds(AvgVisitTime-1)));
 		Timestamp maximum = Timestamp.valueOf(canceled.visitTime.toLocalDateTime().plusSeconds(TimeUnit.HOURS.toSeconds(AvgVisitTime)));
-		 PreparedStatement ps = dbController.getPreparedStatement("SELECT * FROM waitingList WHERE (timestamp(visitTime) >= timestamp( ? )  \"\r\n" + 
+		 PreparedStatement ps = dbController.getPreparedStatement("SELECT * FROM waitingList WHERE timestamp(visitTime) >= timestamp( ? ) " + 
 				" and  timestamp(visitTime) <= timestamp( ? ) AND parkSite = ? And orderStatus = 'WAITINGLIST' ORDER BY timeOfOrder ASC;");
 		
 		List<Order> list = new ArrayList<>();
@@ -190,7 +193,7 @@ public class WaitingListController implements IController {
 			ps.setTimestamp(1, minimum);
 			ps.setTimestamp(2, maximum);
 			ps.setString(3, canceled.parkSite);
-			
+
 			ResultSet res = ps.executeQuery();
 			if (res.next()) {
 				list.add(new Order(res.getString(1), res.getInt(2), res.getInt(3), res.getFloat(4), res.getString(5),
@@ -205,7 +208,7 @@ public class WaitingListController implements IController {
 		for(Order o : list) {
 			if(order.IsOrderAllowedWaitingList(o,canceled.numberOfVisitors))
 			{//setting the Order to sent message
-			dbController.sendUpdate("UPDATE waitingList SET orderStatus='WAITINGLISTMASSAGESENT' WHARE orderID = "+o.orderID+";");
+			dbController.sendUpdate("UPDATE waitingList SET orderStatus='WAITINGLISTMASSAGESENT' WHERE orderID = "+o.orderID+";");
 				return o;
 		}
 //			TODO remove after creation of method

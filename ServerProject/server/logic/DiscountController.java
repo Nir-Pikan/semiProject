@@ -149,7 +149,7 @@ public class DiscountController implements IController {
 	 */
 	public boolean ApproveDiscount(String discountID) {
 		PreparedStatement pstmt = dbController
-				.getPreparedStatement("UPDATE " + tableName + " SET isApproved = true WHERE ( discountID = (?) );");
+				.getPreparedStatement("UPDATE " + tableName + " SET isApproved = true WHERE ( discountID = ? );");
 		try {
 			pstmt.setString(1, discountID);
 			return pstmt.executeUpdate() == 1;
@@ -312,11 +312,11 @@ public class DiscountController implements IController {
 	// TODO Michael toTest
 	private float ApplyDiscount(float currentPrice, Timestamp orderTime) {
 
-		float newPrice;
+		float newPrice=0;
 
 		PreparedStatement pstmt = dbController.getPreparedStatement(
-				"SELECT MAX(discountValue) FROM " + tableName + "  where (timestamp(startDate) < timestamp( ?)"
-						+ " and  timestamp(endDate)>timestamp( ? ) and isApproved=true");
+				"SELECT MAX(discountValue) FROM " + tableName + "  where timestamp(startDate) <= timestamp(?)"
+						+ " and  timestamp(endDate)>=timestamp( ? ) and isApproved=true ;");
 
 		try {
 			pstmt.setTimestamp(1, orderTime);
@@ -325,7 +325,6 @@ public class DiscountController implements IController {
 			if (res == null) {
 				return currentPrice;
 			}
-
 			float discountApply = res.getFloat(1);// discountApply should be between 0.00 to 1.00
 			if (discountApply < 0 || discountApply > 1)
 				return currentPrice;

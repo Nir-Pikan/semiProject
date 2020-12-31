@@ -143,7 +143,7 @@ public class VisitorsReportController implements GuiController, Report {
 						totalVisitorsCounter += entry.numberOfVisitors;
 					}
 
-					// subscriber
+					// subscriber -family
 					if (entry.entryType.equals(ParkEntry.EntryType.Subscriber)) {
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
 						totalVisitorsCounter += entry.numberOfVisitors;
@@ -158,7 +158,7 @@ public class VisitorsReportController implements GuiController, Report {
 
 					// privateGroup
 					if (entry.entryType.equals(ParkEntry.EntryType.PrivateGroup)) {
-						singleVisitorsCounter += entry.numberOfVisitors;
+						singleVisitorsCounter += entry.numberOfVisitors- entry.numberOfSubscribers;
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
 						totalVisitorsCounter += entry.numberOfVisitors;
 					}
@@ -172,23 +172,44 @@ public class VisitorsReportController implements GuiController, Report {
 
 			// update the bar chart
 			// TODO Work on how this looks ~Nir Pikan~ ~Michael Gindin~
-			for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
+
+			DayOfWeek[] dayOfWeeks = DayOfWeek.values();
+			for (int i = 1; i < dayOfWeeks.length; i++) {
+				dayOfWeeks[i] = DayOfWeek.values()[i - 1];
+			}
+			dayOfWeeks[0] = DayOfWeek.SUNDAY;
+			for (EntryType entryType : EntryType.values()) {
 				XYChart.Series<String, Integer> addSeries = new XYChart.Series<String, Integer>();
-				addSeries.setName(dayOfWeek.toString());
-				for (EntryType entryType : EntryType.values()) {
+				addSeries.setName(entryType.toString());
+
+				for (DayOfWeek dayOfWeek : dayOfWeeks) {
 					int counter = 0;
 					for (ParkEntry parkEntry : entries) {
 						if (parkEntry.parkID.equals(parkID) && parkEntry.entryType.equals(entryType)
 								&& parkEntry.arriveTime.toLocalDateTime().toLocalDate().getDayOfWeek()
 										.equals(dayOfWeek)) {
-							counter++;
+							counter += parkEntry.numberOfVisitors;
 						}
 					}
-					addSeries.getData().add(new XYChart.Data<String, Integer>(entryType.toString(), counter));
+
+					addSeries.getData().add(new XYChart.Data<String, Integer>(dayOfWeek.toString(), counter));
 				}
 
 				VisitorsChart.getData().add(addSeries);
 			}
+			XYChart.Series<String, Integer> addSeries = new XYChart.Series<String, Integer>();
+			addSeries.setName("Total Visitors");
+			for (DayOfWeek dayOfWeek : dayOfWeeks) {
+				int counter = 0;
+				for (ParkEntry parkEntry : entries) {
+					if (parkEntry.parkID.equals(parkID)	&& parkEntry.arriveTime.toLocalDateTime().toLocalDate().getDayOfWeek().equals(dayOfWeek)) {
+						counter += parkEntry.numberOfVisitors;
+					}
+				}
+
+				addSeries.getData().add(new XYChart.Data<String, Integer>(dayOfWeek.toString(), counter));
+			}
+			VisitorsChart.getData().add(addSeries);
 
 		}
 	}

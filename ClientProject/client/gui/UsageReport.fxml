@@ -83,7 +83,7 @@
             <Insets left="20.0" />
          </padding>
       </Label>
-      <TreeTableView fx:id="usageTreeTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="5" GridPane.rowSpan="10">
+      <TreeTableView fx:id="usageTreeTable" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="10">
         <columns>
           <TreeTableColumn fx:id="DateCol" prefWidth="75.0" text="Date" />
           <TreeTableColumn fx:id="visitorsCol" prefWidth="75.0" text="Visitors" />
@@ -92,6 +92,9 @@
          <GridPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </GridPane.margin>
+         <columnResizePolicy>
+            <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TreeTableView>
    </children>
 </GridPane>

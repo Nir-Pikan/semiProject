@@ -120,8 +120,7 @@ public class EntryReportController implements GuiController ,Report{
 			}
 			table1_AVGvisitStay.getData().add(addSeries);
 		}
-		table1_AVGvisitStay.setBarGap(10);
-		table1_AVGvisitStay.setCategoryGap(0);
+	
 		
 		//--- Second Chart ---//
 

@@ -91,7 +91,7 @@ public class UsageReportController implements GuiController, Report {
 	public void initReport(String parkName, String parkID, Timestamp[] reportDate) {
 		textDateToday.setText(LocalDate.now().toString());
 		textParkName.setText(parkName);
-		textReportDate.setText("from " + reportDate[0].toLocalDateTime().toLocalDate().toString() + " to "
+		textReportDate.setText("From " + reportDate[0].toLocalDateTime().toLocalDate().toString() + " To "
 				+ reportDate[1].toLocalDateTime().toLocalDate().toString());
 
 		// send request to get park entries to clientController
@@ -151,8 +151,8 @@ public class UsageReportController implements GuiController, Report {
 					return param.getValue().getValue().getDate();
 				}
 			});
+			DateCol.setSortable(false);
 			
-
 			visitorsCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,Number>, ObservableValue<Number>>() {
 				
 				@Override
@@ -161,7 +161,7 @@ public class UsageReportController implements GuiController, Report {
 					return param.getValue().getValue().getVisitors();
 				}
 			});
-			
+			visitorsCol.setSortable(false);
 
 			usageCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,Number>, ObservableValue<Number>>() {
 				
@@ -172,7 +172,7 @@ public class UsageReportController implements GuiController, Report {
 					return param.getValue().getValue().getUsage();
 				}
 			});
-			
+			usageCol.setSortable(false);
 			
 			
 			ParkNameAndTimes p = clientController.client.openingTimes.get(parkID);
@@ -192,17 +192,17 @@ public class UsageReportController implements GuiController, Report {
 
 			for (int i = 0; i < amountOfDays; i++) {
 				// define day item
-				String day = i + 1 + "." + reportDate[0].toLocalDateTime().getMonth().getValue();
+				String day = i + 1 + "-" + reportDate[0].toLocalDateTime().getMonth().toString().toLowerCase();
 				double usage = ((double) visitorsPerDay[i])
 						/ (maxCapacity * (p.closeTime - p.openTime) / Double.parseDouble(parkParameters[2]));
-				usage *= 100;
-
+				usage *= 10000;
+				usage =((int)usage)/100.0;
 				TreeItem<UsageRow> dayItem = new TreeItem<UsageRow>(new UsageRow(day, visitorsPerDay[i], usage));
 				int[] visitorsAtHour = new int[24];
 				for (int j = 0; j < visitorsAtHour.length; j++) {
 					visitorsAtHour[j] = 0;
 				}
-				for (int j = 0; j < visitorsAtHour.length; j++) {
+				for (int j = p.openTime; j <= p.closeTime; j++) {
 					String hourString = j + ":00";
 					int visitors = 0;
 					for (ParkEntry entry : entries) {
@@ -213,7 +213,10 @@ public class UsageReportController implements GuiController, Report {
 					}
 					usage = ((double) visitors)
 							/ (maxCapacity ) ;
-					usage *= 100;
+					
+				
+					usage *= 10000;
+					usage =((int)usage)/100.0;
 					TreeItem<UsageRow> hourItem = new TreeItem<UsageRow>(new UsageRow(hourString, visitors, usage));
 					dayItem.getChildren().add(hourItem);
 
@@ -224,7 +227,6 @@ public class UsageReportController implements GuiController, Report {
 			  
 			usageTreeTable.setRoot(rootData);
 			usageTreeTable.setShowRoot(false);
-			
 		}
 
 	}

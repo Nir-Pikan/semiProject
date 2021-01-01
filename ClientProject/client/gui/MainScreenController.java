@@ -127,9 +127,9 @@ public class MainScreenController {
 
 	private static List<MenuItem> createVisitorMap() {
 		List<MenuItem> res = new ArrayList<>();
-		res.add(new MenuItem("new Single Order", "RegularOrder"));
-		res.add(new MenuItem("new Private Group Order", "SmallGroupOrder"));
-		res.add(new MenuItem("check Existing Order", "OrderDetails"));
+		res.add(new MenuItem("New Single Order", "RegularOrder"));
+		res.add(new MenuItem("New Private Group Order", "SmallGroupOrder"));
+		res.add(new MenuItem("Check Existing Order", "OrderDetails"));
 		return res;
 	}
 

@@ -24,6 +24,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
       <Label fx:id="labelDateToday" text="Date :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
@@ -49,7 +50,7 @@
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Button fx:id="buttonGetReport" mnemonicParsing="false" onAction="#getReoprt_OnClick" text="Show Report" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+      <Button fx:id="buttonGetReport" mnemonicParsing="false" onAction="#getReoprt_OnClick" text="Show Report" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
       <ComboBox fx:id="ParkSelectionComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -67,6 +68,26 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin></TextField>
       <Label fx:id="textDateToday" GridPane.columnIndex="2" />
+      <Label fx:id="labelReportSelection1" text="Select Month : " GridPane.rowIndex="5">
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </Label>
+      <ComboBox fx:id="monthSelction" minHeight="-Infinity" prefHeight="25.0" prefWidth="166.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <Label fx:id="labelReportSelection11" text="Select Year : " GridPane.rowIndex="6">
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </Label>
+      <ComboBox fx:id="yearSelction" minHeight="-Infinity" prefHeight="25.0" prefWidth="166.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </GridPane.margin>
+      </ComboBox>
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

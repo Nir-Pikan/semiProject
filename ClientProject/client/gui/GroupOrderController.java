@@ -3,8 +3,11 @@ package gui;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Map;
 
 import entities.Order;
+import entities.ParkEntry;
+import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +28,12 @@ import modules.ServerRequest.Manager;
 /** the GroupOrder page controller */
 public class GroupOrderController implements GuiController {
 
-	Order ord;
+	public Map<String, ParkNameAndTimes> openingTimes  =  clientController.client.openingTimes;
+	public String[] parkNames = clientController.client.parkNames;
+	
+	Order ord = new Order();
+	private ParkEntry parkEntry;
+	private boolean spontaneous = false;
 
 	@FXML
 	private ComboBox<String> Park_ComboBox;
@@ -75,12 +83,8 @@ public class GroupOrderController implements GuiController {
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear(); // for what? maybe not necessary
-		Park_ComboBox.getItems().addAll("#1", "#2", "#3");
-		VisitHour_ComboBox.getItems().clear(); // for what? maybe not necessary
-		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
-		// last enter time should be 12:00 ?
-		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00","12:00");
-		// CardTypeComboBox.getSelectionModel().select(0);
+		VisitHour_ComboBox.getItems().clear();
+		Park_ComboBox.getItems().addAll(parkNames);
 		NumberOfVisitors_ComboBox.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
 				"14", "15");
 		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
@@ -108,6 +112,27 @@ public class GroupOrderController implements GuiController {
 		};
 		Date_DatePicker.setDayCellFactory(callB);
 	}
+	
+	
+	private String[] CreateWorkingHours(ParkNameAndTimes parkDetails) {
+		VisitHour_ComboBox.getItems().clear();
+		int numberOfWorkingHours = parkDetails.closeTime - parkDetails.openTime;
+		String[] res = new String[numberOfWorkingHours];
+		for (int i = parkDetails.openTime; i < parkDetails.closeTime; i++) {
+			res[i - parkDetails.openTime] = i + ":00";
+		}
+		return res;
+	}
+
+	@FXML
+	void parkWasChosen(ActionEvent event) {
+		ParkNameAndTimes temp = null;
+		for (int i = 0; i < parkNames.length; i++)
+			if (parkNames[i].equals(Park_ComboBox.getValue()))
+				temp = openingTimes.get(parkNames[i]);
+		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
+	}
+	
 
 	private boolean CheckAllRequiredFields() {
 		boolean res = true;
@@ -229,11 +254,17 @@ public class GroupOrderController implements GuiController {
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
+			if (spontaneous == true) {
+				ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);
+				parkEntry = createParkEntry(ord);
+				MoveToTheNextPage(ord, parkEntry);
+				return;
+			}
 			ord = createOrderDetails();
 
 			String response = clientController.client.sendRequestAndResponse(
 					new ServerRequest(Manager.Order, "IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
-			//TODO remove all the not necessary cases after integration (Roman)
+			// TODO remove all the not necessary cases after integration (Roman)
 			switch (response) {
 			case "Order was added successfully":
 				PopUp.showInformation("Order placed success", "Order placed success",
@@ -280,7 +311,7 @@ public class GroupOrderController implements GuiController {
 				break;
 			case "Order can be placed":
 				PopUp.showInformation("Order can be placed", "Order can be placed", "Order can be placed");
-				MoveToTheNextPage(ord);
+				MoveToTheNextPage(ord,null);
 				break;
 			case "Error: No such job":
 				PopUp.showInformation("Unexpected error", "Unexpected error!",
@@ -290,10 +321,39 @@ public class GroupOrderController implements GuiController {
 
 	}
 
-// what to do with that??????????????????????????????????
-	public void setSpontaneous(String ordererId) {
-		// TODO Auto-generated method stub
-
+	public void setSpontaneous(String ownerID, String parkName) {
+		spontaneous = true;
+		Park_ComboBox.setValue(parkName);
+		VisitHour_ComboBox.setValue(LocalTime.now().withSecond(0).withNano(0).toString());
+		ord.ownerID = ownerID;
+		ord.parkSite = parkName;
+		Date_DatePicker.setValue(LocalDate.now()); // get the date of today
+		// disable the fields, visitor don't have the choice of park,date and time
+		Park_ComboBox.setDisable(true);
+		VisitHour_ComboBox.setDisable(true);
+		Date_DatePicker.setDisable(true);
+	}
+	
+	private Order createSpontaneousOrderDetails(String ownerID, String parkName) {
+		int orderID = getNextOrderID();
+		int priceOfOrder = 100;
+		int numberOfVisitors =Integer.parseInt(NumberOfVisitors_ComboBox.getValue());
+		String email = Email_textBox.getText();
+		String phone = Phone_textBox.getText();
+		Order.IdType type = Order.IdType.PRIVATEGROUP; // by default
+		Order.OrderStatus orderStatus = Order.OrderStatus.CONFIRMED;
+		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
+		boolean isUsed = true;
+		int numberOfSubscribers = 0;
+		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
+				timeOfOrder, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		return ord;
+	}
+	
+	private int getNextOrderID() {
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
+		return ServerRequest.gson.fromJson(response, Integer.class);
 	}
 
 	public void setFamilyOrderOnly() {
@@ -308,20 +368,28 @@ public class GroupOrderController implements GuiController {
 		Timestamp visitTime = Timestamp.valueOf(date.atTime(LocalTime.of(visitHour, 0)));
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
 		int numberOfVisitors = Integer.parseInt(NumberOfVisitors_ComboBox.getValue());
-		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
-		int orderID = ServerRequest.gson.fromJson(response, Integer.class);
+		int orderID = getNextOrderID();
 		int priceOfOrder = 100; // for now, need to be calculated by other controller
 		boolean isUsed = false; // by default
 		Order.IdType type = familyOrGuide();
 		String email = Email_textBox.getText();
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
-		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
+		String ownerID = getIdentificationString(); // TODO the real ownerID will be provided from previous page (popUp)
 		int numberOfSubscribers = 0; // in a group order this is not relevant
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
-				visitTime, timeOfOrder, isUsed, ownerID,numberOfSubscribers);
+				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
+	}
+	
+	private String getIdentificationString() {
+		if (clientController.client.visitorID.getVal() != null)
+			return clientController.client.visitorID.getVal().intern();
+		if (clientController.client.logedInSunscriber.getVal() != null) //TODO check if needed
+			return clientController.client.logedInSunscriber.getVal().personalID;
+//		if(clientController.client.logedInWorker.getVal() != null)
+//			return clientController.client.logedInWorker.getVal().getWorkerID();
+		return null;
 	}
 
 	private Order.IdType familyOrGuide() {
@@ -330,26 +398,17 @@ public class GroupOrderController implements GuiController {
 		return Order.IdType.GUIDE;
 	}
 
-	private void MoveToTheNextPage(Order ord) {
+	private void MoveToTheNextPage(Order ord ,ParkEntry parkEntry) {
 		Navigator n = Navigator.instance();
 		GuiController g = n.navigate("OrderSummary");
-		((OrderSummaryController) g).addOrderDataToFields(ord);
+		((OrderSummaryController) g).addOrderDataToFields(ord,parkEntry);
 	}
 	
-	public void addOrderDataToFields(Order order) {
-		ord = order;
-		initFields(ord);
+	private ParkEntry createParkEntry(Order spOrder) {
+		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.Group, spOrder.ownerID, spOrder.parkSite,
+				spOrder.visitTime, null, spOrder.numberOfVisitors, spOrder.numberOfSubscribers, true,
+				spOrder.priceOfOrder);
+		return entry;
 	}
-
-	private void initFields(Order order) {
-		Park_ComboBox.setValue(order.parkSite);
-		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());
-		VisitHour_ComboBox.setValue(order.visitTime.toLocalDateTime().getHour() + ":" + order.visitTime.toLocalDateTime().getMinute() + "0");
-		NumberOfVisitors_ComboBox.setValue(order.numberOfVisitors + "");
-		FamilyIndicator_checkBox.setSelected(order.type == Order.IdType.FAMILY ? true : false);
-		Email_textBox.setText(order.email);
-		Phone_textBox.setText(order.phone);
-	}
-	
 
 }

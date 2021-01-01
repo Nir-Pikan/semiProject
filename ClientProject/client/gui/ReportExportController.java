@@ -1,5 +1,8 @@
 package gui;
 
+import java.sql.Date;
+import java.sql.Time;
+
 /**
  * Sample Skeleton for 'ReportExportWindowBoundary.fxml' Controller Class
  */
@@ -8,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 
 import entities.ParkNameAndTimes;
 import entities.Worker;
@@ -51,6 +55,12 @@ public class ReportExportController implements GuiController {
 	private ComboBox<String> ParkSelectionComboBox;
 
 	@FXML
+	private ComboBox<String> monthSelction;
+
+    @FXML
+    private ComboBox<String> yearSelction;
+
+	@FXML
 	private Label LabelParkId;
 
 	@FXML
@@ -58,31 +68,37 @@ public class ReportExportController implements GuiController {
 
 	@FXML
 	void getReoprt_OnClick(ActionEvent event) {
-		LocalDate startOfMonthDay = LocalDate.now().withDayOfMonth(1);
+		if (!CheckAllRequiredFields())
+			return;
+
+		String selectedMonth = monthSelction.getValue();
+		LocalDate startOfMonthDay = LocalDate.of(Integer.parseInt(yearSelction.getValue()), Months.valueOf(selectedMonth).ordinal() + 1,
+				1);
 		Timestamp startOfMonth = Timestamp.valueOf(startOfMonthDay.atStartOfDay());
 		Timestamp endOfMonth = Timestamp.valueOf(startOfMonthDay.plusMonths(1).atStartOfDay());
+
 		Report r;
 		switch (ReportSelectionComboBox.getValue()) {
 		case Cancel:
-			r = (Report) PopUp.showCostumContent("CancelReport","CancelReport.fxml");
+			r = (Report) PopUp.showCostumContent("CancelReport", "CancelReport.fxml");
 			break;
 		case Entry:
-			r = (Report) PopUp.showCostumContent("EntryReport","EntryReport.fxml");
+			r = (Report) PopUp.showCostumContent("EntryReport", "EntryReport.fxml");
 			break;
 		case Income:
-			r = (Report) PopUp.showCostumContent("IncomeReport","IncomeReport.fxml");
+			r = (Report) PopUp.showCostumContent("IncomeReport", "IncomeReport.fxml");
 			break;
 		case Usage:
-			r = (Report) PopUp.showCostumContent("UsageReport","UsageReport.fxml");
+			r = (Report) PopUp.showCostumContent("UsageReport", "UsageReport.fxml");
 			break;
 		case Visitor:
-			r = (Report) PopUp.showCostumContent("VisitorsReport","VisitorsReport.fxml");
+			r = (Report) PopUp.showCostumContent("VisitorsReport", "VisitorsReport.fxml");
 			break;
 		default:
 			return;
 		}
-		Timestamp[] dates = new Timestamp[] {startOfMonth,endOfMonth};
-		r.initReport(textParkId.getText(),ParkSelectionComboBox.getValue(), dates);
+		Timestamp[] dates = new Timestamp[] { startOfMonth, endOfMonth };
+		r.initReport(textParkId.getText(), ParkSelectionComboBox.getValue(), dates);
 	}
 
 	@Override
@@ -96,6 +112,17 @@ public class ReportExportController implements GuiController {
 			}
 			textParkId.setText(p.parkID);
 		});
+		String[] monthStrings = new String[Months.values().length];
+
+		for (int j = 0; j < monthStrings.length; j++) {
+
+			monthStrings[j] = Months.values()[j].toString();
+		}
+
+		monthSelction.getItems().clear();
+		monthSelction.getItems().addAll(monthStrings);
+		yearSelction.getItems().clear();
+		yearSelction.getItems().addAll("2020","2021");
 		if (w.getWorkerType().equals("departmentManager")) {
 			ParkSelectionComboBox.getItems().addAll(clientController.client.parkNames);
 			ReportSelectionComboBox.getItems().addAll(ReportType.Entry, ReportType.Cancel);
@@ -110,7 +137,83 @@ public class ReportExportController implements GuiController {
 		textDateToday.setText(LocalDate.now().toString());
 	}
 
+	private boolean CheckAllRequiredFields() {
+		boolean res = true;
+		res &= CheckParkName();
+		res &= CheckParkId();
+		res &= CheckReportSelection();
+		res &= CheckMonthSelection();
+		res &= CheckYearSelection();
+		
+		return res;
+	}
+
+	private boolean CheckYearSelection() {
+		if(yearSelction.getValue()==null) {
+			yearSelction.getStyleClass().add("error");
+			return false;
+		}
+		yearSelction.getStyleClass().remove("error");
+		return true;
+	}
+
+	private boolean CheckMonthSelection() {
+		if(monthSelction.getValue()==null) {
+			monthSelction.getStyleClass().add("error");
+			return false;
+		}
+		monthSelction.getStyleClass().remove("error");
+		return true;
+	}
+
+	private boolean CheckReportSelection() {
+		
+		if(ReportSelectionComboBox.getValue()==null) {
+			ReportSelectionComboBox.getStyleClass().add("error");
+			return false;
+		}
+		
+		ReportSelectionComboBox.getStyleClass().remove("error");
+		return true;
+	}
+
+	private boolean CheckParkId() {
+		
+		if (textParkId.getText()==null) {
+			textParkId.getStyleClass().add("error");
+			textParkId.setText("There is No Park ID value");
+			return false;
+		}
+		if (textParkId.getText().equals("")) {
+			textParkId.getStyleClass().add("error");
+			textParkId.setText("There is No Park ID value");
+			return false;
+		}
+		textParkId.getStyleClass().remove("error");
+		return true;
+	}
+
+	private boolean CheckParkName() {
+		if(ParkSelectionComboBox.getValue()==null) {
+			ParkSelectionComboBox.getStyleClass().add("error");
+			return false;
+		}
+		String parkNameString = ParkSelectionComboBox.getValue();
+		if (parkNameString.equals("")) {
+			ParkSelectionComboBox.getStyleClass().add("error");
+			return false;
+		}
+		ParkSelectionComboBox.getStyleClass().remove("error");
+		return true;
+	}
+
 	private enum ReportType {
 		Visitor, Entry, Usage, Income, Cancel
+	}
+
+	public enum Months {
+
+		January, February, March, April, May, June, July, August, September, October, November, December;
+
 	}
 }

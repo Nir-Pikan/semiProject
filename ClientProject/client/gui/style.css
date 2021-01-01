@@ -93,8 +93,35 @@
 .default-color3.chart-bar { -fx-bar-fill: #41a9c9; }
 .axis  { -fx-tick-label-fill: white; }
 
-.chart-legend {
-   -fx-background-color:  transparent;
+.chart-legend .label {
+    -fx-text-fill: black;
+}
+
+.tree-table-view .nested-column-header .label{
+	-fx-padding:10px;
+	-fx-background-color:#538996;
+	-fx-alignment: CENTER;
+   	-fx-text-fill: black;
+   	-fx-font-weight :bold;
+}
+.tree-table-row-cell:odd{
+    -fx-background-color: #bdd6db; 
+    -fx-text-fill: black;
+}
+.tree-table-row-cell:even{
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+.tree-cell:expanded > .tree-disclosure-node > .arrow,
+.tree-table-row-cell:expanded > .tree-disclosure-node > .arrow,
+.tree-cell > .tree-disclosure-node > .arrow,
+.tree-table-row-cell > .tree-disclosure-node > .arrow
+{
+	 -fx-background-color:black;
+}
+.tree-table-cell{
+	  -fx-alignment: CENTER;
+	-fx-text-fill: black;
 }
 
 .default-color0.chart-pie { -fx-pie-color: #83C1D0; }

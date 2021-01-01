@@ -1,5 +1,7 @@
 package main;
 
+import java.util.List;
+
 import gui.ServerGuiController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -25,26 +27,26 @@ public class MainServer extends Application {
 			ServerGuiController controller = loader.getController();
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("server");
-			primaryStage.show(); 
+			primaryStage.show();
 
-			//prevent window close
-			
+			// prevent window close
+
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			    @Override
-			    public void handle(WindowEvent event) {
-			    	if(ServerGuiController.isServerRunning == true) {//if the server is running do not close window
-			    		event.consume();
-			    	}else {
-			    		System.exit(0);
-			    	}
-			    		
-			    }
+				@Override
+				public void handle(WindowEvent event) {
+					if (ServerGuiController.isServerRunning == true) {// if the server is running do not close window
+						event.consume();
+					} else {
+						System.exit(0);
+					}
+
+				}
 			});
-			
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }

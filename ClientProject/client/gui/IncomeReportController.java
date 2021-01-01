@@ -75,6 +75,9 @@ public class IncomeReportController implements GuiController,Report{
 
     @FXML
     private TableColumn<Cell, Integer> incomeColumn;
+    
+  //  @FXML
+  //  private TableColumn<Cell, Integer> incomeColumn;
 
     @FXML
     private Button buttonPrint;
@@ -146,7 +149,10 @@ public class IncomeReportController implements GuiController,Report{
     	textParkName.setText(parkName);
     	textReportDate.setText(GetStringTime(reportStartAndEndTimes[0]) + " - " + GetStringTime(reportStartAndEndTimes[1]));
     	textTotalIncome.setText(TotalIncome + ""); 
-    	textAVGIncomeDay.setText((TotalIncome/map.size()) + "");
+    	int avgIncome = 0;
+    	if(map.size() != 0)
+    		avgIncome = TotalIncome/map.size();
+    	textAVGIncomeDay.setText(avgIncome + "");
     }
     
     public static String GetStringTime(Timestamp time)

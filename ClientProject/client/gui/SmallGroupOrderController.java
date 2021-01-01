@@ -5,8 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import entities.Order;
+import entities.ParkEntry;
+import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,10 +32,15 @@ import modules.ServerRequest.Manager;
 /** the SmallGroupOrder page controller */
 public class SmallGroupOrderController implements GuiController {
 
-	private int visitorsCounter = 0;
+	public Map<String, ParkNameAndTimes> openingTimes = clientController.client.openingTimes;
+	public String[] parkNames = clientController.client.parkNames;
+
+	private int visitorsCounter = 1;
 	private List<String> visitorsIDArray = new ArrayList<String>();
 	ObservableList<String> stringList;
-	Order ord;
+	private Order ord = new Order();
+	private ParkEntry parkEntry;
+	private boolean spontaneous = false;
 
 	@FXML
 	private ComboBox<String> Park_ComboBox;
@@ -79,19 +87,21 @@ public class SmallGroupOrderController implements GuiController {
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear(); // for what? maybe not necessary
-		Park_ComboBox.getItems().addAll("#1", "#2", "#3"); //TODO get the real names from DB (Roman)
-		VisitHour_ComboBox.getItems().clear(); // for what? maybe not necessary
-		// every visit is about 4 hours so: if the park works from 8:00 to 16:00 the
-		// last enter time should be 12:00 ?
-		VisitHour_ComboBox.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00"); //TODO maybe will be changed (Roman)
-		// CardTypeComboBox.getSelectionModel().select(0);
-
+		VisitHour_ComboBox.getItems().clear();
+		Park_ComboBox.getItems().addAll(parkNames);
+		String IdentificationID = getIdentificationString();
 		// ===================== delete later ===========================
-		Phone_textBox.setText("0545518526"); //TODO delete this later  (Roman)
+		Phone_textBox.setText("0545518526"); // TODO delete this later (Roman)
 		Email_textBox.setText("mirage164@gmail.com");
 		// =============================================================
+
 		stringList = FXCollections.observableArrayList(visitorsIDArray);
 		listViewVisitors.setItems(stringList);
+		if (IdentificationID != null) {
+			listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + IdentificationID + ")");
+			visitorsIDArray.add(IdentificationID);
+		}
+
 		// set only relevant dates
 		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
 			@Override
@@ -110,6 +120,26 @@ public class SmallGroupOrderController implements GuiController {
 		};
 		Date_DatePicker.setDayCellFactory(callB);
 	}
+
+	private String[] CreateWorkingHours(ParkNameAndTimes parkDetails) {
+		VisitHour_ComboBox.getItems().clear(); // some warning thrown sometimes
+		int numberOfWorkingHours = parkDetails.closeTime - parkDetails.openTime;
+		String[] res = new String[numberOfWorkingHours];
+		for (int i = parkDetails.openTime; i < parkDetails.closeTime; i++) {
+			res[i - parkDetails.openTime] = i + ":00";
+		}
+		return res;
+	}
+
+	@FXML
+	void parkWasChosen(ActionEvent event) {
+		ParkNameAndTimes temp = null;
+		for (int i = 0; i < parkNames.length; i++)
+			if (parkNames[i].equals(Park_ComboBox.getValue()))
+				temp = openingTimes.get(parkNames[i]);
+		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
+	}
+
 	// TODO Remove visitor button length problem
 
 	/**
@@ -126,7 +156,7 @@ public class SmallGroupOrderController implements GuiController {
 		res &= CheckPhoneNumber();
 		return res;
 	}
-	
+
 	/**
 	 * Check that park site was chosen
 	 * 
@@ -250,10 +280,12 @@ public class SmallGroupOrderController implements GuiController {
 		return true;
 	}
 
-/**
- * when Add Visitor button clicked the method checks if the ID is entered properly and add the ID to a ListView
- * @param event
- */
+	/**
+	 * When Add Visitor button clicked the method checks if the ID is entered
+	 * properly and add the ID to a ListView
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void AddVisitor_Button_Clicked(ActionEvent event) { // could the visitor be for different parks? time? date ?
 		String ordererId = PopUp.getUserInput("private Group Order", "enter Id of the orderer", "id or subscriberId :");
@@ -261,53 +293,66 @@ public class SmallGroupOrderController implements GuiController {
 		if (!CheckID(ordererId)) {
 			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
 					"Please enter appropriate ID");
-		} else if (visitorsIDArray.contains(ordererId) || visitorsIDArray.contains("S" + ordererId) || visitorsIDArray.contains(ordererId.substring(1,ordererId.length())) ) {
+		} else if (visitorsIDArray.contains(ordererId) || visitorsIDArray.contains("S" + ordererId)
+				|| visitorsIDArray.contains(ordererId.substring(1, ordererId.length()))) {
 			PopUp.showInformation("This ID already is added", "This ID already is added", "This ID already is added");
 		} else {
 			visitorsIDArray.add(ordererId);
-			PopUp.showInformation("Visitor Edded","Visitor Edded","Visitor Edded"); // TODO maybe delete
+			PopUp.showInformation("Visitor Edded", "Visitor Edded", "Visitor Edded"); // TODO maybe delete
 			visitorsCounter++;
 			listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + ordererId + ")");
 			PlaceOrder_Button.setDisable(false);
 			RemoveVisitor_Button.setDisable(false);
 		}
 	}
-/**
- * When Remove Visitor button clicked remove visitors ID from ListView
- * @param event
- */
-	@FXML //TODO disable buttons when they dont needed
+
+	/**
+	 * When Remove Visitor button clicked remove visitors ID from ListView
+	 * 
+	 * @param event
+	 */
+	@FXML // TODO disable buttons when they dont needed
 	void RemoveVisitor_Button_Clicked(ActionEvent event) {
 		int index = listViewVisitors.getSelectionModel().getSelectedIndex();
 		if (index == -1) {
-			System.out.println("NOTHING SELECTED!"); //TODO PopUp
+			System.out.println("NOTHING SELECTED!"); // TODO PopUp
 			return;
-		} else if(index == 0) {
+		} else if (index == 0) {
 			PlaceOrder_Button.setDisable(true);
 			RemoveVisitor_Button.setDisable(true);
 		}
-			stringList.remove(listViewVisitors.getSelectionModel().getSelectedItem());
-			visitorsIDArray.remove(index);
-			visitorsCounter--;
+		stringList.remove(listViewVisitors.getSelectionModel().getSelectedItem());
+		visitorsIDArray.remove(index);
+		visitorsCounter--;
 	}
-/**
- * Checks if the ID is from a type of 9 numbers or S and 9 numbers
- * @param ID
- * @return true if ID entered as expected, false otherwise
- */
+
+	/**
+	 * Checks if the ID is from a type of 9 numbers or S and 9 numbers
+	 * 
+	 * @param ID
+	 * @return true if ID entered as expected, false otherwise
+	 */
 	private boolean CheckID(String ID) {
 		if ((!ID.matches("([0-9])+") || ID.length() != 9) && (!ID.matches("S([0-9])+") || ID.length() != 10)) {
 			return false;
 		}
 		return true;
 	}
-/**
- * When Place Order button clicked the method checks if the Order can be booked 
- * @param event
- */
+
+	/**
+	 * When Place Order button clicked the method checks if the Order can be booked
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
+			if (spontaneous == true) {
+				ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);
+				parkEntry = createParkEntry(ord);
+				MoveToTheNextPage(ord, parkEntry);
+				return;
+			}
 			ord = createOrderDetails();
 
 			String response = clientController.client.sendRequestAndResponse(
@@ -359,7 +404,7 @@ public class SmallGroupOrderController implements GuiController {
 				break;
 			case "Order can be placed":
 				PopUp.showInformation("Order can be placed", "Order can be placed", "Order can be placed");
-				MoveToTheNextPage(ord);
+				MoveToTheNextPage(ord, null); // if its preorder entry = null
 				break;
 			case "Error: No such job":
 				PopUp.showInformation("Unexpected error", "Unexpected error!",
@@ -369,15 +414,17 @@ public class SmallGroupOrderController implements GuiController {
 
 	}
 
-	private void MoveToTheNextPage(Order ord) {
+	private void MoveToTheNextPage(Order ord, ParkEntry entry) {
 		Navigator n = Navigator.instance();
 		GuiController g = n.navigate("OrderSummary");
-		((OrderSummaryController) g).addOrderDataToFields(ord);
+		((OrderSummaryController) g).addOrderDataToFields(ord, entry);
 	}
-/**
- * Creates Order entity by the data that was entered from GUI 
- * @return
- */
+
+	/**
+	 * Creates Order entity by the data that was entered from GUI
+	 * 
+	 * @return
+	 */
 	private Order createOrderDetails() {
 		String parkName = Park_ComboBox.getValue();
 		LocalDate date = Date_DatePicker.getValue();
@@ -385,26 +432,37 @@ public class SmallGroupOrderController implements GuiController {
 		Timestamp visitTime = Timestamp.valueOf(date.atTime(LocalTime.of(visitHour, 0)));
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
 		int numberOfVisitors = visitorsCounter;
-		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
-		int orderID = ServerRequest.gson.fromJson(response, Integer.class);
+		int orderID = getNextOrderID();
 		int priceOfOrder = 100; // for now, need to be calculated by other controller
 		boolean isUsed = false; // by default
 		Order.IdType type = Order.IdType.PRIVATEGROUP;
 		String email = Email_textBox.getText();
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
-		String ownerID = "323533745"; // TODO the real ownerID will be provided from previous page (popUp)
+		String ownerID = getIdentificationString();
 		int numberOfSubscribers = NumberOfSubscribers(); // in a group order this is not relevant
 		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		return ord;
 	}
-/**
- * For each ID that was added, checks if the ID is subscriber. (no matters if S was is a first char)
- * @return
- */
-	private int NumberOfSubscribers() { //TODO make it work
+
+	private String getIdentificationString() {
+		if (clientController.client.visitorID.getVal() != null)
+			return clientController.client.visitorID.getVal().intern();
+		if (clientController.client.logedInSunscriber.getVal() != null)
+			return clientController.client.logedInSunscriber.getVal().personalID;
+//		if(clientController.client.logedInWorker.getVal() != null)
+//			return clientController.client.logedInWorker.getVal().getWorkerID();
+		return null;
+	}
+
+	/**
+	 * For each ID that was added, checks if the ID is subscriber. (no matters if S
+	 * was is a first char)
+	 * 
+	 * @return
+	 */
+	private int NumberOfSubscribers() { // TODO make it work
 		int res = 0;
 		String response = null;
 		for (String i : visitorsIDArray) {
@@ -418,10 +476,49 @@ public class SmallGroupOrderController implements GuiController {
 		return res;
 	}
 
-	// TODO setSpontaneous need to be implemented but how??
-	public void setSpontaneous(String ordererId) {
-		// TODO Auto-generated method stub
+	public void setSpontaneous(String ownerID, String parkName) {
+		spontaneous = true;
+		visitorsIDArray.add(ownerID);
+		listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + ownerID + ")");
+		Park_ComboBox.setValue(parkName);
+		VisitHour_ComboBox.setValue(LocalTime.now().withSecond(0).withNano(0).toString()); 
+		ord.ownerID = ownerID;	
+		ord.parkSite = parkName;
+		Date_DatePicker.setValue(LocalDate.now()); // get the date of today
+		// disable the fields, visitor don't have the choice of park,date and time
+		Park_ComboBox.setDisable(true);
+		VisitHour_ComboBox.setDisable(true);
+		Date_DatePicker.setDisable(true);
 
+	}
+
+	private ParkEntry createParkEntry(Order spOrder) {
+		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.PrivateGroup, spOrder.ownerID, spOrder.parkSite,
+				spOrder.visitTime, null, spOrder.numberOfVisitors, spOrder.numberOfSubscribers, true,
+				spOrder.priceOfOrder);
+		return entry;
+	}
+
+	private Order createSpontaneousOrderDetails(String ownerID, String parkName) {
+		int orderID = getNextOrderID();
+		int priceOfOrder = 100;
+		int numberOfVisitors = visitorsCounter;
+		String email = Email_textBox.getText();
+		String phone = Phone_textBox.getText();
+		Order.IdType type = Order.IdType.PRIVATEGROUP; // by default
+		Order.OrderStatus orderStatus = Order.OrderStatus.CONFIRMED;
+		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
+		boolean isUsed = true;
+		int numberOfSubscribers = NumberOfSubscribers();
+		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
+				timeOfOrder, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		return ord;
+	}
+
+	private int getNextOrderID() {
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
+		return ServerRequest.gson.fromJson(response, Integer.class);
 	}
 
 }

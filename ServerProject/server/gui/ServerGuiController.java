@@ -106,7 +106,7 @@ public class ServerGuiController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		new ConsoleReplacer(scroll).replaceAll(true);;
+		new ConsoleReplacer(scroll).replaceAll(true);
 	}
 	
 	

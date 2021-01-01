@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
-import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -109,6 +108,8 @@ public class EntryReportController implements GuiController ,Report{
 			totalPeopleType[parkEntry.entryType.ordinal()] += parkEntry.numberOfVisitors;
 
 		}
+
+		
 		for (EntryType entryType : ParkEntry.EntryType.values()) {
 			XYChart.Series<String, Double> addSeries = new XYChart.Series<String, Double>();
 			addSeries.setName(entryType.toString());
@@ -117,12 +118,12 @@ public class EntryReportController implements GuiController ,Report{
 						(avgStayArray[entryType.ordinal()] / totalPeopleType[entryType.ordinal()]) / 60));
 			} else {
 				addSeries.getData().add(new XYChart.Data<String, Double>(entryType.toString(), (double) 0));
+				
 			}
 			table1_AVGvisitStay.getData().add(addSeries);
+
 		}
-		table1_AVGvisitStay.setBarGap(10);
-		table1_AVGvisitStay.setCategoryGap(0);
-		
+	
 		//--- Second Chart ---//
 
 		int[][] sumPeople = new int[ParkEntry.EntryType.values().length][24];
@@ -145,21 +146,17 @@ public class EntryReportController implements GuiController ,Report{
 		}
 
 		for (EntryType entryType : ParkEntry.EntryType.values()) {
-
-			int[] hours = sumPeople[entryType.ordinal()];
-
+			
 			XYChart.Series<String, Integer> addSeries = new XYChart.Series<String, Integer>();
 			
 			addSeries.setName(entryType.toString());
 			for (int i = minimalHour; i <= maximalHour; i++) {
 				addSeries.getData()
-						.add(new XYChart.Data<String, Integer>(String.valueOf(i), sumPeople[entryType.ordinal()][i]));
+						.add(new XYChart.Data<String, Integer>(String.valueOf(i)+":00", sumPeople[entryType.ordinal()][i]));
 			}
 			table2_AVGentry.getData().add(addSeries);
 			
 		}
-		table2_AVGentry.setBarGap(10);
-		table2_AVGentry.setCategoryGap(0);
 		
 	}
 

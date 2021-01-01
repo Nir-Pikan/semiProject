@@ -30,7 +30,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" />
   </rowConstraints>
    <children>
-      <ComboBox fx:id="Park_ComboBox" prefHeight="25.0" prefWidth="196.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <ComboBox fx:id="Park_ComboBox" onAction="#parkWasChosen" prefHeight="25.0" prefWidth="196.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <ComboBox fx:id="VisitHour_ComboBox" prefHeight="25.0" prefWidth="191.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <TextField fx:id="Email_textBox" prefHeight="25.0" prefWidth="170.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <DatePicker fx:id="Date_DatePicker" prefHeight="25.0" prefWidth="188.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />

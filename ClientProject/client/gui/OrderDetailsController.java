@@ -59,48 +59,48 @@ public class OrderDetailsController implements GuiController {
 
 	@FXML
 	void ApproveOrder(ActionEvent event) {
-		switch(order.orderStatus) {
+		switch (order.orderStatus) {
 		case IDLE:
 			order.orderStatus = OrderStatus.CONFIRMED;
 			String response = clientController.client.sendRequestAndResponse(
 					new ServerRequest(Manager.Order, "UpdateOrder", ServerRequest.gson.toJson(order, Order.class)));
-			if(response.contains("Failed")) {
+			if (response.contains("Failed")) {
 				PopUp.showError("Order Approve", "Order Approve", "failed to approve order");
-			}else {
+			} else {
 				PopUp.showInformation("Order Approve", "Order Approve", "order approved");
 				getOrder(order.orderID);
 			}
 			return;
 		case WAITINGLISTMASSAGESENT:
-			 clientController.client.sendRequestAndResponse(
+			clientController.client.sendRequestAndResponse(
 					new ServerRequest(Manager.WaitingList, "acceptWaitingOrder", String.valueOf(order.orderID)));
 			PopUp.showInformation("Order Approve", "Order Approve", "order approved");
 			getOrder(order.orderID);
 			return;
-			default:
-				PopUp.showError("Order Approve", "Order Approve", "cannot approve order");
+		default:
+			PopUp.showError("Order Approve", "Order Approve", "cannot approve order");
 		}
-		
-		
+
 	}
 
 	@FXML
 	void cancelOrder(ActionEvent event) {
-		PopUp p = new PopUp(AlertType.CONFIRMATION,"Are you sure you wand to cancel?",ButtonType.CANCEL,ButtonType.CLOSE);
+		PopUp p = new PopUp(AlertType.CONFIRMATION, "Are you sure you wand to cancel?", ButtonType.CANCEL,
+				ButtonType.CLOSE);
 		p.setTitle("Cancel Order");
 		p.setHeaderText("Cancel Order");
-		if(p.showAndWait().get() != ButtonType.CANCEL)
+		if (p.showAndWait().get() != ButtonType.CANCEL)
 			return;
-		switch(order.orderStatus) {
+		switch (order.orderStatus) {
 		case IDLE:
-			clientController.client.sendRequestAndResponse(
-					new ServerRequest(Manager.Order, "CancelOrderByOrderID", ServerRequest.gson.toJson(order, Order.class)));
+			clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order, "CancelOrderByOrderID",
+					ServerRequest.gson.toJson(order, Order.class)));
 			PopUp.showInformation("Order Cancel", "Order Cancel", "order Canceled");
 			Navigator.instance().clearHistory();
 			return;
 		case WAITINGLISTMASSAGESENT:
-			clientController.client.sendRequestAndResponse(
-					new ServerRequest(Manager.WaitingList, "cancelWaitingOrder", ServerRequest.gson.toJson(order, Order.class)));
+			clientController.client.sendRequestAndResponse(new ServerRequest(Manager.WaitingList, "cancelWaitingOrder",
+					ServerRequest.gson.toJson(order, Order.class)));
 			PopUp.showInformation("Order Cancel", "Order Cancel", "order Canceled");
 			Navigator.instance().clearHistory();
 			return;
@@ -130,51 +130,71 @@ public class OrderDetailsController implements GuiController {
 	@Override
 	public void init() {
 		String orderId = PopUp.getUserInput("Order details", "Show Order Details", "Order ID:");
-
-		if(getOrder(Integer.parseInt(orderId)))
+		try {
+		if (getOrder(Integer.parseInt(orderId)))
 			return;
-
+		}catch(NumberFormatException e) {
+			PopUp.showError("Order Details", "Order Details", "Order Number is invalid, try again");
+			throw new Navigator.NavigationInterruption();
+		}
 		PopUp.showError("Order Details", "Order Details", "Order not Found, try again");
 		Navigator.instance().back();
 		throw new Navigator.NavigationInterruption();// tell the navigator to stop the navigation
 	}
-	
+
 	private boolean getOrder(int orederIDint) {
 		String orderID = orederIDint + "";
 		// check if normal order
-				String response = clientController.client
-						.sendRequestAndResponse(new ServerRequest(Manager.Order, "GetOrderByID", orderID));
-				if (!response.contains("not found")) {
-					Order o = ServerRequest.gson.fromJson(response, Order.class);
-					addOrderDataToFields(o);
-					if (o.orderStatus == OrderStatus.CANCEL || o.orderStatus == OrderStatus.SEMICANCELED) {
-						cancelBtn.setDisable(true);
-					} else {
-						if (o.orderStatus != OrderStatus.CONFIRMED
-								&& o.visitTime.toLocalDateTime().toLocalDate().equals(LocalDate.now().plusDays(1))
-								&& LocalTime.now().isAfter(LocalTime.of(10, 00))
-								&& LocalTime.now().isBefore(LocalTime.of(12, 00))) {
-							approveBtn.setDisable(false);
-						} else {
-							approveBtn.setDisable(true);
-						}
-					}
-					return true;
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Order, "GetOrderByID", orderID));
+		if (!response.contains("not found")) {
+			Order o = ServerRequest.gson.fromJson(response, Order.class);
+			checkOrderOwner(o);
+			addOrderDataToFields(o);
+			if (o.orderStatus == OrderStatus.CANCEL || o.orderStatus == OrderStatus.SEMICANCELED) {
+				cancelBtn.setDisable(true);
+			} else {
+				if (o.orderStatus != OrderStatus.CONFIRMED
+						&& o.visitTime.toLocalDateTime().toLocalDate().equals(LocalDate.now().plusDays(1))
+						&& LocalTime.now().isAfter(LocalTime.of(10, 00))
+						&& LocalTime.now().isBefore(LocalTime.of(12, 00))) {
+					approveBtn.setDisable(false);
+				} else {
+					approveBtn.setDisable(true);
 				}
+			}
+			return true;
+		}
 
-				// check if waitingList order
-				String response2 = clientController.client
-						.sendRequestAndResponse(new ServerRequest(Manager.WaitingList, "GetOrderByID", orderID));
-				if (!response2.contains("not found")) {
-					Order o = ServerRequest.gson.fromJson(response2, Order.class);
-					addOrderDataToFields(o);
-					if (o.orderStatus != OrderStatus.WAITINGLISTMASSAGESENT) {
-						approveBtn.setDisable(false);
-					} else {
-						approveBtn.setDisable(true);
-					}
-					return true;
-				}
-				return false;
+		// check if waitingList order
+		String response2 = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.WaitingList, "GetOrderByID", orderID));
+		if (!response2.contains("not found")) {
+			Order o = ServerRequest.gson.fromJson(response2, Order.class);
+			addOrderDataToFields(o);
+			if (o.orderStatus != OrderStatus.WAITINGLISTMASSAGESENT) {
+				approveBtn.setDisable(false);
+			} else {
+				approveBtn.setDisable(true);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private void checkOrderOwner(Order o) {
+		if (clientController.client.logedInSunscriber.getVal() != null) {
+			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals(o.ownerID)) {
+				PopUp.showError("Show Order Details", "Order Details", "You can see only your own order");
+				throw new Navigator.NavigationInterruption();
+			}
+		}
+		if (clientController.client.visitorID.getVal() != null) {
+			if (!clientController.client.visitorID.getVal().equals(o.ownerID)) {
+				PopUp.showError("Show Order Details", "Order Details", "You can see only your own order");
+				throw new Navigator.NavigationInterruption();
+			}
+		}
+
 	}
 }

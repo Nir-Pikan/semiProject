@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
+import module.Navigator;
 import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
@@ -85,15 +86,16 @@ public class OrderSummaryController implements GuiController {
 				PopUp.showInformation("Unexpected Error", "Unexpected Error", "Unexpected Error");
 			}
 		}
+		Navigator.instance().clearHistory();
 	}
 
 	public void addOrderDataToFields(Order order, ParkEntry entry) {
 		this.order = order;
 		this.entry = entry;
-		initFields(order);
+		initFields(order,entry);
 	}
 
-	private void initFields(Order order) {
+	private void initFields(Order order,ParkEntry entry) {
 		approveBtn.setDisable(false);
 		if (entry == null)
 			orderNoTxt.setText("Order #: " + String.valueOf(order.orderID));
@@ -105,6 +107,9 @@ public class OrderSummaryController implements GuiController {
 		emailTxt.setText(order.email);
 		phoneTxt.setText(order.phone);
 		float price = calcOrderPrice(order);
+		order.priceOfOrder = price;
+		entry.priceOfEntry = price;
+		entry.priceOfOrder = price;
 		priceTxt.setText(String.valueOf(price));
 	}
 	

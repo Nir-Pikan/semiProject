@@ -19,6 +19,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
+import logic.OpenOrderTimes;
 import module.GuiController;
 import module.Navigator;
 import module.PopUp;
@@ -341,8 +342,15 @@ public class RegularOrderController implements GuiController {
 							"Failed to cancel an order");
 					break;
 				case "No more orders allowed in this time":
-					PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
-							"No more orders allowed in this time");
+//					PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
+//							"No more orders allowed in this time"); // another options will be displayed and offer to waiting list
+					Order newSelectedOrder  = OpenOrderTimes.askForWaitingListAndShowOptions(ord);
+					if(newSelectedOrder == null)
+						return;
+					else
+						MoveToTheNextPage(newSelectedOrder,null);
+//						 response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order,
+//								"IsOrderAllowed", ServerRequest.gson.toJson(newSelectedOrder, Order.class)));
 					break;
 				case "Order Canceled":
 					PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");

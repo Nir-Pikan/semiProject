@@ -181,12 +181,10 @@ public class ReportExportController implements GuiController {
 		
 		if (textParkId.getText()==null) {
 			textParkId.getStyleClass().add("error");
-			textParkId.setText("There is No Park ID value");
 			return false;
 		}
 		if (textParkId.getText().equals("")) {
 			textParkId.getStyleClass().add("error");
-			textParkId.setText("There is No Park ID value");
 			return false;
 		}
 		textParkId.getStyleClass().remove("error");

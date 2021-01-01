@@ -174,9 +174,12 @@ public class OrderController implements IController {
 										///////////////////////////////////////////////////////////// needed
 			orderID = ServerRequest.gson.fromJson(request.data, Integer.class);
 			answer = CancelOrderByOrderID(orderID);
-			if (answer)
+			if (answer) {
+				Order order = GetOrderByID(orderID);
+				Platform.runLater(()->{messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order), "GoNature Order Canceled");});
 				// response = ServerRequest.gson.toJson(answer);
 				response = "Order Canceled";
+			}
 			else
 				response = "Failed to cancel an order";
 			break;

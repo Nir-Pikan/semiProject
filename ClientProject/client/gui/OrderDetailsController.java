@@ -94,7 +94,7 @@ public class OrderDetailsController implements GuiController {
 		switch (order.orderStatus) {
 		case IDLE:
 			clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order, "CancelOrderByOrderID",
-					ServerRequest.gson.toJson(order, Order.class)));
+					ServerRequest.gson.toJson(order.orderID, Integer.class)));
 			PopUp.showInformation("Order Cancel", "Order Cancel", "order Canceled");
 			Navigator.instance().clearHistory();
 			return;

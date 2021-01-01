@@ -19,7 +19,7 @@ public class WakeableThread extends Thread {
 		synchronized (lock) {
 			while(!needToWake) {
 				try {
-					wait();
+					lock.wait();
 				} catch (InterruptedException e) {
 				}
 			}
@@ -32,7 +32,7 @@ public class WakeableThread extends Thread {
 		synchronized (lock) {
 			while(!needToWake && LocalTime.now().isBefore(endTime)) {
 				try {
-					wait(TIME_ACCURECY);
+					lock.wait(TIME_ACCURECY);
 				} catch (InterruptedException e) {
 				}
 			}
@@ -46,7 +46,7 @@ public class WakeableThread extends Thread {
 		synchronized (lock) {
 			while(!needToWake && LocalTime.now().isBefore(endTime)) {
 				try {
-					wait(TIME_ACCURECY);
+					lock.wait(TIME_ACCURECY);
 				} catch (InterruptedException e) {
 				}
 			}

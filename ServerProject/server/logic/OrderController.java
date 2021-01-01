@@ -15,10 +15,12 @@ import entities.Order.IdType;
 import entities.Order.OrderStatus;
 import entities.Park;
 import io.DbController;
+import javafx.application.Platform;
 import modules.IController;
 import modules.ObservableList;
 import modules.PeriodicallyRunner;
 import modules.ServerRequest;
+import modules.ServerRequest.Manager;
 
 public class OrderController implements IController {
 
@@ -125,7 +127,7 @@ public class OrderController implements IController {
 			}
 			// try to add order
 			if (AddNewOrder(ord)) { // now this part is duplicated line 103
-				messageC.SendEmailAndSMS(ord.email, ord.phone, genereteMessage(ord), "GoNature New Order");
+				Platform.runLater(()->{messageC.SendEmailAndSMS(ord.email, ord.phone, genereteMessage(ord), "GoNature New Order");});
 				response = "Order was added successfully";
 			} else
 				response = "Failed to add Order";
@@ -366,24 +368,27 @@ public class OrderController implements IController {
 		// run this every day at 10AM
 		PeriodicallyRunner.runEveryDayAt(10, 00, () -> {
 			ArrayList<Order> resultList = getTomorrowOrders();
-
-			for (Order order : resultList) {
-				messageC.SendEmailAndSMS(order.email, order.phone, genereteApprovalRequestMessage(order),
-						"GoNature Remainder");
+			
+			for(Order order : resultList) {
+				Platform.runLater(()->{messageC.SendEmailAndSMS(order.email, order.phone, genereteApprovalRequestMessage(order), "GoNature Remainder");});
 			}
 
 		});
 
-		// run this every day at 12AM
-		PeriodicallyRunner.runEveryDayAt(12, 00, () -> {
-			ArrayList<Order> resultList = getTomorrowOrders();
+	
+		
+		//run this every day at 12AM
+				PeriodicallyRunner.runEveryDayAt(12, 00, ()->{
+					ArrayList<Order> resultList = getTomorrowOrders();
+					
+					for(Order order : resultList) {
+						Platform.runLater(()->{messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order), "GoNature Order Canceled");});
+						
+					CancelOrderByOrderID(order.orderID);
+					}
+					
+				});
 
-			for (Order order : resultList) {
-				messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order),
-						"GoNature Order Canceled");
-			}
-
-		});
 		System.out.println("Message Remainder initiated");
 	}
 
@@ -577,8 +582,8 @@ public class OrderController implements IController {
 	public boolean UpdateOrder(Order ord) {
 		PreparedStatement ps = dbController.getPreparedStatement(
 				"UPDATE orders SET isUsed = ?, parkSite = ? , numberOfVisitors = ?, priceOfOrder = ?,"
-						+ " email = ?, phone = ?,type = ?, orderStatus = ?, visitTime = ?, timeOfOrder = ?,\r\n"
-						+ "ownerID = ?,numberOfSubscribers = ?, WHERE orderID = ?");
+						+ " email = ?, phone = ?,type = ?, orderStatus = ?, visitTime = ?, timeOfOrder = ?,"
+						+ "ownerID = ?,numberOfSubscribers = ? WHERE orderID = ?");
 		try {
 			ps.setBoolean(1, ord.isUsed);
 			ps.setString(2, ord.parkSite);
@@ -628,6 +633,7 @@ public class OrderController implements IController {
 	 * @param hours
 	 * @return
 	 */
+
 	private Timestamp[] calcHoursRange(Order order, Park prk) {
 		Timestamp[] res = new Timestamp[2];
 		// Park prk = park.getPark(order.parkSite);

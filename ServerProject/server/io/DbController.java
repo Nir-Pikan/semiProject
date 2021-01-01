@@ -48,6 +48,7 @@ public class DbController implements IDbController {
 		System.out.println("SQLException: " + ex.getMessage());
 		System.out.println("SQLState: " + ex.getSQLState());
 		System.out.println("VendorError: " + ex.getErrorCode());
+		ex.printStackTrace();
 	}
 	
 	/**creates table in the dataBase only if not exists
@@ -132,6 +133,8 @@ public class DbController implements IDbController {
 	
 	/**Exception if \"DbController.getInstance()\" was called without calling \"DbController.init()\" first*/
 	private static class DbNotInitialized extends RuntimeException{
+
+		private static final long serialVersionUID = 7662412731079268879L;
 
 		public DbNotInitialized() {
 			super("Db not initialized, but referenced");

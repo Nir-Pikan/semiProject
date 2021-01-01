@@ -419,5 +419,4 @@ public class GroupOrderController implements GuiController {
 		return entry;
 	}
 
-
 }

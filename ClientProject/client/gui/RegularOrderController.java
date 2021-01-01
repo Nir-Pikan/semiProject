@@ -386,6 +386,7 @@ public class RegularOrderController implements GuiController {
 		((OrderSummaryController) g).addOrderDataToFields(ord, entry);
 	}
 
+
 //	public void addOrderDataToFields(Order order) {
 //		ord = order;
 //		initFields(ord);
@@ -403,6 +404,7 @@ public class RegularOrderController implements GuiController {
 //		Email_textBox.setText(order.email);
 //		Phone_textBox.setText(order.phone);
 //	}
+
 
 	/**
 	 * Create Order Entity from the fields that was willed by the user on a GUI

@@ -101,7 +101,7 @@ public class MainScreenController {
 		clientController.client.logedInWorker.AddListener((prop, oldVal, newVal) -> {
 			if (newVal != null) {
 				Worker w = clientController.client.logedInWorker.getVal();
-				greetingMsg.setText("Hello " + w.getFirstName() + " " + w.getLastName());
+				greetingMsg.setText("Hello "+w.getFirstName()+ " "+w.getLastName() +"("+w.getWorkerType()+")");
 				Login.setVisible(true);
 				Login.setManaged(true);
 				List<MenuItem> menuItems = new ArrayList<>();

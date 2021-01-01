@@ -83,7 +83,7 @@ public class MyMail {
 		alert.setTitle(titleBar);
 		alert.setHeaderText(headerMessage);
 		alert.setContentText(infoMessage);
-		alert.showAndWait();
+		alert.show();
 	}
 
 	/** validation of a email address **/

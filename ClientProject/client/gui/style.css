@@ -52,7 +52,6 @@
 
 .button:hover,.toggle-button:selected{
 -fx-background-color:#538996;
--fx-font-weight:bold;
 }
 .btn_no:hover{
 	-fx-background-color:red;

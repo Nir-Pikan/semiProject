@@ -108,10 +108,7 @@ public class OrderSummaryController implements GuiController {
 		phoneTxt.setText(order.phone);
 		float price = calcOrderPrice(order);
 		order.priceOfOrder = price;
-		if (entry != null) {
-			entry.priceOfEntry = price;
-			entry.priceOfOrder = price;
-		}
+		
 		priceTxt.setText(String.valueOf(price));
 	}
 

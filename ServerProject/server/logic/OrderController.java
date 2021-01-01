@@ -631,13 +631,13 @@ public class OrderController implements IController {
 	private Timestamp addTimeInHours(Timestamp stamp, int hours) {
 		long tempTimeLong = stamp.getTime();
 		Timestamp temp = new Timestamp(tempTimeLong);
-		int tempHours = stamp.getHours() + hours;
+		int tempHours = stamp.toLocalDateTime().getHour() + hours;
 		if (tempHours < openingHour)
-			temp.setHours(openingHour);
+			temp.toLocalDateTime().withHour(openingHour);
 		else if (tempHours > closeHour)
-			temp.setHours(closeHour);
+			temp.toLocalDateTime().withHour(closeHour);
 		else
-			temp.setHours(stamp.getHours() + hours);
+			temp.toLocalDateTime().withHour(stamp.toLocalDateTime().getHour() + hours);
 		return temp;
 	}
 

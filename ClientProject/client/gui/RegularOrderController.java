@@ -367,7 +367,7 @@ public class RegularOrderController implements GuiController {
 	private void initFields(Order order) {
 		Park_ComboBox.setValue(order.parkSite);
 		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());
-		VisitHour_ComboBox.setValue(order.visitTime.getHours() + ":" + order.visitTime.getMinutes() + "0");
+		VisitHour_ComboBox.setValue(order.visitTime.toLocalDateTime().getHour() + ":" + order.visitTime.toLocalDateTime().getMinute() + "0");
 		Email_textBox.setText(order.email);
 		Phone_textBox.setText(order.phone);
 	}

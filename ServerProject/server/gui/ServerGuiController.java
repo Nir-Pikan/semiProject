@@ -14,9 +14,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import modules.TextAreaPrintStream;
+import modules.ConsoleReplacer;
 import util.UIupdate;
 
 public class ServerGuiController implements Initializable{
@@ -43,9 +44,9 @@ public class ServerGuiController implements Initializable{
 	@FXML
 	private TextField serverPort;
 
-    @FXML
-    private TextArea log;
-    
+	   @FXML
+	    private ScrollPane scroll;
+
 	@FXML
 	void StartServer(ActionEvent event) {
 		int port;
@@ -105,14 +106,7 @@ public class ServerGuiController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		TextAreaPrintStream t ;
-	System.setOut(t = new TextAreaPrintStream(log, new OutputStream() {
-		
-		@Override
-		public void write(int arg0) throws IOException {
-		}
-	}));
-	t.setShowInOriginalSystemOut();
+		new ConsoleReplacer(scroll).replaceAll(true);;
 	}
 	
 	

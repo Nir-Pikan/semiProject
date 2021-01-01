@@ -134,6 +134,8 @@ public class DbController implements IDbController {
 	/**Exception if \"DbController.getInstance()\" was called without calling \"DbController.init()\" first*/
 	private static class DbNotInitialized extends RuntimeException{
 
+		private static final long serialVersionUID = 7662412731079268879L;
+
 		public DbNotInitialized() {
 			super("Db not initialized, but referenced");
 		}

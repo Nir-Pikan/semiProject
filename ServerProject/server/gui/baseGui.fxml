@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -52,8 +52,8 @@
       <TextField fx:id="serverPort" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Label text="Listen port:" GridPane.rowIndex="1" />
       <Button mnemonicParsing="false" onAction="#closeAll" text="Stop Server" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
-      <TextArea fx:id="log" editable="false" prefHeight="168.0" prefWidth="716.0" GridPane.columnSpan="3" GridPane.rowIndex="10" />
       <Label text="Server Logs:" GridPane.rowIndex="9" />
+      <ScrollPane fx:id="scroll" prefHeight="279.0" prefWidth="738.0" GridPane.columnSpan="3" GridPane.rowIndex="10" />
    </children>
    <padding>
       <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />

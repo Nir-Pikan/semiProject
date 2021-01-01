@@ -344,7 +344,7 @@ public class GroupOrderController implements GuiController {
 	private void initFields(Order order) {
 		Park_ComboBox.setValue(order.parkSite);
 		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());
-		VisitHour_ComboBox.setValue(order.visitTime.getHours() + ":" + order.visitTime.getMinutes() + "0");
+		VisitHour_ComboBox.setValue(order.visitTime.toLocalDateTime().getHour() + ":" + order.visitTime.toLocalDateTime().getMinute() + "0");
 		NumberOfVisitors_ComboBox.setValue(order.numberOfVisitors + "");
 		FamilyIndicator_checkBox.setSelected(order.type == Order.IdType.FAMILY ? true : false);
 		Email_textBox.setText(order.email);

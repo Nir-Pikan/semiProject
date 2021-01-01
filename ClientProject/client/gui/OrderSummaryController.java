@@ -92,10 +92,10 @@ public class OrderSummaryController implements GuiController {
 	public void addOrderDataToFields(Order order, ParkEntry entry) {
 		this.order = order;
 		this.entry = entry;
-		initFields(order,entry);
+		initFields(order, entry);
 	}
 
-	private void initFields(Order order,ParkEntry entry) {
+	private void initFields(Order order, ParkEntry entry) {
 		approveBtn.setDisable(false);
 		if (entry == null)
 			orderNoTxt.setText("Order #: " + String.valueOf(order.orderID));
@@ -108,14 +108,16 @@ public class OrderSummaryController implements GuiController {
 		phoneTxt.setText(order.phone);
 		float price = calcOrderPrice(order);
 		order.priceOfOrder = price;
-		entry.priceOfEntry = price;
-		entry.priceOfOrder = price;
+		if (entry != null) {
+			entry.priceOfEntry = price;
+			entry.priceOfOrder = price;
+		}
 		priceTxt.setText(String.valueOf(price));
 	}
-	
+
 	private float calcOrderPrice(Order order) {
-		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Discount, "CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
+		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
+				"CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
 		return ServerRequest.gson.fromJson(response, Float.class);
 	}
 

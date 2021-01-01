@@ -73,17 +73,7 @@ public class ParkManagerParametersUpdateController implements GuiController {
 	private Label labelOnAVGchanged;
 
 	@FXML
-	private Button buttonAddDiscount;
-
-	@FXML
 	private Button buttonSendRequest;
-
-	/** when clicked open the AddDiscount page */
-	@FXML
-	void AddDiscount_OnClick(ActionEvent event) {
-		AddDiscountController c = (AddDiscountController) Navigator.instance().navigate("AddDiscount");
-		// TODO Add Set Park from manager Park
-	}
 
 	/** when clicked send the update request */
 	@FXML

@@ -142,6 +142,7 @@ public class MainScreenController {
 		res.put("EditParameters", new MenuItem("Change Park Parameters", "ParkManagerParametersUpdate"));
 		res.put("ApproveParameters", new MenuItem("Approve Park Parameters", "DevisionManagerParksDetailsApprove"));
 		res.put("ApproveDiscounts", new MenuItem("Approve Discounts", "DevisionManagerDiscount"));
+		res.put("AddDiscounts", new MenuItem("Add New Discount", "AddDiscount"));
 		return res;
 	}
 

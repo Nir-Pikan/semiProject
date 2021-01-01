@@ -192,7 +192,8 @@ public class ServerController extends AbstractServer {
 //		Permission visitorsView = new Permission("VistitorsView");
 //		Permission reportExport = new Permission("ReportExport");
 //		Permission editParameters = new Permission("EditParameters");
-//
+//		Permission addDiscounts = new Permission("AddDiscounts");
+//		
 //		depManager.AddPermission(reg);
 //		depManager.AddPermission(visitorsView);
 //		depManager.AddPermission(reportExport);
@@ -203,16 +204,19 @@ public class ServerController extends AbstractServer {
 //		parkSilverManager.AddPermission(visitorsView);
 //		parkSilverManager.AddPermission(reportExport);
 //		parkSilverManager.AddPermission(editParameters);
+//		parkSilverManager.AddPermission(addDiscounts);
 //
 //		parkGoldManager.AddPermission(reg);
 //		parkGoldManager.AddPermission(visitorsView);
 //		parkGoldManager.AddPermission(reportExport);
 //		parkGoldManager.AddPermission(editParameters);
+//		parkGoldManager.AddPermission(addDiscounts);
 //
 //		parkPlatinumManager.AddPermission(reg);
 //		parkPlatinumManager.AddPermission(visitorsView);
 //		parkPlatinumManager.AddPermission(reportExport);
 //		parkPlatinumManager.AddPermission(editParameters);
+//		parkPlatinumManager.AddPermission(addDiscounts);
 //
 //		parkSilverWorker.AddPermission(reg);
 //		parkSilverWorker.AddPermission(visitorsView);

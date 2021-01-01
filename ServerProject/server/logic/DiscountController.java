@@ -325,7 +325,10 @@ public class DiscountController implements IController {
 			if (res == null) {
 				return currentPrice;
 			}
-			float discountApply = res.getFloat(1);// discountApply should be between 0.00 to 1.00
+			float discountApply =0;
+			if(res.next()) {
+				discountApply = res.getFloat(1);// discountApply should be between 0.00 to 1.00				
+			}
 			if (discountApply < 0 || discountApply > 1)
 				return currentPrice;
 

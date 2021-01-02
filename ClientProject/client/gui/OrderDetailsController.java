@@ -184,7 +184,7 @@ public class OrderDetailsController implements GuiController {
 
 	private void checkOrderOwner(Order o) {
 		if (clientController.client.logedInSunscriber.getVal() != null) {
-			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals(o.ownerID)) {
+			if (!removeSIfExist(clientController.client.logedInSunscriber.getVal().subscriberID).equals(removeSIfExist(o.ownerID))) {
 				PopUp.showError("Show Order Details", "Order Details", "You can see only your own order");
 				throw new Navigator.NavigationInterruption();
 			}
@@ -196,5 +196,11 @@ public class OrderDetailsController implements GuiController {
 			}
 		}
 
+	}
+	
+	private String removeSIfExist(String str) {
+		if(str.startsWith("S"))
+			return str.substring(1);
+		return str;
 	}
 }

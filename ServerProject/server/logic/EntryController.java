@@ -131,11 +131,11 @@ public class EntryController implements IController {
 			pstmt.setInt(6, newEntry.numberOfVisitors);
 			pstmt.setInt(7, newEntry.numberOfSubscribers);
 			pstmt.setBoolean(8, newEntry.isCasual);
-			pstmt.setFloat(9, newEntry.priceOfOrder);
 			boolean isGroup = newEntry.entryType == EntryType.Group ? true : false;
-			pstmt.setFloat(10,100);//TODO delete and replace
-		//	pstmt.setFloat(10, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
-			//		newEntry.numberOfSubscribers, isGroup));
+			pstmt.setFloat(9, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
+					newEntry.numberOfSubscribers, isGroup));
+			pstmt.setFloat(10, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
+					newEntry.numberOfSubscribers, isGroup));
 
 			
 			park.updateNumberOfCurrentVisitor(newEntry.parkID, newEntry.numberOfVisitors);

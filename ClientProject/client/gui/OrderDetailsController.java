@@ -197,4 +197,10 @@ public class OrderDetailsController implements GuiController {
 		}
 
 	}
+	
+	private String removeSIfExist(String str) {
+		if(str.startsWith("S"))
+			return str.substring(1);
+		return str;
+	}
 }

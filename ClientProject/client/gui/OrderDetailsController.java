@@ -154,7 +154,7 @@ public class OrderDetailsController implements GuiController {
 			if (o.orderStatus == OrderStatus.CANCEL || o.orderStatus == OrderStatus.SEMICANCELED) {
 				cancelBtn.setDisable(true);
 			} else {
-				if (o.orderStatus != OrderStatus.CONFIRMED
+				if (o.orderStatus == OrderStatus.IDLE
 						&& o.visitTime.toLocalDateTime().toLocalDate().equals(LocalDate.now().plusDays(1))
 						&& LocalTime.now().isAfter(LocalTime.of(10, 00))
 						&& LocalTime.now().isBefore(LocalTime.of(12, 00))) {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="540.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MotdController">
+   <center>
+      <VBox>
+         <children>
+            <Label text="Messeges:" />
+            <ScrollPane fx:id="scroll" prefHeight="451.0" prefWidth="440.0" style="-fx-background-color: transparent;">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Contact Us:" />
+            <Label text="Phone number: 050-0000000 , Email: g1.GoNature@gmail.com" />
+         </children>
+      </VBox>
+   </bottom>
+   <top>
+      <Label styleClass="h1" text="Welcome to GoNautre" BorderPane.alignment="CENTER" />
+   </top>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</BorderPane>

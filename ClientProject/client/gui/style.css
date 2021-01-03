@@ -9,6 +9,7 @@
 
 
 .label{	-fx-text-fill: white;}
+.text-id{	-fx-fill: white;}
 
 /* controls */
 .red {
@@ -151,7 +152,9 @@
 	-fx-text-fill: #4CB6D9;
 
 }
-
+.scroll-pane .viewport {
+       -fx-background-color: transparent;
+}
 /*END OF controls */
 
 /* alert */

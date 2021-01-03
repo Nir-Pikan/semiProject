@@ -261,6 +261,8 @@ public class WaitingListController implements IController {
 		case "GetOrderByID":
 			try {
 			Order o = getwaitingOrder(Integer.parseInt(request.data));
+			if(o == null )
+				return request.data + " not Found";
 			return ServerRequest.gson.toJson(o, Order.class);
 			}catch (NumberFormatException e) {
 				return request.data + " not Found";

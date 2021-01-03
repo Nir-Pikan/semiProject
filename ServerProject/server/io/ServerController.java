@@ -97,6 +97,9 @@ public class ServerController extends AbstractServer {
 			}
 			response = worker.handleRequest(sr);
 			break;
+		case Message:
+			response = messageC.handleRequest(sr);
+			break;
 		default:
 			response = "Unsuported";
 			break;

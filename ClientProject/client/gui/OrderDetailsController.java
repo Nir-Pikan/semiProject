@@ -102,14 +102,15 @@ public class OrderDetailsController implements GuiController {
 			return;
 		switch (order.orderStatus) {
 		case IDLE:
+		case CONFIRMED:
 			clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order, "CancelOrderByOrderID",
 					ServerRequest.gson.toJson(order.orderID, Integer.class)));
 			PopUp.showInformation("Order Cancel", "Order Cancel", "order Canceled");
 			Navigator.instance().clearHistory();
 			return;
-		case WAITINGLISTMASSAGESENT:
+		case WAITINGLIST:
 			clientController.client.sendRequestAndResponse(new ServerRequest(Manager.WaitingList, "cancelWaitingOrder",
-					ServerRequest.gson.toJson(order, Order.class)));
+					ServerRequest.gson.toJson(order.orderID, Integer.class)));
 			PopUp.showInformation("Order Cancel", "Order Cancel", "order Canceled");
 			Navigator.instance().clearHistory();
 			return;
@@ -194,9 +195,9 @@ public class OrderDetailsController implements GuiController {
 			Order o = ServerRequest.gson.fromJson(response2, Order.class);
 			addOrderDataToFields(o);
 			if (o.orderStatus != OrderStatus.WAITINGLISTMASSAGESENT) {
-				approveBtn.setDisable(false);
-			} else {
 				approveBtn.setDisable(true);
+			} else {
+				approveBtn.setDisable(false);
 			}
 			return true;
 		}

@@ -49,7 +49,7 @@ public class MyMail {
 		if(!isValidEmailAddress(destinationMail))
 			return false;  // if destination Mail address is invalid return false
 		return true;
-		//return SendEmaill(destinationMail, messageContent, subject);
+		//return SendEmaill(destinationMail, messageContent, subject); //TODO need to replace when finished! ~Nir Pikan~
 		
 	}
 

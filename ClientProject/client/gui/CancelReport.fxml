@@ -11,9 +11,10 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="785.0" prefWidth="787.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CancelReportController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="677.0" minWidth="10.0" prefWidth="167.0" />
-      <ColumnConstraints maxWidth="679.0" minWidth="10.0" prefWidth="336.0" />
-      <ColumnConstraints maxWidth="426.0" minWidth="10.0" prefWidth="326.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="677.0" minWidth="10.0" prefWidth="52.0" />
+      <ColumnConstraints maxWidth="679.0" minWidth="10.0" prefWidth="164.0" />
+      <ColumnConstraints maxWidth="427.0" minWidth="10.0" prefWidth="427.0" />
+      <ColumnConstraints maxWidth="426.0" minWidth="10.0" prefWidth="144.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -36,15 +37,19 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label fx:id="labelDateToday" text="Date :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-      <Label fx:id="textDateToday" GridPane.columnIndex="2" GridPane.rowIndex="1">
+      <Label fx:id="labelDateToday" text="Date :" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+      <Label fx:id="textDateToday" prefHeight="17.0" prefWidth="297.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin>
       </Label>
-      <Label fx:id="labelIncomeReport" prefHeight="94.0" prefWidth="348.0" text="Cancel Report" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+      <Label fx:id="labelIncomeReport" prefHeight="110.0" prefWidth="377.0" text="Cancel Report" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="2">
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
@@ -52,20 +57,20 @@
             <Font size="48.0" />
          </font>
       </Label>
-      <Label fx:id="labalParkName" text="Park Name :" GridPane.rowIndex="3">
+      <Label fx:id="labalParkName" text="Park Name :" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="textParkName" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label fx:id="labaelReportDate" text="Report Date :" GridPane.rowIndex="4">
+      <Label fx:id="textParkName" maxWidth="-Infinity" prefHeight="17.0" prefWidth="308.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+      <Label fx:id="labaelReportDate" text="Report Date :" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="textReportDate" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label fx:id="textTotalOrders" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Label fx:id="labelTotalOrders" prefHeight="17.0" text="Total Orders: " GridPane.rowIndex="5">
+      <Label fx:id="textReportDate" maxWidth="-Infinity" prefHeight="17.0" prefWidth="324.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <Label fx:id="textTotalOrders" maxWidth="-Infinity" prefHeight="17.0" prefWidth="315.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <Label fx:id="labelTotalOrders" prefHeight="17.0" text="Total Orders: " GridPane.columnIndex="1" GridPane.rowIndex="5">
          <padding>
             <Insets left="20.0" />
          </padding>
@@ -73,25 +78,25 @@
             <Insets />
          </GridPane.margin>
       </Label>
-      <Label fx:id="labelOrdersConfirmed" text="Orders Arrived: " GridPane.rowIndex="6">
+      <Label fx:id="labelOrdersConfirmed" text="Orders Arrived: " GridPane.columnIndex="1" GridPane.rowIndex="6">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="textOrdersConfirmed" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <Button fx:id="buttonPrint" mnemonicParsing="false" onAction="#buttonPrint_OnClick" text="Print Report" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="18" />
-      <Label fx:id="labelOrdersNotConfirmed" text="Orders Not Arrived: " GridPane.rowIndex="7">
+      <Label fx:id="textOrdersConfirmed" maxWidth="-Infinity" prefHeight="17.0" prefWidth="312.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+      <Button fx:id="buttonPrint" mnemonicParsing="false" onAction="#buttonPrint_OnClick" text="Print Report" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="22" />
+      <Label fx:id="labelOrdersNotConfirmed" text="Orders Not Arrived: " GridPane.columnIndex="1" GridPane.rowIndex="7">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="textOrdersNotConfirmed" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <Label fx:id="labelOrdersCanceled" text="Orders Canceled : " GridPane.rowIndex="8">
+      <Label fx:id="textOrdersNotConfirmed" maxWidth="-Infinity" prefHeight="17.0" prefWidth="316.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+      <Label fx:id="labelOrdersCanceled" text="Orders Canceled : " GridPane.columnIndex="1" GridPane.rowIndex="8">
          <padding>
             <Insets left="20.0" />
          </padding>
       </Label>
-      <Label fx:id="textOrdersCanceled" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <PieChart fx:id="pieChartCancel" title="Cancel Statisics" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.rowSpan="8" />
+      <Label fx:id="textOrdersCanceled" maxWidth="-Infinity" prefHeight="17.0" prefWidth="314.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+      <PieChart fx:id="pieChartCancel" prefHeight="255.0" prefWidth="227.0" title="Cancel Statisics" GridPane.columnSpan="4" GridPane.rowIndex="10" GridPane.rowSpan="8" />
    </children>
 </GridPane>

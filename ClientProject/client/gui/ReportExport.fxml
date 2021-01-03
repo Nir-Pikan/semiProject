@@ -18,17 +18,17 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="45.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="27.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="26.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="35.0" minHeight="10.0" prefHeight="27.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="28.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="28.0" minHeight="0.0" prefHeight="27.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
       <Label fx:id="labelDateToday" text="Date :" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
-      <Label fx:id="labelParkManager" text="Report Manager" GridPane.columnSpan="2">
+      <Label fx:id="labelParkManager" prefHeight="67.0" prefWidth="234.0" text="Report Manager" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>

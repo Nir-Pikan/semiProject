@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
+import module.JavafxPrinter;
 import module.PopUp;
 import module.Report;
 import modules.ServerRequest;
@@ -28,7 +29,7 @@ public class EntryReportController implements GuiController ,Report{
 	private Label labelDateToaday;
 
 	@FXML
-	private TextField textDateToday;
+	private Label textDateToday;
 
 	@FXML
 	private Label labelEntryReport;
@@ -43,7 +44,7 @@ public class EntryReportController implements GuiController ,Report{
 	private Label labelReportDate;
 
 	@FXML
-	private TextField textReportDate;
+	private Label textReportDate;
 
 	@FXML
 	private Button buttonExtractReport;
@@ -70,7 +71,7 @@ public class EntryReportController implements GuiController ,Report{
 	
 	@FXML
 	void ExtractReport(ActionEvent event) {
-
+		JavafxPrinter.printThisWindow(buttonExtractReport.getScene().getWindow());
 	}
 
 	public void initReport(String parkName, String parkID,Timestamp[] dates) {
@@ -137,12 +138,15 @@ public class EntryReportController implements GuiController ,Report{
 		int maximalHour=0;
 		
 		for (ParkEntry parkEntry : entries) {
+			if(parkEntry.parkID.equals(parkID))
+			{
 			sumPeople[parkEntry.entryType.ordinal()][parkEntry.arriveTime.toLocalDateTime()
 					.getHour()] += parkEntry.numberOfVisitors;
 			if(parkEntry.arriveTime.toLocalDateTime().getHour()<minimalHour)
 				minimalHour=parkEntry.arriveTime.toLocalDateTime().getHour();
 			if(parkEntry.arriveTime.toLocalDateTime().getHour()>maximalHour)
 				maximalHour=parkEntry.arriveTime.toLocalDateTime().getHour();
+			}
 		}
 
 		for (EntryType entryType : ParkEntry.EntryType.values()) {

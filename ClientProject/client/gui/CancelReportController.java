@@ -14,6 +14,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import module.GuiController;
+import module.JavafxPrinter;
 import module.Report;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
@@ -83,7 +84,7 @@ public class CancelReportController implements GuiController,Report{
     @FXML
     void buttonPrint_OnClick(ActionEvent event) 
     {
-    	
+    	JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
     }
     
     /**
@@ -118,9 +119,10 @@ public class CancelReportController implements GuiController,Report{
     		AnalyzeOrder(order);
 		}
     	Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-    	textDateToday.setText(GetStringTime(currentTime));
+    	textDateToday.setText(currentTime.toLocalDateTime().toLocalDate().toString());
     	textParkName.setText(parkName);
-    	textReportDate.setText(GetStringTime(reportStartAndEndTimes[0]) + "  -  " + GetStringTime(reportStartAndEndTimes[1]));
+    	textReportDate.setText("from " + reportStartAndEndTimes[0].toLocalDateTime().toLocalDate().toString() + " to "
+				+ reportStartAndEndTimes[1].toLocalDateTime().toLocalDate().toString());
     	textTotalOrders.setText(TotalOrders + "");
     	textOrdersConfirmed.setText(used + "");
     	textOrdersNotConfirmed.setText(NotCanceledNotUsed + "");
@@ -131,12 +133,6 @@ public class CancelReportController implements GuiController,Report{
                 new PieChart.Data("Arrived", used),
                 new PieChart.Data("Not Arrived", NotCanceledNotUsed));
     	pieChartCancel.setData(pieChartData);
-    }
-    
-    public String GetStringTime(Timestamp time)
-    {
-    	String[] arr = time.toString().split(" ")[0].split("-");
-    	return arr[2] + "." + arr[1] + "." + arr[0];
     }
     
     private void AnalyzeOrder(Order order)

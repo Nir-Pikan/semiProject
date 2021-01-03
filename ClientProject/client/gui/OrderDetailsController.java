@@ -160,8 +160,8 @@ public class OrderDetailsController implements GuiController {
 			throw new Navigator.NavigationInterruption();
 		}
 		PopUp.showError("Order Details", "Order Details", "Order not Found, try again");
-		Navigator.instance().back();
 		throw new Navigator.NavigationInterruption();// tell the navigator to stop the navigation
+//		Navigator.instance().back();
 	}
 
 	private boolean getOrder(int orederIDint) {
@@ -206,14 +206,20 @@ public class OrderDetailsController implements GuiController {
 
 	private void checkOrderOwner(Order o) {
 		if (clientController.client.logedInSubscriber.getVal() != null) {
-			if (!clientController.client.logedInSubscriber.getVal().subscriberID.equals('S' + o.ownerID)) { 																							
+			if (!clientController.client.logedInSubscriber.getVal().subscriberID.equals('S' + o.ownerID)) {
 				PopUp.showError("Show Order Details", "Order Details", "You can only see your own orders");
+				throw new Navigator.NavigationInterruption();
+			} else if (o.orderStatus == Order.OrderStatus.CANCEL) {
+				PopUp.showError("Show Order Details", "Order Details", "This order was canceled");
 				throw new Navigator.NavigationInterruption();
 			}
 		}
 		if (clientController.client.visitorID.getVal() != null) {
 			if (!clientController.client.visitorID.getVal().equals(o.ownerID)) {
 				PopUp.showError("Show Order Details", "Order Details", "You can only see your own orders");
+				throw new Navigator.NavigationInterruption();
+			} else if (o.orderStatus == Order.OrderStatus.CANCEL) {
+				PopUp.showError("Show Order Details", "Order Details", "This order was canceled");
 				throw new Navigator.NavigationInterruption();
 			}
 		}

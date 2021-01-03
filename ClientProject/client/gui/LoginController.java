@@ -121,7 +121,7 @@ public class LoginController implements GuiController
 			    PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
 			return false;
 		}
-		clientController.client.logedInSunscriber.setVal(subscriber);
+		clientController.client.logedInSubscriber.setVal(subscriber);
 		Navigator.instance().clearHistory();
 		return true;
 	}

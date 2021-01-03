@@ -130,7 +130,7 @@ public class WaitingListController implements IController {
 			ps.setString(5, ord.email);
 			ps.setString(6, ord.phone);
 			ps.setString(7, ord.type.toString()); // can be stored as enum ?
-			ps.setString(8, ord.orderStatus.toString()); // can be stored as enum ?
+			ps.setString(8, Order.OrderStatus.WAITINGLIST.toString());
 			ps.setTimestamp(9, ord.visitTime);
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setBoolean(11, ord.isUsed);
@@ -213,7 +213,6 @@ public class WaitingListController implements IController {
 			dbController.sendUpdate("UPDATE waitingList SET orderStatus='WAITINGLISTMASSAGESENT' WHERE orderID = "+o.orderID+";");
 				return o;
 		}
-//			TODO remove after creation of method
 		}
 		return null;
 	}
@@ -263,9 +262,11 @@ public class WaitingListController implements IController {
 		case "GetOrderByID":
 			try {
 			Order o = getwaitingOrder(Integer.parseInt(request.data));
+			if(o == null )
+				return request.data + " not found";
 			return ServerRequest.gson.toJson(o, Order.class);
 			}catch (NumberFormatException e) {
-				return request.data + " not Found";
+				return request.data + " not found";
 			}
 		case "cancelWaitingOrder":
 			deleteFromWaitingList(getwaitingOrder(Integer.parseInt(request.data)));

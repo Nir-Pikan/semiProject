@@ -20,7 +20,6 @@ import modules.IController;
 import modules.ObservableList;
 import modules.PeriodicallyRunner;
 import modules.ServerRequest;
-import modules.ServerRequest.Manager;
 
 public class OrderController implements IController {
 
@@ -282,6 +281,7 @@ public class OrderController implements IController {
 	 *         time
 	 */
 	// TODO check
+	//TODO OR remove not nedded code
 	private boolean IsOrderAllowed(Order ord) {
 		// int AVGvisitTime =
 		// Double.valueOf(park.getAVGvisitTime(ord.parkSite)).intValue();
@@ -320,7 +320,6 @@ public class OrderController implements IController {
 	 * @return
 	 */
 	public boolean IsOrderAllowedWaitingList(Order order, int numberOfVisitorsCanceled) {
-		int AVGvisitTime = Double.valueOf(park.getAVGvisitTime(order.parkSite)).intValue();
 		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
 		// int maxPreOrder = 4; // for test only
 		Park prk = park.getPark(order.parkSite);
@@ -621,17 +620,11 @@ public class OrderController implements IController {
 	 * @param hours
 	 * @return
 	 */
-
 	private Timestamp[] calcHoursRange(Order order, Park prk) {
 		Timestamp[] res = new Timestamp[2];
-		// Park prk = park.getPark(order.parkSite);
-		long tempTimeLong = order.visitTime.getTime();
-		Timestamp temp1 = new Timestamp(tempTimeLong); // to not change the original visitTime
-		Timestamp temp2 = new Timestamp(tempTimeLong); // to not change the original visitTime
-		temp1.setHours(order.visitTime.getHours() - ((int) prk.avgVisitTime) - 1); // -2 because of <=,>= in
-																					// IsOrderAllowed
-		temp2.setHours(order.visitTime.getHours() + ((int) prk.avgVisitTime - 1)); // -1 because of <=,>= in
-																					// IsOrderAllowed
+		LocalDateTime tempTime = order.visitTime.toLocalDateTime();
+		Timestamp temp1 = Timestamp.valueOf(tempTime.plusHours(- ((int) prk.avgVisitTime) - 1)); // -1 because of <=,>= in IsOrderAllowed
+		Timestamp temp2 = Timestamp.valueOf(tempTime.plusHours ((int)prk.avgVisitTime -1)); // -1 because of <=,>= in IsOrderAllowed
 		res[0] = temp1;
 		res[1] = temp2;
 		return res;

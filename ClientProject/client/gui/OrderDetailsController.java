@@ -175,7 +175,7 @@ public class OrderDetailsController implements GuiController {
 			if (o.orderStatus == OrderStatus.CANCEL || o.orderStatus == OrderStatus.SEMICANCELED) {
 				cancelBtn.setDisable(true);
 			} else {
-				if (o.orderStatus != OrderStatus.CONFIRMED
+				if (o.orderStatus == OrderStatus.IDLE
 						&& o.visitTime.toLocalDateTime().toLocalDate().equals(LocalDate.now().plusDays(1))
 						&& LocalTime.now().isAfter(LocalTime.of(10, 00))
 						&& LocalTime.now().isBefore(LocalTime.of(12, 00))) {
@@ -206,16 +206,22 @@ public class OrderDetailsController implements GuiController {
 	private void checkOrderOwner(Order o) {
 		if (clientController.client.logedInSunscriber.getVal() != null) {
 			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals('S' + o.ownerID)) { 																							
-				PopUp.showError("Show Order Details", "Order Details", "You can see only your own order");
+				PopUp.showError("Show Order Details", "Order Details", "You can only see your own orders");
 				throw new Navigator.NavigationInterruption();
 			}
 		}
 		if (clientController.client.visitorID.getVal() != null) {
 			if (!clientController.client.visitorID.getVal().equals(o.ownerID)) {
-				PopUp.showError("Show Order Details", "Order Details", "You can see only your own order");
+				PopUp.showError("Show Order Details", "Order Details", "You can only see your own orders");
 				throw new Navigator.NavigationInterruption();
 			}
 		}
 
+	}
+	
+	private String removeSIfExist(String str) {
+		if(str.startsWith("S"))
+			return str.substring(1);
+		return str;
 	}
 }

@@ -434,8 +434,8 @@ public class RegularOrderController implements GuiController {
 	private String getIdentificationString() {
 		if (clientController.client.visitorID.getVal() != null)
 			return clientController.client.visitorID.getVal().intern();
-		if (clientController.client.logedInSunscriber.getVal() != null)
-			return clientController.client.logedInSunscriber.getVal().personalID;
+		if (clientController.client.logedInSubscriber.getVal() != null)
+			return clientController.client.logedInSubscriber.getVal().personalID;
 //		if(clientController.client.logedInWorker.getVal() != null)
 //			return clientController.client.logedInWorker.getVal().getWorkerID();
 		return null;
@@ -452,7 +452,7 @@ public class RegularOrderController implements GuiController {
 	}
 
 	private int isSubscriber() {
-		if (clientController.client.logedInSunscriber.getVal() != null)
+		if (clientController.client.logedInSubscriber.getVal() != null)
 			return 1;
 		return 0;
 	}

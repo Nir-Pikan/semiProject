@@ -139,8 +139,8 @@ public class GroupOrderController implements GuiController {
 	}
 
 	private boolean checkIfGuide() {
-		if (clientController.client.logedInSunscriber.getVal() != null)
-			if (clientController.client.logedInSunscriber.getVal().type == Subscriber.Type.GUIDE)
+		if (clientController.client.logedInSubscriber.getVal() != null)
+			if (clientController.client.logedInSubscriber.getVal().type == Subscriber.Type.GUIDE)
 				return true;
 		return false;
 	}
@@ -436,8 +436,8 @@ public class GroupOrderController implements GuiController {
 	private String getIdentificationString() {
 		if (clientController.client.visitorID.getVal() != null) // TODO check if needed
 			return clientController.client.visitorID.getVal().intern();
-		if (clientController.client.logedInSunscriber.getVal() != null)
-			return clientController.client.logedInSunscriber.getVal().personalID;
+		if (clientController.client.logedInSubscriber.getVal() != null)
+			return clientController.client.logedInSubscriber.getVal().personalID;
 //		if(clientController.client.logedInWorker.getVal() != null)
 //			return clientController.client.logedInWorker.getVal().getWorkerID();
 		return null;

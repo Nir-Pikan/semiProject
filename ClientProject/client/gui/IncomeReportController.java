@@ -1,10 +1,8 @@
 package gui;
 
-import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 import entities.Order;
@@ -17,7 +15,6 @@ import javafx.event.ActionEvent;
  */
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;

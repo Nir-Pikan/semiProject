@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import entities.DiscountEntity;
 import entities.Order;
 import entities.Order.IdType;
+import entities.ParkEntry;
+import entities.ParkEntry.EntryType;
 import io.DbController;
 import modules.IController;
 import modules.ServerRequest;
@@ -68,10 +70,15 @@ public class DiscountController implements IController {
 			 }
 			break;
 
-		// TODO Michael need to implement
+		// TODO Michael need to implement //TODO implemented by Roman please test
 		case "CalculatePriceForEntryCasual":// to entryController
-		
-			
+			ParkEntry entry = ServerRequest.gson.fromJson(request.data, ParkEntry.class);
+			if(entry == null)
+				response = "Failed to Calculate Price of Entry got Null";
+			else {
+				float price = CalculatePriceForEntryCasual(entry.numberOfVisitors,entry.numberOfSubscribers,entry.entryType == EntryType.Group ? true : false);
+				response=ServerRequest.gson.toJson(price, Float.class);
+			}
 			break;
 
 		case "AddNewDiscount":
@@ -186,7 +193,8 @@ public class DiscountController implements IController {
 
 		if (isGroup) {
 			// first calculate the price for the group without the instructor
-			inovice = FullPriceForPerson * (TotalVisitors - 1) * orderGroupDiscount * inAdvancePayDiscount;
+		//	inovice = FullPriceForPerson * (TotalVisitors - 1) * orderGroupDiscount * inAdvancePayDiscount;
+			inovice = FullPriceForPerson * (TotalVisitors - 1) * orderGroupDiscount; // (Roman) no payment in advance 
 			// add the price for the instructor
 			inovice += FullPriceForPerson * orderGroupDiscount * orderGroupDiscountInstructor;
 

@@ -131,9 +131,9 @@ public class OrderDetailsController implements GuiController {
 	public void init() {
 		String orderId = PopUp.getUserInput("Order details", "Show Order Details", "Order ID:");
 		try {
-		if (getOrder(Integer.parseInt(orderId)))
-			return;
-		}catch(NumberFormatException e) {
+			if (getOrder(Integer.parseInt(orderId)))
+				return;
+		} catch (NumberFormatException e) {
 			PopUp.showError("Order Details", "Order Details", "Order Number is invalid, try again");
 			throw new Navigator.NavigationInterruption();
 		}
@@ -184,7 +184,7 @@ public class OrderDetailsController implements GuiController {
 
 	private void checkOrderOwner(Order o) {
 		if (clientController.client.logedInSunscriber.getVal() != null) {
-			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals(o.ownerID)) {
+			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals('S' + o.ownerID)) { // (Roman change: 'S' added
 				PopUp.showError("Show Order Details", "Order Details", "You can see only your own order");
 				throw new Navigator.NavigationInterruption();
 			}

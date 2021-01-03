@@ -149,7 +149,7 @@ public class MainScreenController {
 	private static List<MenuItem> createSubscriberMap() {
 		List<MenuItem> res = new ArrayList<>();
 		res.addAll(VISITOR_MAP);
-		res.add(2, new MenuItem("new Group Order", "GroupOrder"));
+		res.add(2, new MenuItem("New Group Order", "GroupOrder")); // n changed to capital
 		return res;
 	}
 

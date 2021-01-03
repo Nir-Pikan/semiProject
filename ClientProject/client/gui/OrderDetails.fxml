@@ -50,19 +50,19 @@
       <Label text="Email:" GridPane.rowIndex="9" />
       <Label text="Phone No:" GridPane.rowIndex="10" />
       <Label text="Price:" GridPane.rowIndex="11" />
-      <TextField fx:id="personIdTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-      <TextField fx:id="parkNameTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-      <TextField fx:id="orderTypeTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-      <TextField fx:id="noOfVisitorsTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-      <TextField fx:id="emailTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
-      <TextField fx:id="phoneTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
-      <TextField fx:id="priceTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" />
+      <TextField fx:id="personIdTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+      <TextField fx:id="parkNameTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+      <TextField fx:id="orderTypeTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+      <TextField fx:id="noOfVisitorsTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+      <TextField fx:id="emailTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+      <TextField fx:id="phoneTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+      <TextField fx:id="priceTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" />
       <Label fx:id="orderNoTxt" text="##OrderNo##" GridPane.columnIndex="2" GridPane.columnSpan="2" />
       <Label text="No of Subscribers:" GridPane.rowIndex="8" />
-      <TextField fx:id="noOfSubscribersTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+      <TextField fx:id="noOfSubscribersTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
       <Label text="Date:" GridPane.rowIndex="4" />
       <Label text="Time:" GridPane.rowIndex="5" />
-      <TextField fx:id="dateTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-      <TextField fx:id="timeTxt" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+      <TextField fx:id="dateTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+      <TextField fx:id="timeTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
    </children>
 </GridPane>

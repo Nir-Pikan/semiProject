@@ -126,7 +126,9 @@ public class OrderController implements IController {
 			}
 			// try to add order
 			if (AddNewOrder(ord)) { // now this part is duplicated line 103
-				Platform.runLater(()->{messageC.SendEmailAndSMS(ord.email, ord.phone, genereteMessage(ord), "GoNature New Order");});
+				Platform.runLater(() -> {
+					messageC.SendEmailAndSMS(ord.email, ord.phone, genereteMessage(ord), "GoNature New Order");
+				});
 				response = "Order was added successfully";
 			} else
 				response = "Failed to add Order";
@@ -143,7 +145,7 @@ public class OrderController implements IController {
 				response = "No more orders allowed in this time";
 				break;
 			}
-			response = "Order can be placed"; // not realy necessary
+			response = "Order can be placed"; // not really necessary
 			break;
 		case "NextOrderID":
 			nextOrderID = NextOrderID();
@@ -169,23 +171,23 @@ public class OrderController implements IController {
 			else
 				response = ServerRequest.gson.toJson(orders, Order[].class);
 			break;
-		case "CancelOrderByOrderID": ///////////////////////////////////////////////////////////// not sure if
-										///////////////////////////////////////////////////////////// needed
+		case "CancelOrderByOrderID":
 			orderID = ServerRequest.gson.fromJson(request.data, Integer.class);
-			answer = CancelOrderByOrderID(orderID);
-			if (answer) {
-				Order order = GetOrderByID(orderID);
-				Platform.runLater(()->{messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order), "GoNature Order Canceled");});
+			Order order = GetOrderByID(orderID);
+			if (order != null) {
+				canceled.add(order);// add order to canceled list
+				Platform.runLater(() -> {
+					messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order),
+							"GoNature Order Canceled");
+				});
 				// response = ServerRequest.gson.toJson(answer);
 				response = "Order Canceled";
-			}
-			else
+			} else
 				response = "Failed to cancel an order";
 			break;
-		case "SetOrderToIsUsed": ///////////////////////////////////////////////////////////// not shore if
-									///////////////////////////////////////////////////////////// needed
+		case "SetOrderToIsUsed": 
 			orderID = ServerRequest.gson.fromJson(request.data, Integer.class);
-			answer = SetOrderToIsUsed(orderID);
+			answer = SetOrderToIsUsed(orderID);  
 			if (answer)
 				// response = ServerRequest.gson.toJson(answer);
 				response = "Order seted as used";
@@ -370,26 +372,30 @@ public class OrderController implements IController {
 		// run this every day at 10AM
 		PeriodicallyRunner.runEveryDayAt(10, 00, () -> {
 			ArrayList<Order> resultList = getTomorrowOrders();
-			
-			for(Order order : resultList) {
-				Platform.runLater(()->{messageC.SendEmailAndSMS(order.email, order.phone, genereteApprovalRequestMessage(order), "GoNature Remainder");});
+
+			for (Order order : resultList) {
+				Platform.runLater(() -> {
+					messageC.SendEmailAndSMS(order.email, order.phone, genereteApprovalRequestMessage(order),
+							"GoNature Remainder");
+				});
 			}
 
 		});
 
-	
-		
-		//run this every day at 12AM
-				PeriodicallyRunner.runEveryDayAt(12, 00, ()->{
-					ArrayList<Order> resultList = getTomorrowOrders();
-					
-					for(Order order : resultList) {
-						Platform.runLater(()->{messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order), "GoNature Order Canceled");});
-						
-					CancelOrderByOrderID(order.orderID);
-					}
-					
+		// run this every day at 12AM
+		PeriodicallyRunner.runEveryDayAt(12, 00, () -> {
+			ArrayList<Order> resultList = getTomorrowOrders();
+
+			for (Order order : resultList) {
+				Platform.runLater(() -> {
+					messageC.SendEmailAndSMS(order.email, order.phone, genereteCanceldMessage(order),
+							"GoNature Order Canceled");
 				});
+
+				canceled.add(order);
+			}
+
+		});
 
 		System.out.println("Message Remainder initiated");
 	}
@@ -534,27 +540,6 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * This method set the orderStatus with orderID to CANCEL
-	 * 
-	 * @param orderID
-	 * @return true if order canceled, false otherwise
-	 */
-	public boolean CancelOrderByOrderID(int orderID) {
-		canceled.add(GetOrderByID(orderID));// add order to canceled list
-		PreparedStatement pstmt = dbController
-				.getPreparedStatement("UPDATE orders SET orderStatus = \"CANCEL\", isUsed = true WHERE orderID = ?;");
-		try {
-			pstmt.setInt(1, orderID);
-			return pstmt.executeUpdate() == 1;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println(pstmt.toString());
-			System.out.println("Failed to execute update");
-		}
-		return false;
-	}
-
-	/**
 	 * Set Order with this orderID to used status
 	 * 
 	 * @param orderID
@@ -599,7 +584,7 @@ public class OrderController implements IController {
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setString(11, ord.ownerID);
 			ps.setInt(12, ord.numberOfSubscribers);
-			ps.setLong(13, ord.orderID);	
+			ps.setLong(13, ord.orderID);
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -635,12 +620,10 @@ public class OrderController implements IController {
 	 * @param hours
 	 * @return
 	 */
-
 	private Timestamp[] calcHoursRange(Order order, Park prk) {
 		Timestamp[] res = new Timestamp[2];
-		// Park prk = park.getPark(order.parkSite);
 		LocalDateTime tempTime = order.visitTime.toLocalDateTime();
-		Timestamp temp1 = Timestamp.valueOf(tempTime.plusHours(- ((int) prk.avgVisitTime) - 2)); // -2 because of <=,>= in IsOrderAllowed
+		Timestamp temp1 = Timestamp.valueOf(tempTime.plusHours(- ((int) prk.avgVisitTime) - 1)); // -1 because of <=,>= in IsOrderAllowed
 		Timestamp temp2 = Timestamp.valueOf(tempTime.plusHours ((int)prk.avgVisitTime -1)); // -1 because of <=,>= in IsOrderAllowed
 		res[0] = temp1;
 		res[1] = temp2;

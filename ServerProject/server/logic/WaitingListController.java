@@ -52,7 +52,8 @@ public class WaitingListController implements IController {
 				 if(!(cur instanceof WakeableThread)) 
 					 return;
 				 WakeableThread myThread = (WakeableThread )cur;
-				 handelCancel(newVal, myThread);
+				 if(newVal !=null)
+					 handelCancel(newVal, myThread);
 				 currentCancelation.remove(myThread);//finish with the cancellation
 				 order.canceled.remove(newVal);
 				});
@@ -92,6 +93,7 @@ public class WaitingListController implements IController {
 	
 	private void handelCancel(Order canceled,WakeableThread thread){
 		canceled.orderStatus = OrderStatus.SEMICANCELED;
+		canceled.isUsed = true;
 		order.UpdateOrder(canceled);
 		Order nextWaiting;
 		while((nextWaiting = getNextOrder(canceled))!=null) {

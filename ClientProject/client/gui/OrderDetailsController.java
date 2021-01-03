@@ -208,13 +208,13 @@ public class OrderDetailsController implements GuiController {
 			if (!clientController.client.logedInSubscriber.getVal().subscriberID.equals('S' + o.ownerID)) { // (Roman
 																											// change:
 																											// 'S' added
-				PopUp.showError("Show Order Details", "Order Details", "You can see only your own orders");
+				PopUp.showError("Show Order Details", "Order Details", "You can only see your own orders");
 				throw new Navigator.NavigationInterruption();
 			}
 		}
 		if (clientController.client.visitorID.getVal() != null) {
 			if (!clientController.client.visitorID.getVal().equals(o.ownerID)) {
-				PopUp.showError("Show Order Details", "Order Details", "You can see only your own orders");
+				PopUp.showError("Show Order Details", "Order Details", "You can only see your own orders");
 				throw new Navigator.NavigationInterruption();
 			}
 		}

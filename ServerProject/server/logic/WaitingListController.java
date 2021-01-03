@@ -211,7 +211,6 @@ public class WaitingListController implements IController {
 			dbController.sendUpdate("UPDATE waitingList SET orderStatus='WAITINGLISTMASSAGESENT' WHERE orderID = "+o.orderID+";");
 				return o;
 		}
-//			TODO remove after creation of method
 		}
 		return null;
 	}
@@ -262,10 +261,10 @@ public class WaitingListController implements IController {
 			try {
 			Order o = getwaitingOrder(Integer.parseInt(request.data));
 			if(o == null )
-				return request.data + " not Found";
+				return request.data + " not found";
 			return ServerRequest.gson.toJson(o, Order.class);
 			}catch (NumberFormatException e) {
-				return request.data + " not Found";
+				return request.data + " not found";
 			}
 		case "cancelWaitingOrder":
 			deleteFromWaitingList(getwaitingOrder(Integer.parseInt(request.data)));

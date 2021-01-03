@@ -5,8 +5,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
-import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

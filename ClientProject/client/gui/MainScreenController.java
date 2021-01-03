@@ -55,8 +55,8 @@ public class MainScreenController {
 		menu.getChildren().clear();
 		Navigator.instance().clearHistory();
 		Navigator.instance().navigate("login");
-		if (clientController.client.logedInSunscriber.getVal() != null) {
-			clientController.client.logedInSunscriber.silentSet(null);
+		if (clientController.client.logedInSubscriber.getVal() != null) {
+			clientController.client.logedInSubscriber.silentSet(null);
 			return;
 		}
 		if (clientController.client.logedInWorker.getVal() != null) {
@@ -79,10 +79,10 @@ public class MainScreenController {
 	public Pane init() {
 		Login.setVisible(false);
 		Login.setManaged(false);
-		clientController.client.logedInSunscriber.AddListener((prop, oldVal, newVal) -> {
+		clientController.client.logedInSubscriber.AddListener((prop, oldVal, newVal) -> {
 
 			if (newVal != null) {
-				Subscriber s = clientController.client.logedInSunscriber.getVal();
+				Subscriber s = clientController.client.logedInSubscriber.getVal();
 				greetingMsg.setText("Hello " + s.firstName + " " + s.lastName);
 				Login.setVisible(true);
 				Login.setManaged(true);

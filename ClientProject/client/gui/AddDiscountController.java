@@ -141,9 +141,8 @@ public class AddDiscountController implements GuiController {
 			ServerRequest sr = new ServerRequest(Manager.Discount, "AddNewDiscount",
 					ServerRequest.gson.toJson(discountEntity, DiscountEntity.class));
 
-			clientController.client.sendRequest(sr);
 
-			String respond = clientController.consumeResponse();
+			String respond = clientController.client.sendRequestAndResponse(sr);
 			if (respond.equals("Failed to add Discount") || respond.equals("")) {
 				PopUp.showInformation("Server Error", "Servere Request Failed",
 						"The server was unsuccessful to add new discount \nOr Discount ID already exist");

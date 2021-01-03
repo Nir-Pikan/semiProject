@@ -16,14 +16,13 @@ public class ReportController implements IController
 		this.order = order;
 		this.entry = entry;
 		this.park = park;
-		// TODO Auto-generated constructor stub
+		// TODO remove
 	}
 
 
 
 	@Override
 	public String handleRequest(ServerRequest request) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

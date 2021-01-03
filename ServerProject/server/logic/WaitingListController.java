@@ -128,7 +128,7 @@ public class WaitingListController implements IController {
 			ps.setString(5, ord.email);
 			ps.setString(6, ord.phone);
 			ps.setString(7, ord.type.toString()); // can be stored as enum ?
-			ps.setString(8, ord.orderStatus.toString()); // can be stored as enum ?
+			ps.setString(8, Order.OrderStatus.WAITINGLIST.toString());
 			ps.setTimestamp(9, ord.visitTime);
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setBoolean(11, ord.isUsed);

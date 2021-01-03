@@ -86,19 +86,21 @@ public class OrderSummaryController implements GuiController {
 				PopUp.showInformation("Unexpected Error", "Unexpected Error", "Unexpected Error");
 			}
 		}
-		Navigator.instance().clearHistory();
+		Navigator.instance().clearHistory(); // return to the main window
 	}
 
 	public void addOrderDataToFields(Order order, ParkEntry entry) {
 		this.order = order;
 		this.entry = entry;
-		initFields(order, entry);
+		if (entry != null)
+			initFieldsByEntry(order, entry);
+		else
+			initFieldsByOrder(order);
 	}
 
-	private void initFields(Order order, ParkEntry entry) {
+	private void initFieldsByOrder(Order order) {
 		approveBtn.setDisable(false);
-		if (entry == null)
-			orderNoTxt.setText("Order #: " + String.valueOf(order.orderID));
+		orderNoTxt.setText("Order #: " + String.valueOf(order.orderID));
 		personIdTxt.setText(order.ownerID);
 		parkNameTxt.setText(order.parkSite);
 		orderTypeTxt.setText(order.type.toString());
@@ -106,15 +108,34 @@ public class OrderSummaryController implements GuiController {
 		noOfSubscribersTxt.setText(String.valueOf(order.numberOfSubscribers));
 		emailTxt.setText(order.email);
 		phoneTxt.setText(order.phone);
-		float price = calcOrderPrice(order);
+		float price = calcOrderOrderPrice(order, entry);
 		order.priceOfOrder = price;
-		
+		priceTxt.setText(String.valueOf(price));
+	}
+	
+	private void initFieldsByEntry(Order order,ParkEntry entry) {
+		approveBtn.setDisable(false);
+		personIdTxt.setText(entry.personID);
+		parkNameTxt.setText(entry.parkID);
+		orderTypeTxt.setText(entry.entryType.toString()); //TODO test this
+		noOfVisitorsTxt.setText(String.valueOf(entry.numberOfVisitors));
+		noOfSubscribersTxt.setText(String.valueOf(entry.numberOfSubscribers));
+		emailTxt.setText(order.email);
+		phoneTxt.setText(order.phone);
+		float price = calcEntryOrderPrice(entry);
+		order.priceOfOrder = price;
 		priceTxt.setText(String.valueOf(price));
 	}
 
-	private float calcOrderPrice(Order order) {
+	private float calcOrderOrderPrice(Order order, ParkEntry entry) {
+			String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
+					"CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
+			return ServerRequest.gson.fromJson(response, Float.class);
+	}
+	
+	private float calcEntryOrderPrice(ParkEntry entry) {
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
-				"CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
+				"CalculatePriceForEntryCasual", ServerRequest.gson.toJson(entry, ParkEntry.class)));
 		return ServerRequest.gson.fromJson(response, Float.class);
 	}
 

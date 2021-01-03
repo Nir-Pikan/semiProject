@@ -17,7 +17,6 @@ import modules.ServerRequest.Manager;
 /** the VisitorsInTheParkPage page controller */
 public class VisitorsInTheParkPageController implements GuiController {
 
-
 	@FXML
 	private ChoiceBox<String> parkNumChoise;
 
@@ -30,11 +29,22 @@ public class VisitorsInTheParkPageController implements GuiController {
 	@FXML
 	void familyOrder(ActionEvent event) {
 		String ordererId = PopUp.getUserInput("family/Group Order", "enter Id of the orderer", "id or subscriberId :");
-//		String response = clientController.client
-//				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ordererId));
-//		Subscriber s = ServerRequest.gson.fromJson(response, Subscriber.class);
-		GroupOrderController g = (GroupOrderController) Navigator.instance().navigate("GroupOrder");
-		g.setSpontaneous(ordererId,parkNumChoise.getValue());
+		if (CheckID(ordererId)) {
+		if (!ordererId.contains("S"))
+			ordererId = "S" + ordererId;
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ordererId));
+		if (response.contains("was not found")) {
+			PopUp.showInformation("Please enter subscriber ID", "Please enter subscriber ID",
+					"Please enter subscriber ID");
+			return;
+		}
+		Subscriber s = ServerRequest.gson.fromJson(response, Subscriber.class);
+			GroupOrderController g = (GroupOrderController) Navigator.instance().navigate("GroupOrder");
+			g.setSpontaneous(ordererId, parkNumChoise.getValue());
+		} else
+			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
+					"Please enter appropriate ID");
 //		if (s.type == Type.SUBSCRIBER)
 //			g.setFamilyOrderOnly();
 
@@ -43,16 +53,24 @@ public class VisitorsInTheParkPageController implements GuiController {
 	@FXML
 	void privateGroupOrder(ActionEvent event) {
 		String ordererId = PopUp.getUserInput("private Group Order", "enter Id of the orderer", "id or subscriberId :");
-		((SmallGroupOrderController) Navigator.instance().navigate("SmallGroupOrder")).setSpontaneous(ordererId,parkNumChoise.getValue());
+		if (CheckID(ordererId))
+			((SmallGroupOrderController) Navigator.instance().navigate("SmallGroupOrder")).setSpontaneous(ordererId,
+					parkNumChoise.getValue());
+		else
+			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
+					"Please enter appropriate ID");
 	}
 
 	@FXML
 	void regularOrder(ActionEvent event) {
 		String ordererId = PopUp.getUserInput("regular Order", "enter Id of the orderer", "id or subscriberId :");
-
-		((RegularOrderController) Navigator.instance().navigate("RegularOrder")).setSpontaneous(ordererId,parkNumChoise.getValue());
+		if (CheckID(ordererId))
+			((RegularOrderController) Navigator.instance().navigate("RegularOrder")).setSpontaneous(ordererId,
+					parkNumChoise.getValue());
+		else
+			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
+					"Please enter appropriate ID");
 	}
-
 
 	@Override
 	public void init() {
@@ -67,15 +85,30 @@ public class VisitorsInTheParkPageController implements GuiController {
 			}
 			visitorsAmountText.setText(response);
 		});
-		if(!clientController.client.logedInWorker.getVal().getWorkerType().equals("departmentManager")) {
-			parkNumChoise.getSelectionModel().select(clientController.client.logedInWorker.getVal().getPermissions().GetParkID());
+		if (!clientController.client.logedInWorker.getVal().getWorkerType().equals("departmentManager")) {
+			parkNumChoise.getSelectionModel()
+					.select(clientController.client.logedInWorker.getVal().getPermissions().GetParkID());
 			parkNumChoise.setDisable(true);
-		};
+		}
+		;
 	}
 
 	public void setPark(String parkId) {
 		parkNumChoise.setDisable(true);
 		parkNumChoise.getSelectionModel().select(parkId);
+	}
+
+	/**
+	 * Checks if the ID is from a type of 9 numbers or S and 9 numbers
+	 * 
+	 * @param ID
+	 * @return true if ID entered as expected, false otherwise
+	 */
+	private boolean CheckID(String ID) {
+		if ((!ID.matches("([0-9])+") || ID.length() != 9) && (!ID.matches("S([0-9])+") || ID.length() != 10)) {
+			return false;
+		}
+		return true;
 	}
 
 }

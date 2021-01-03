@@ -111,8 +111,8 @@ public class SmallGroupOrderController implements GuiController {
 					@Override
 					public void updateItem(LocalDate item, boolean empty) {
 						super.updateItem(item, empty);
-						LocalDate today = LocalDate.now();
-						setDisable(empty || item.compareTo(today) < 0);
+						LocalDate tomorrow = LocalDate.now().plusDays(1);;
+						setDisable(empty || item.compareTo(tomorrow) < 0);
 					}
 
 				};
@@ -349,8 +349,8 @@ public class SmallGroupOrderController implements GuiController {
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
 			if (spontaneous == true) {
-				ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);
-				parkEntry = createParkEntry(ord);
+				parkEntry.numberOfVisitors = visitorsCounter;
+				parkEntry.numberOfSubscribers = NumberOfSubscribers();
 				MoveToTheNextPage(ord, parkEntry);
 				return;
 			}
@@ -497,31 +497,36 @@ public class SmallGroupOrderController implements GuiController {
 		Park_ComboBox.setDisable(true);
 		VisitHour_ComboBox.setDisable(true);
 		Date_DatePicker.setDisable(true);
+		ord.email = Email_textBox.getText(); // need this for OrderSummary because is no email in ParkEntry entity
+		ord.phone = Phone_textBox.getText(); // need this for OrderSummary because is no phone in ParkEntry entity
+		parkEntry = createParkEntry(ownerID, parkName);
 
 	}
 
-	private ParkEntry createParkEntry(Order spOrder) {
-		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.PrivateGroup, spOrder.ownerID, spOrder.parkSite,
-				spOrder.visitTime, null, spOrder.numberOfVisitors, spOrder.numberOfSubscribers, true,
-				spOrder.priceOfOrder);
+	private ParkEntry createParkEntry(String ownerID, String parkID) {
+		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
+		int numberOfSubscribers = NumberOfSubscribers();
+		int priceOfOrder = 100;
+		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.PrivateGroup, ownerID, parkID, timeOfOrder, null, 1,
+				numberOfSubscribers, true, priceOfOrder);
 		return entry;
 	}
-
-	private Order createSpontaneousOrderDetails(String ownerID, String parkName) {
-		int orderID = getNextOrderID();
-		int priceOfOrder = 100;
-		int numberOfVisitors = visitorsCounter;
-		String email = Email_textBox.getText();
-		String phone = Phone_textBox.getText();
-		Order.IdType type = Order.IdType.PRIVATEGROUP; // by default
-		Order.OrderStatus orderStatus = Order.OrderStatus.CONFIRMED;
-		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
-		boolean isUsed = true;
-		int numberOfSubscribers = NumberOfSubscribers();
-		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
-				timeOfOrder, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
-		return ord;
-	}
+	/* don't delete */
+//	private Order createSpontaneousOrderDetails(String ownerID, String parkName) {
+//		int orderID = getNextOrderID();
+//		int priceOfOrder = 100;
+//		int numberOfVisitors = visitorsCounter;
+//		String email = Email_textBox.getText();
+//		String phone = Phone_textBox.getText();
+//		Order.IdType type = Order.IdType.PRIVATEGROUP; // by default
+//		Order.OrderStatus orderStatus = Order.OrderStatus.CONFIRMED;
+//		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
+//		boolean isUsed = true;
+//		int numberOfSubscribers = NumberOfSubscribers();
+//		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
+//				timeOfOrder, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+//		return ord;
+//	}
 
 	private int getNextOrderID() {
 		String response = clientController.client

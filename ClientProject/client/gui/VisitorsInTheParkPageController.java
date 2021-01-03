@@ -45,7 +45,7 @@ public class VisitorsInTheParkPageController implements GuiController {
 		} else
 			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
 					"Please enter appropriate ID");
-//		if (s.type == Type.SUBSCRIBER)
+//		if (s.type == Type.SUBSCRIBER)TODO check what with this
 //			g.setFamilyOrderOnly();
 
 	}

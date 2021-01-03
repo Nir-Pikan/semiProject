@@ -50,8 +50,7 @@ public class DevisionManagerDiscountController implements GuiController {
 		discountEndDate.setCellValueFactory(new PropertyValueFactory<DiscountEntity, LocalDate>("endDateShow"));
 
 		ServerRequest sr = new ServerRequest(Manager.Discount, "getAllDiscount", "");
-		clientController.client.sendRequest(sr);
-		String respons = clientController.consumeResponse();
+		String respons = clientController.client.sendRequestAndResponse(sr);
 
 		DiscountEntity[] discountsList = (DiscountEntity[]) ServerRequest.gson.fromJson(respons,
 				DiscountEntity[].class);
@@ -84,8 +83,8 @@ public class DevisionManagerDiscountController implements GuiController {
 							String discountID = getTableView().getItems().get(getIndex()).getDiscountID();
 
 							ServerRequest sr = new ServerRequest(Manager.Discount, "ApproveDiscount", discountID);
-							clientController.client.sendRequest(sr);
-							String respons = clientController.consumeResponse();
+
+							String respons = clientController.client.sendRequestAndResponse(sr);
 							if (respons.equals("Discount was updated successfully")) {
 								discountsTable.getItems().remove(getIndex());
 								PopUp.showInformation("New Discount Approved Successfully",
@@ -100,8 +99,7 @@ public class DevisionManagerDiscountController implements GuiController {
 							String discountID = getTableView().getItems().get(getIndex()).getDiscountID();
 
 							ServerRequest sr = new ServerRequest(Manager.Discount, "DeleteDiscount", discountID);
-							clientController.client.sendRequest(sr);
-							String respons = clientController.consumeResponse();
+							String respons = clientController.client.sendRequestAndResponse(sr);
 							if (respons.equals("Discount was delete successfully")) {
 								discountsTable.getItems().remove(getIndex());
 								PopUp.showInformation("Discount was delete successfully",

@@ -27,7 +27,6 @@ public class EntryController implements IController {
 		this.messageC = messageC;
 		this.subscriber = subscriber;
 		this.discount = discount;
-		// TODO Auto-generated constructor stub
 		dbController = DbController.getInstance();
 		createTable();
 

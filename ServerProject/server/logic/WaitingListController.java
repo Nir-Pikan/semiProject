@@ -211,7 +211,6 @@ public class WaitingListController implements IController {
 			dbController.sendUpdate("UPDATE waitingList SET orderStatus='WAITINGLISTMASSAGESENT' WHERE orderID = "+o.orderID+";");
 				return o;
 		}
-//			TODO remove after creation of method
 		}
 		return null;
 	}

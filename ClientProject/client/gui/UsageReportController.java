@@ -147,7 +147,6 @@ public class UsageReportController implements GuiController, Report {
 				
 				@Override
 				public ObservableValue<String> call(CellDataFeatures<UsageRow, String> param) {
-					// TODO Auto-generated method stub
 					return param.getValue().getValue().getDate();
 				}
 			});
@@ -157,7 +156,6 @@ public class UsageReportController implements GuiController, Report {
 				
 				@Override
 				public ObservableValue<Number> call(CellDataFeatures<UsageRow, Number> param) {
-					// TODO Auto-generated method stub
 					return param.getValue().getValue().getVisitors();
 				}
 			});
@@ -168,7 +166,6 @@ public class UsageReportController implements GuiController, Report {
 		
 				@Override
 				public ObservableValue<Number> call(CellDataFeatures<UsageRow, Number> param) {
-					// TODO Auto-generated method stub
 					return param.getValue().getValue().getUsage();
 				}
 			});

@@ -1,5 +1,8 @@
 package gui;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -53,6 +56,12 @@ public class OrderDetailsController implements GuiController {
 
 	@FXML
 	private Label orderNoTxt;
+
+	@FXML
+	private TextField dateTxt;
+
+	@FXML
+	private TextField timeTxt;
 
 	@FXML
 	private TextField noOfSubscribersTxt;
@@ -119,12 +128,24 @@ public class OrderDetailsController implements GuiController {
 		orderNoTxt.setText("Order #: " + String.valueOf(order.orderID));
 		personIdTxt.setText(order.ownerID);
 		parkNameTxt.setText(order.parkSite);
+		timeTxt.setText(toTime(order.visitTime)); // added by (Roman)
+		dateTxt.setText(toDate(order.visitTime.getTime())); // added by (Roman)
 		orderTypeTxt.setText(order.type.toString());
 		noOfVisitorsTxt.setText(String.valueOf(order.numberOfVisitors));
 		noOfSubscribersTxt.setText(String.valueOf(order.numberOfSubscribers));
 		emailTxt.setText(order.email);
 		phoneTxt.setText(order.phone);
 		priceTxt.setText(String.valueOf(order.priceOfOrder));
+	}
+
+	private String toTime(Timestamp stamp) { // added by (Roman)
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		return sdf.format(stamp);
+	}
+
+	private String toDate(long timestamp) { // added by (Roman)
+		Date date = new Date(timestamp);
+		return new SimpleDateFormat("MM/dd/yyyy").format(date);
 	}
 
 	@Override
@@ -184,7 +205,9 @@ public class OrderDetailsController implements GuiController {
 
 	private void checkOrderOwner(Order o) {
 		if (clientController.client.logedInSunscriber.getVal() != null) {
-			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals('S' + o.ownerID)) { // (Roman change: 'S' added
+			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals('S' + o.ownerID)) { // (Roman
+																											// change:
+																											// 'S' added
 				PopUp.showError("Show Order Details", "Order Details", "You can see only your own order");
 				throw new Navigator.NavigationInterruption();
 			}

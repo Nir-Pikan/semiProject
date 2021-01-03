@@ -53,7 +53,7 @@ public class OrderController implements IController {
 		// hope no bug is will be found
 		boolean isCreated = dbController.createTable("orders(parkSite varchar(20),numberOfVisitors int,orderID int,"
 				+ "priceOfOrder FLOAT, email varchar(20),phone varchar(20), type ENUM('PRIVATE','PRIVATEGROUP','GUIDE','FAMILY'),"
-				+ "orderStatus ENUM('CANCEL','IDLE','CONFIRMED','WAITINGLIST','WAITINGLISTMASSAGESENT'),"
+				+ "orderStatus ENUM('CANCEL','SEMICANCELED','IDLE','CONFIRMED','WAITINGLIST','WAITINGLISTMASSAGESENT'),"
 				+ "visitTime TIMESTAMP(1), timeOfOrder TIMESTAMP(1), isUsed BOOLEAN,ownerID varchar(20),"
 				+ "numberOfSubscribers int, primary key(orderID));");
 		if (isCreated)
@@ -599,8 +599,8 @@ public class OrderController implements IController {
 			ps.setTimestamp(9, ord.visitTime);
 			ps.setTimestamp(10, ord.timeOfOrder);
 			ps.setString(11, ord.ownerID);
-			ps.setLong(12, ord.orderID);
-			ps.setInt(13, ord.numberOfSubscribers);
+			ps.setInt(12, ord.numberOfSubscribers);
+			ps.setLong(13, ord.orderID);	
 			return ps.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();

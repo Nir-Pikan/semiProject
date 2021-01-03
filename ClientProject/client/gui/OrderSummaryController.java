@@ -46,12 +46,12 @@ public class OrderSummaryController implements GuiController {
 
 	@FXML
 	private TextField priceTxt;
-	
-    @FXML
-    private TextField timeTxt;
 
-    @FXML
-    private TextField dateTxt;
+	@FXML
+	private TextField timeTxt;
+
+	@FXML
+	private TextField dateTxt;
 
 	@FXML
 	private Label orderNoTxt;
@@ -124,15 +124,14 @@ public class OrderSummaryController implements GuiController {
 		order.priceOfOrder = price;
 		priceTxt.setText(String.valueOf(price));
 	}
-	
-	
-	private void initFieldsByEntry(Order order,ParkEntry entry) {
+
+	private void initFieldsByEntry(Order order, ParkEntry entry) {
 		approveBtn.setDisable(false);
 		personIdTxt.setText(entry.personID);
 		parkNameTxt.setText(entry.parkID);
 		timeTxt.setText(toTime(entry.arriveTime));
 		dateTxt.setText(toDate(entry.arriveTime.getTime()));
-		orderTypeTxt.setText(entry.entryType.toString()); //TODO test this
+		orderTypeTxt.setText(entry.entryType.toString()); // TODO test this
 		noOfVisitorsTxt.setText(String.valueOf(entry.numberOfVisitors));
 		noOfSubscribersTxt.setText(String.valueOf(entry.numberOfSubscribers));
 		emailTxt.setText(order.email);
@@ -141,23 +140,23 @@ public class OrderSummaryController implements GuiController {
 		order.priceOfOrder = price;
 		priceTxt.setText(String.valueOf(price));
 	}
-	
+
 	private String toTime(Timestamp stamp) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		return sdf.format(stamp);
 	}
-	
+
 	private String toDate(long timestamp) {
-	    Date date = new Date(timestamp);
-	    return new SimpleDateFormat("MM/dd/yyyy").format(date);
+		Date date = new Date(timestamp);
+		return new SimpleDateFormat("MM/dd/yyyy").format(date);
 	}
 
 	private float calcOrderOrderPrice(Order order, ParkEntry entry) {
-			String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
-					"CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
-			return ServerRequest.gson.fromJson(response, Float.class);
+		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
+				"CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
+		return ServerRequest.gson.fromJson(response, Float.class);
 	}
-	
+
 	private float calcEntryOrderPrice(ParkEntry entry) {
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
 				"CalculatePriceForEntryCasual", ServerRequest.gson.toJson(entry, ParkEntry.class)));

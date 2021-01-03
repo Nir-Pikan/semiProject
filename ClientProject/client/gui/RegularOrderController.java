@@ -305,6 +305,8 @@ public class RegularOrderController implements GuiController {
 	 */
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
+//		clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order, "CancelOrderByOrderID",
+//				ServerRequest.gson.toJson(1, Integer.class))); // delete this!
 		if (CheckAllRequiredFields()) {
 			if (spontaneous == true) {
 				// ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);

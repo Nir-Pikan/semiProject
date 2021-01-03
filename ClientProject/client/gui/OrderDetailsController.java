@@ -205,9 +205,7 @@ public class OrderDetailsController implements GuiController {
 
 	private void checkOrderOwner(Order o) {
 		if (clientController.client.logedInSunscriber.getVal() != null) {
-			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals('S' + o.ownerID)) { // (Roman
-																											// change:
-																											// 'S' added
+			if (!clientController.client.logedInSunscriber.getVal().subscriberID.equals('S' + o.ownerID)) { 																							
 				PopUp.showError("Show Order Details", "Order Details", "You can see only your own order");
 				throw new Navigator.NavigationInterruption();
 			}

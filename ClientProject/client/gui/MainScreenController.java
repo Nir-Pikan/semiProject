@@ -53,8 +53,7 @@ public class MainScreenController {
 		Login.setManaged(false);
 		greetingMsg.setText("");
 		menu.getChildren().clear();
-		Navigator.instance().clearHistory();
-		Navigator.instance().navigate("login");
+		Navigator.instance().clearHistory("login");
 		if (clientController.client.logedInSubscriber.getVal() != null) {
 			clientController.client.logedInSubscriber.silentSet(null);
 			return;
@@ -109,6 +108,11 @@ public class MainScreenController {
 					menuItems.add(WORKER_MAP.getOrDefault(p.GetName(), new MenuItem(p.GetName(), null)));
 				}
 				setMenu(menuItems);
+			}
+		});
+		clientController.client.observable.addObserver((obs,event)->{
+			if(event == clientController.SERVER_CLOSED) {
+				Login.fire();
 			}
 		});
 		return body;

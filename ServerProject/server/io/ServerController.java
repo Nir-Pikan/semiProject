@@ -65,6 +65,7 @@ public class ServerController extends AbstractServer {
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		String parsed = (String) msg;
 		String response = null;
+		System.out.println("received message > "+parsed);
 		ServerRequest sr = ServerRequest.fromJson(parsed);
 		switch (sr.manager) {
 		case Discount:

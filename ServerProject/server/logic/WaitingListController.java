@@ -99,7 +99,7 @@ public class WaitingListController implements IController {
 		while((nextWaiting = getNextOrder(canceled))!=null) {
 			final Order orderToNotify = nextWaiting;
 			Platform.runLater(()->{notifyWaitingOrder(orderToNotify);});
-			
+			currentWaitingCancelation.put(nextWaiting.orderID,thread);
 			if(thread.sleepUntillWoken(TimeUnit.HOURS, 1)) {
 				//if woken by user interaction
 				if(!currentCancelation.containsKey(thread))

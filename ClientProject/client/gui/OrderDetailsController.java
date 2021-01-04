@@ -65,6 +65,9 @@ public class OrderDetailsController implements GuiController {
 
 	@FXML
 	private TextField noOfSubscribersTxt;
+	
+	@FXML
+    private Label lblWaitingList;
 
 	@FXML
 	void ApproveOrder(ActionEvent event) {
@@ -193,6 +196,7 @@ public class OrderDetailsController implements GuiController {
 				.sendRequestAndResponse(new ServerRequest(Manager.WaitingList, "GetOrderByID", orderID));
 		if (!response2.contains("not found")) {
 			Order o = ServerRequest.gson.fromJson(response2, Order.class);
+			lblWaitingList.setVisible(true);
 			checkOrderOwner(o);
 			addOrderDataToFields(o);
 			if (o.orderStatus != OrderStatus.WAITINGLISTMASSAGESENT) {

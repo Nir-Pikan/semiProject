@@ -157,15 +157,15 @@ public class LoginController implements GuiController
 	{
 		workerLoginForm.setManaged(false);
 		workerLoginForm.setVisible(false);	
-		txtUsername.setOnKeyTyped((event)->{
+		txtUsername.setOnKeyReleased((event)->{
 			if(event.getCode()==KeyCode.ENTER)
 				btnWorkerLogin.fire();
 		});
-		txtPassword.setOnKeyTyped((event)->{
+		txtPassword.setOnKeyReleased((event)->{
 			if(event.getCode()==KeyCode.ENTER)
 				btnWorkerLogin.fire();
 		});
-		txtId.setOnKeyTyped((event)->{
+		txtId.setOnKeyReleased((event)->{
 			if(event.getCode()==KeyCode.ENTER)
 				btnUserLogin.fire();
 		});

@@ -3,16 +3,15 @@ package io;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import entities.ParkNameAndTimes;
 import entities.Subscriber;
 import entities.Worker;
 import javafx.application.Platform;
-import module.Navigator;
 import modules.Property;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 import ocsf.client.AbstractClient;
+import util.EventNotifier;
 
 /** a class representing the client controller */
 public class clientController extends AbstractClient {
@@ -36,7 +35,10 @@ public class clientController extends AbstractClient {
 	public Property<Worker> logedInWorker = new Property<>();
 	public Property<Subscriber> logedInSubscriber = new Property<>();
 	public Property<String> visitorID = new Property<>();
-
+	public EventNotifier observable = new EventNotifier();
+	
+	
+	
 	/**
 	 * creates a {@link clientController}
 	 * 
@@ -152,10 +154,11 @@ public class clientController extends AbstractClient {
 				}
 			}
 			Platform.runLater(()->{
-			Navigator.instance().clearHistory();
-			Navigator.instance().navigate("login");
+			observable.emit(SERVER_CLOSED);
 			});
 		}).start();
 	}
+	
+	public static final String SERVER_CLOSED = "_SERVER_CLOSED";
 	
 }

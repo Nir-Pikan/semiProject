@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+
 import entities.Order;
+import entities.ParkEntry;
 import entities.Order.OrderStatus;
 import io.clientController;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 
 /**
@@ -21,6 +25,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import module.GuiController;
+import module.JavafxPrinter;
 import module.Report;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
@@ -72,9 +77,6 @@ public class IncomeReportController implements GuiController,Report{
 
     @FXML
     private TableColumn<Cell, Integer> incomeColumn;
-    
-  //  @FXML
-  //  private TableColumn<Cell, Integer> incomeColumn;
 
     @FXML
     private Button buttonPrint;
@@ -88,7 +90,7 @@ public class IncomeReportController implements GuiController,Report{
     @FXML
     void buttonPrint_OnClick(ActionEvent event)
     {
-    	
+    	JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
     }
     
     /**
@@ -100,115 +102,102 @@ public class IncomeReportController implements GuiController,Report{
     {
     	this.reportStartAndEndTimes = reportStartAndEndTimes;
     	this.parkName = parkName;
+    	dateColumn.setCellValueFactory(new PropertyValueFactory<Cell,String>("Date"));
+    	visitorsColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("Visitors"));
+    	incomeColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("Income"));
     	createReport();
     }
     
     void createReport()
     {
+    	ArrayList<Cell> cellsList = new ArrayList<Cell>();
     	TotalIncome = 0;
-    	String[] _requestData = {ServerRequest.gson.toJson(reportStartAndEndTimes[0], Timestamp.class),
-    			ServerRequest.gson.toJson(reportStartAndEndTimes[1], Timestamp.class), parkName};
-    	String requestData = ServerRequest.gson.toJson(_requestData, String[].class);
-    	ServerRequest serverRequest = new ServerRequest(Manager.Order, "GetOrderListForDate", requestData);
+    	String requestData = ServerRequest.gson.toJson(reportStartAndEndTimes, Timestamp[].class);
+    	ServerRequest serverRequest = new ServerRequest(Manager.Entry, "getEntriesByDate", requestData);
     	String response = clientController.client.sendRequestAndResponse(serverRequest);
-    	Order[] allOrders = ServerRequest.gson.fromJson(response, Order[].class);
-    	if(allOrders == null)
+    	ParkEntry[] allParkEntrys = ServerRequest.gson.fromJson(response, ParkEntry[].class);
+    	if(allParkEntrys == null)
     		return; 
-    	Map<myDate, ArrayList<Order>> map = new TreeMap<myDate, ArrayList<Order>>();
-    	for (Order order : allOrders) 
+    	Map<myDate, ArrayList<ParkEntry>> map = new TreeMap<myDate, ArrayList<ParkEntry>>();
+    	for (ParkEntry entry : allParkEntrys) 
     	{
-    		if(ValidOrderToReport(order)) 
+    		if(ValidOrderToReport(entry)) 
     		{
-    			myDate date = new myDate(GetStringTime(order.visitTime));
+    			myDate date = new myDate(entry.arriveTime.toLocalDateTime().toLocalDate().toString().trim());
     			if(!map.containsKey(date))
     			{
-    				map.put(date, new ArrayList<Order>());
+    				map.put(date, new ArrayList<ParkEntry>());
     			}
-    			map.get(date).add(order);
+    			map.get(date).add(entry);
     		}
 		}
-    	for (Map.Entry<myDate, ArrayList<Order>> entry : map.entrySet())
+    	for (Map.Entry<myDate, ArrayList<ParkEntry>> dayEntrys : map.entrySet())
     	{
 			int income = 0;
 			int visitors = 0;
-			myDate date = entry.getKey();
+			myDate date = dayEntrys.getKey();
 			
-			for (Order order : entry.getValue()) 
+			for (ParkEntry parkEntry : dayEntrys.getValue()) 
 			{
-				visitors += order.numberOfVisitors;
-				income += order.priceOfOrder;
+				visitors += parkEntry.numberOfVisitors;
+				income += parkEntry.priceOfEntry;
 			}
 			TotalIncome += income;
-			incomeTable.getItems().add(new Cell(income, visitors, date.getDate()));
+			cellsList.add(new Cell( date.getDate(), visitors, income));
 		}
     	Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-    	textDateToday.setText(GetStringTime(currentTime));
+    	textDateToday.setText(currentTime.toLocalDateTime().toLocalDate().toString());
     	textParkName.setText(parkName);
-    	textReportDate.setText(GetStringTime(reportStartAndEndTimes[0]) + " - " + GetStringTime(reportStartAndEndTimes[1]));
+    	textReportDate.setText("from " + reportStartAndEndTimes[0].toLocalDateTime().toLocalDate().toString() + " to "
+				+ reportStartAndEndTimes[1].toLocalDateTime().toLocalDate().toString());
     	textTotalIncome.setText(TotalIncome + ""); 
     	int avgIncome = 0;
     	if(map.size() != 0)
     		avgIncome = TotalIncome/map.size();
     	textAVGIncomeDay.setText(avgIncome + "");
+    	incomeTable.setItems(FXCollections.observableArrayList(cellsList));
     }
     
-    public static String GetStringTime(Timestamp time)
+    private boolean ValidOrderToReport(ParkEntry parkEntry)
     {
-    	String[] arr = time.toString().split(" ")[0].split("-");
-    	return arr[2] + "." + arr[1] + "." + arr[0];
+      	return parkEntry.arriveTime.before(new Timestamp(System.currentTimeMillis()));
     }
-    
-    private boolean ValidOrderToReport(Order order)
-    {
-      	if(!order.visitTime.before(new Timestamp(System.currentTimeMillis())))
-			return false; 		
-	    if( order.orderStatus.equals(OrderStatus.CANCEL) || order.orderStatus.equals(OrderStatus.SEMICANCELED))
-	    	return false; 
-	    return true;
-    }
-    
-    @Override
-	public void init() { // needed for appropriate working of TableView
-    	dateColumn.setCellValueFactory(new PropertyValueFactory<Cell,String>("date"));
-    	visitorsColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("visitors"));
-    	incomeColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("price"));
-	}
 
     public class Cell
     {
-    	private Integer price;
-    	private Integer visitors;
-    	private String date;
+    	public int Income;
+    	public int Visitors;
+    	public String Date;
     	
-    	public Integer getVisitors() {
-			return visitors;
+    	public int getVisitors() {
+			return Visitors;
 		}
 
-		public void setVisitors(Integer visitors) {
-			this.visitors = visitors;
+		public void setVisitors(int visitors) {
+			this.Visitors = visitors;
 		}
 
-		public String getDay() {
-			return date;
+		public String getDate() {
+			return Date;
 		}
 
-		public void setDay(String date) {
-			this.date = date;
+		public void setDate(String date) {
+			this.Date = date;
 		}
 
-		public Integer getPrice() {
-			return price;
+		public int getIncome() {
+			return Income;
 		}
 
-		public void setPrice(Integer price) {
-			this.price = price;
+		public void setIncome(int price) {
+			this.Income = price;
 		}
 
-		public Cell(Integer price,Integer visitors , String date)
+		public Cell(String date, int visitors, int price)
     	{
-			this.date = date;
-			this.visitors = visitors;
-    		this.price = price;
+			this.Date = date;
+			this.Visitors = visitors;
+    		this.Income = price;
     	}
     }
     
@@ -282,20 +271,20 @@ public class IncomeReportController implements GuiController,Report{
 
     public static int GetYear(String time)
     {
-    	String[] arr = time.split(".");;
-    	return Integer.parseInt(arr[2]);
+    	String[] arr = time.split("-");;
+    	return Integer.parseInt(arr[0]);
     }
     
     public static int GetMonth(String time)
     {
-    	String[] arr = time.split(".");;
+    	String[] arr = time.split("-");;
     	return Integer.parseInt(arr[1]);
     }
     
     public static int GetDay(String time)
     {
-    	String[] arr = time.split(".");;
-    	return Integer.parseInt(arr[0]);
+    	String[] arr = time.split("-");;
+    	return Integer.parseInt(arr[2]);
     }
 		
 	

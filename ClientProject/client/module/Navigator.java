@@ -104,6 +104,14 @@ public class Navigator {
 		current = null;
 		navigate(defaultTab);
 	}
+	
+	/** navigates to the given page and clear the history 
+	 * @param fxml the page to navigate*/
+	public void clearHistory(String fxml) {
+		history = new Stack<>();
+		current = null;
+		navigate(fxml);
+	}
 
 	/** helper class for saving windows */
 	private class Tab {

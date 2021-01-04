@@ -105,14 +105,15 @@ public class OrderDetailsController implements GuiController {
 			return;
 		switch (order.orderStatus) {
 		case IDLE:
+		case CONFIRMED:
 			clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order, "CancelOrderByOrderID",
 					ServerRequest.gson.toJson(order.orderID, Integer.class)));
 			PopUp.showInformation("Order Cancel", "Order Cancel", "order Canceled");
 			Navigator.instance().clearHistory();
 			return;
-		case WAITINGLISTMASSAGESENT:
+		case WAITINGLIST:
 			clientController.client.sendRequestAndResponse(new ServerRequest(Manager.WaitingList, "cancelWaitingOrder",
-					ServerRequest.gson.toJson(order, Order.class)));
+					ServerRequest.gson.toJson(order.orderID, Integer.class)));
 			PopUp.showInformation("Order Cancel", "Order Cancel", "order Canceled");
 			Navigator.instance().clearHistory();
 			return;
@@ -162,8 +163,8 @@ public class OrderDetailsController implements GuiController {
 			throw new Navigator.NavigationInterruption();
 		}
 		PopUp.showError("Order Details", "Order Details", "Order not Found, try again");
-		Navigator.instance().back();
 		throw new Navigator.NavigationInterruption();// tell the navigator to stop the navigation
+//		Navigator.instance().back();
 	}
 
 	private boolean getOrder(int orederIDint) {
@@ -196,11 +197,12 @@ public class OrderDetailsController implements GuiController {
 		if (!response2.contains("not found")) {
 			Order o = ServerRequest.gson.fromJson(response2, Order.class);
 			lblWaitingList.setVisible(true);
+			checkOrderOwner(o);
 			addOrderDataToFields(o);
 			if (o.orderStatus != OrderStatus.WAITINGLISTMASSAGESENT) {
-				approveBtn.setDisable(false);
-			} else {
 				approveBtn.setDisable(true);
+			} else {
+				approveBtn.setDisable(false);
 			}
 			return true;
 		}
@@ -209,14 +211,20 @@ public class OrderDetailsController implements GuiController {
 
 	private void checkOrderOwner(Order o) {
 		if (clientController.client.logedInSubscriber.getVal() != null) {
-			if (!clientController.client.logedInSubscriber.getVal().subscriberID.equals('S' + o.ownerID)) { 																							
+			if (!clientController.client.logedInSubscriber.getVal().subscriberID.equals('S' + o.ownerID)) {
 				PopUp.showError("Show Order Details", "Order Details", "You can only see your own orders");
+				throw new Navigator.NavigationInterruption();
+			} else if (o.orderStatus == Order.OrderStatus.CANCEL) {
+				PopUp.showError("Show Order Details", "Order Details", "This order was canceled");
 				throw new Navigator.NavigationInterruption();
 			}
 		}
 		if (clientController.client.visitorID.getVal() != null) {
 			if (!clientController.client.visitorID.getVal().equals(o.ownerID)) {
 				PopUp.showError("Show Order Details", "Order Details", "You can only see your own orders");
+				throw new Navigator.NavigationInterruption();
+			} else if (o.orderStatus == Order.OrderStatus.CANCEL) {
+				PopUp.showError("Show Order Details", "Order Details", "This order was canceled");
 				throw new Navigator.NavigationInterruption();
 			}
 		}

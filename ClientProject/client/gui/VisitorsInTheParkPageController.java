@@ -21,6 +21,10 @@ public class VisitorsInTheParkPageController implements GuiController {
 	private ChoiceBox<String> parkNumChoise;
 
 	@FXML
+	private TextField availableVisitorsAmountText;
+
+
+	@FXML
 	private TextField visitorsAmountText;
 
 	@FXML
@@ -83,7 +87,15 @@ public class VisitorsInTheParkPageController implements GuiController {
 						"Park " + parkNumChoise.getSelectionModel().getSelectedItem() + " not exists");
 				return;
 			}
-			visitorsAmountText.setText(response);
+			availableVisitorsAmountText.setText(response);
+			String response2 = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Park,
+					"get number of current visitors", parkNumChoise.getSelectionModel().getSelectedItem()));
+			if (response2.equals("park not exists")) {
+				PopUp.showError("current visitors", "failed to get Current visitor",
+						"Park " + parkNumChoise.getSelectionModel().getSelectedItem() + " not exists");
+				return;
+			}
+			visitorsAmountText.setText(response2);
 		});
 		if (!clientController.client.logedInWorker.getVal().getWorkerType().equals("departmentManager")) {
 			parkNumChoise.getSelectionModel()

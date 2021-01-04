@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import module.GuiController;
 import module.Navigator;
@@ -52,6 +53,7 @@ public class LoginController implements GuiController
 			visitorLoginForm.setVisible(false);
 			workerLoginForm.setManaged(true);
 			workerLoginForm.setVisible(true);
+			
 		} 
 		else
 		{
@@ -155,6 +157,18 @@ public class LoginController implements GuiController
 	{
 		workerLoginForm.setManaged(false);
 		workerLoginForm.setVisible(false);	
+		txtUsername.setOnKeyTyped((event)->{
+			if(event.getCode()==KeyCode.ENTER)
+				btnWorkerLogin.fire();
+		});
+		txtPassword.setOnKeyTyped((event)->{
+			if(event.getCode()==KeyCode.ENTER)
+				btnWorkerLogin.fire();
+		});
+		txtId.setOnKeyTyped((event)->{
+			if(event.getCode()==KeyCode.ENTER)
+				btnUserLogin.fire();
+		});
 	}
 
 }

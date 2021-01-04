@@ -11,10 +11,12 @@ import entities.ParkNameAndTimes;
 import io.clientController;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import module.Navigator;
@@ -64,9 +66,11 @@ public class OpenOrderTimes {
 	public static Order askForWaitingListAndShowOptions(Order ord) {
 		ButtonType waiting = new ButtonType("Add to Waiting List", ButtonData.YES);
 		ButtonType showTimes = new ButtonType("Show Available Times", ButtonData.NO);
+		
 		Alert a = new PopUp(AlertType.CONFIRMATION,"Would you like to enter to the waiting list or see other times for your order?",waiting,showTimes,ButtonType.CLOSE);
 		a.setTitle("The Park Is Full");
 		a.setHeaderText("The park is full");
+		((Button)a.getDialogPane().lookupButton(waiting)).setPrefWidth(200);
 		ButtonType returned = a.showAndWait().orElse(ButtonType.CLOSE);
 		if(returned == ButtonType.CLOSE) {
 			return null;

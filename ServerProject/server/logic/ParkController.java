@@ -255,6 +255,11 @@ public class ParkController implements IController {
 			if (p2 == null)
 				return "park not exists";
 			return (p2.maxCapacity - p2.currentNumOfVisitors) + "";
+		case "get number of current visitors":
+			Park p3 = getPark(request.data);
+			if (p3 == null)
+				return "park not exists";
+			return p3.currentNumOfVisitors + "";
 		case "get all parks data":
 			return ServerRequest.gson.toJson(getParksData(), ParkNameAndTimes[].class);
 		}

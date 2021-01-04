@@ -193,6 +193,7 @@ public class OrderDetailsController implements GuiController {
 				.sendRequestAndResponse(new ServerRequest(Manager.WaitingList, "GetOrderByID", orderID));
 		if (!response2.contains("not found")) {
 			Order o = ServerRequest.gson.fromJson(response2, Order.class);
+			checkOrderOwner(o);
 			addOrderDataToFields(o);
 			if (o.orderStatus != OrderStatus.WAITINGLISTMASSAGESENT) {
 				approveBtn.setDisable(true);

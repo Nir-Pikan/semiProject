@@ -418,7 +418,6 @@ public class RegularOrderController implements GuiController {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
 		int numberOfVisitors = 1; // by default
 		int orderID = getNextOrderID();
-		float priceOfOrder = 100;
 		boolean isUsed = false; // by default
 		Order.IdType type = Order.IdType.PRIVATE; // by default
 		String email = Email_textBox.getText();
@@ -426,8 +425,9 @@ public class RegularOrderController implements GuiController {
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = getIdentificationString();
 		int numberOfSubscribers = isSubscriber();
-		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
+		Order ord = new Order(parkName, numberOfVisitors, orderID, 100, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		ord.priceOfOrder = calcOrderPrice(ord);
 		return ord;
 	}
 
@@ -476,10 +476,22 @@ public class RegularOrderController implements GuiController {
 	private ParkEntry createParkEntry(String ownerID, String parkID) {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
 		int numberOfSubscribers = checkIfSubscriberInDB(ownerID);
-		int priceOfOrder = 100;
 		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.Personal, ownerID, parkID, timeOfOrder, null, 1,
-				numberOfSubscribers, true, priceOfOrder);
+				numberOfSubscribers, true, 100);
+		entry.priceOfOrder = calcEntryPrice(entry);
 		return entry;
+	}
+	
+	protected static float calcOrderPrice(Order order) {
+		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
+				"CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
+		return ServerRequest.gson.fromJson(response, Float.class);
+	}
+
+	protected static float calcEntryPrice(ParkEntry entry) {
+		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
+				"CalculatePriceForEntryCasual", ServerRequest.gson.toJson(entry, ParkEntry.class)));
+		return ServerRequest.gson.fromJson(response, Float.class);
 	}
 	/* don't delete */
 //	private ParkEntry createParkEntry(Order spOrder) {

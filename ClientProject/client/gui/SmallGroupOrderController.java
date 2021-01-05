@@ -441,7 +441,6 @@ public class SmallGroupOrderController implements GuiController {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
 		int numberOfVisitors = visitorsCounter;
 		int orderID = getNextOrderID();
-		int priceOfOrder = 100; // for now, need to be calculated by other controller
 		boolean isUsed = false; // by default
 		Order.IdType type = Order.IdType.PRIVATEGROUP;
 		String email = Email_textBox.getText();
@@ -449,8 +448,9 @@ public class SmallGroupOrderController implements GuiController {
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = getIdentificationString();
 		int numberOfSubscribers = NumberOfSubscribers(); // in a group order this is not relevant
-		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
+		Order ord = new Order(parkName, numberOfVisitors, orderID, 100, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		ord.priceOfOrder = RegularOrderController.calcOrderPrice(ord);
 		return ord;
 	}
 
@@ -506,9 +506,9 @@ public class SmallGroupOrderController implements GuiController {
 	private ParkEntry createParkEntry(String ownerID, String parkID) {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
 		int numberOfSubscribers = NumberOfSubscribers();
-		int priceOfOrder = 100;
 		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.PrivateGroup, ownerID, parkID, timeOfOrder, null, 1,
-				numberOfSubscribers, true, priceOfOrder);
+				numberOfSubscribers, true, 100);
+		entry.priceOfOrder = RegularOrderController.calcEntryPrice(entry);
 		return entry;
 	}
 	/* don't delete */

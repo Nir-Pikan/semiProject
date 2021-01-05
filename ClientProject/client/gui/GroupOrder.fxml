@@ -98,11 +98,6 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="FamilyOrderNote" alignment="BASELINE_LEFT" layoutX="320.0" layoutY="250.0" prefHeight="30.0" prefWidth="140.0" styleClass="red" text="*" textFill="#da4848" GridPane.columnIndex="1" GridPane.rowIndex="6">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
       <CheckBox fx:id="FamilyIndicator_checkBox" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#FamilyCheckBoxClicked" text="Family Order?" GridPane.rowIndex="6">
          <font>
             <Font size="15.0" />

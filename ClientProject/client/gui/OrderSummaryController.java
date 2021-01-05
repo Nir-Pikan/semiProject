@@ -129,12 +129,12 @@ public class OrderSummaryController implements GuiController {
 		parkNameTxt.setText(entry.parkID);
 		timeTxt.setText(toTime(entry.arriveTime));
 		dateTxt.setText(toDate(entry.arriveTime.getTime()));
-		orderTypeTxt.setText(entry.entryType.toString()); // TODO test this
+		orderTypeTxt.setText(entry.entryType.toString()); 
 		noOfVisitorsTxt.setText(String.valueOf(entry.numberOfVisitors));
 		noOfSubscribersTxt.setText(String.valueOf(entry.numberOfSubscribers));
 		emailTxt.setText(order.email);
 		phoneTxt.setText(order.phone);
-		priceTxt.setText(String.valueOf(order.priceOfOrder));
+		priceTxt.setText(String.valueOf(entry.priceOfOrder));
 	}
 
 	private String toTime(Timestamp stamp) {

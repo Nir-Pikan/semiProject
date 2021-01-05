@@ -351,6 +351,7 @@ public class SmallGroupOrderController implements GuiController {
 			if (spontaneous == true) {
 				parkEntry.numberOfVisitors = visitorsCounter;
 				parkEntry.numberOfSubscribers = NumberOfSubscribers();
+				parkEntry.priceOfOrder = RegularOrderController.calcEntryPrice(parkEntry);
 				MoveToTheNextPage(ord, parkEntry);
 				return;
 			}
@@ -506,9 +507,9 @@ public class SmallGroupOrderController implements GuiController {
 	private ParkEntry createParkEntry(String ownerID, String parkID) {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
 		int numberOfSubscribers = NumberOfSubscribers();
-		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.PrivateGroup, ownerID, parkID, timeOfOrder, null, 1,
+		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.PrivateGroup, ownerID, parkID, timeOfOrder, null, visitorsCounter,
 				numberOfSubscribers, true, 100);
-		entry.priceOfOrder = RegularOrderController.calcEntryPrice(entry);
+		//entry.priceOfOrder = RegularOrderController.calcEntryPrice(entry);
 		return entry;
 	}
 	/* don't delete */

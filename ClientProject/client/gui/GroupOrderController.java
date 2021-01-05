@@ -66,9 +66,6 @@ public class GroupOrderController implements GuiController {
 	private Label PhoneNote;
 
 	@FXML
-	private Label FamilyOrderNote;
-
-	@FXML
 	private Label EmailNote;
 
 	@FXML
@@ -149,8 +146,6 @@ public class GroupOrderController implements GuiController {
 	void FamilyCheckBoxClicked(ActionEvent event) {
 		NumberOfVisitors_ComboBox.getItems().clear();
 		if (FamilyIndicator_checkBox.isSelected()) {
-			// if (clientController.client.logedInSubscriber.getVal() != null || sub.type ==
-			// Subscriber.Type.SUBSCRIBER)
 			setFamilyDropBox();
 		} else {
 			NumberOfVisitors_ComboBox.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
@@ -292,6 +287,7 @@ public class GroupOrderController implements GuiController {
 			if (spontaneous == true) {
 				// ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);
 				parkEntry.numberOfVisitors = Integer.parseInt(NumberOfVisitors_ComboBox.getValue());
+				parkEntry.priceOfOrder = RegularOrderController.calcEntryPrice(parkEntry);
 				MoveToTheNextPage(ord, parkEntry);
 				return;
 			}
@@ -325,15 +321,11 @@ public class GroupOrderController implements GuiController {
 						"Failed to cancel an order");
 				break;
 			case "No more orders allowed in this time":
-//				PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
-//						"No more orders allowed in this time");   // another options will be displayed and offer to waiting list
 				Order newSelectedOrder = OpenOrderTimes.askForWaitingListAndShowOptions(ord);
 				if (newSelectedOrder == null)
 					return;
 				else
 					MoveToTheNextPage(newSelectedOrder, null);
-//					 response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order,
-//							"IsOrderAllowed", ServerRequest.gson.toJson(newSelectedOrder, Order.class)));
 				break;
 			case "Order Canceled":
 				PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");
@@ -375,12 +367,6 @@ public class GroupOrderController implements GuiController {
 		VisitHour_ComboBox.setDisable(true);
 		Date_DatePicker.setDisable(true);
 		checkIfGuideByIDAndSetFamilyCheckBox(ownerID);
-//			FamilyIndicator_checkBox.setSelected(true);
-//			FamilyIndicator_checkBox.setDisable(true);
-//		}else {
-//			FamilyIndicator_checkBox.setSelected(false);
-//			FamilyIndicator_checkBox.setDisable(false);
-//		}
 		ord.email = Email_textBox.getText(); // need this for OrderSummary because is no email in ParkEntry entity
 		ord.phone = Phone_textBox.getText(); // need this for OrderSummary because is no phone in ParkEntry entity
 		parkEntry = createParkEntry(ownerID, parkName);
@@ -437,7 +423,7 @@ public class GroupOrderController implements GuiController {
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = getIdentificationString();
-		int numberOfSubscribers = 0; // in a group order this is not relevant
+		int numberOfSubscribers = type == Order.IdType.FAMILY ? numberOfVisitors : 0;
 		Order ord = new Order(parkName, numberOfVisitors, orderID, 100, email, phone, type, orderStatus, visitTime,
 				timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		ord.priceOfOrder = RegularOrderController.calcOrderPrice(ord);
@@ -449,8 +435,6 @@ public class GroupOrderController implements GuiController {
 			return clientController.client.visitorID.getVal().intern();
 		if (clientController.client.logedInSubscriber.getVal() != null)
 			return clientController.client.logedInSubscriber.getVal().personalID;
-//		if(clientController.client.logedInWorker.getVal() != null)
-//			return clientController.client.logedInWorker.getVal().getWorkerID();
 		return null;
 	}
 
@@ -471,7 +455,6 @@ public class GroupOrderController implements GuiController {
 		int numberOfSubscribers = 0;
 		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.Group, ownerID, parkID, timeOfOrder, null, 1,
 				numberOfSubscribers, true, 100); // real number of visitor will be set later
-		entry.priceOfOrder = RegularOrderController.calcEntryPrice(entry);
 		return entry;
 	}
 

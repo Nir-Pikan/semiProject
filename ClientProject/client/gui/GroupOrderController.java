@@ -35,6 +35,7 @@ public class GroupOrderController implements GuiController {
 
 	Order ord = new Order();
 	private ParkEntry parkEntry;
+	Subscriber sub;
 	private boolean spontaneous = false;
 
 	@FXML
@@ -90,10 +91,7 @@ public class GroupOrderController implements GuiController {
 		NumberOfVisitors_ComboBox.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
 				"14", "15");
 		PlaceOrder_Button.setDisable(false);
-		if (!checkIfGuide()) {
-			FamilyIndicator_checkBox.setSelected(true);
-			FamilyIndicator_checkBox.setDisable(true);
-		}
+		checkIfGuide();
 		// ===================== delete later ===========================
 		Phone_textBox.setText("0545518526");
 		Email_textBox.setText("mirage164@gmail.com");
@@ -138,13 +136,38 @@ public class GroupOrderController implements GuiController {
 		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
 	}
 
-	private boolean checkIfGuide() {
+	private void checkIfGuide() {
 		if (clientController.client.logedInSubscriber.getVal() != null)
-			if (clientController.client.logedInSubscriber.getVal().type == Subscriber.Type.GUIDE)
-				return true;
-		return false;
+			if (clientController.client.logedInSubscriber.getVal().type == Subscriber.Type.SUBSCRIBER) {
+				FamilyIndicator_checkBox.setSelected(true);
+				FamilyIndicator_checkBox.setDisable(true);
+				setFamilyDropBox();
+			}
 	}
 
+	@FXML
+	void FamilyCheckBoxClicked(ActionEvent event) {
+		NumberOfVisitors_ComboBox.getItems().clear();
+		if (FamilyIndicator_checkBox.isSelected()) {
+			// if (clientController.client.logedInSubscriber.getVal() != null || sub.type ==
+			// Subscriber.Type.SUBSCRIBER)
+			setFamilyDropBox();
+		} else {
+			NumberOfVisitors_ComboBox.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+					"13", "14", "15");
+		}
+	}
+
+	private void setFamilyDropBox() {
+		int familySize;
+		NumberOfVisitors_ComboBox.getItems().clear();
+		if (clientController.client.logedInSubscriber.getVal() != null)
+			familySize = clientController.client.logedInSubscriber.getVal().familySize;
+		else
+			familySize = sub.familySize;
+		for (int i = 1; i <= familySize; i++)
+			NumberOfVisitors_ComboBox.getItems().add("" + i);
+	}
 
 	private boolean CheckAllRequiredFields() {
 		boolean res = true;
@@ -362,26 +385,19 @@ public class GroupOrderController implements GuiController {
 		ord.phone = Phone_textBox.getText(); // need this for OrderSummary because is no phone in ParkEntry entity
 		parkEntry = createParkEntry(ownerID, parkName);
 	}
-	
+
 	private void checkIfGuideByIDAndSetFamilyCheckBox(String id) {
 		if (!id.contains("S"))
 			id = "S" + id;
 		String response = clientController.client
 				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", id));
-//		if (response.contains("was not found"))
-//			//throw new Navigator.NavigationInterruption(); // it's don't help me match just throw exception
-//			Navigator.instance().clearHistory(); // return to the main window
-			
-		Subscriber sub = ServerRequest.gson.fromJson(response, Subscriber.class);
-		if(sub.type == Subscriber.Type.GUIDE) {
-			FamilyIndicator_checkBox.setSelected(false);
-			FamilyIndicator_checkBox.setDisable(false);
-		}
-		else {
+		sub = ServerRequest.gson.fromJson(response, Subscriber.class);
+		if (sub.type == Subscriber.Type.SUBSCRIBER) {
 			FamilyIndicator_checkBox.setSelected(true);
 			FamilyIndicator_checkBox.setDisable(true);
+			setFamilyDropBox();
 		}
-			
+
 	}
 
 	/* don't delete */
@@ -407,11 +423,6 @@ public class GroupOrderController implements GuiController {
 		return ServerRequest.gson.fromJson(response, Integer.class);
 	}
 
-	public void setFamilyOrderOnly() {
-		// TODO Auto-generated method stub
-
-	}
-
 	private Order createOrderDetails() {
 		String parkName = Park_ComboBox.getValue();
 		LocalDate date = Date_DatePicker.getValue();
@@ -420,16 +431,16 @@ public class GroupOrderController implements GuiController {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis()); // get the current time
 		int numberOfVisitors = Integer.parseInt(NumberOfVisitors_ComboBox.getValue());
 		int orderID = getNextOrderID();
-		int priceOfOrder = 100; // for now, need to be calculated by other controller
 		boolean isUsed = false; // by default
 		Order.IdType type = familyOrGuideCheckBox();
 		String email = Email_textBox.getText();
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
-		String ownerID = getIdentificationString(); // TODO the real ownerID will be provided from previous page (popUp)
+		String ownerID = getIdentificationString();
 		int numberOfSubscribers = 0; // in a group order this is not relevant
-		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
-				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		Order ord = new Order(parkName, numberOfVisitors, orderID, 100, email, phone, type, orderStatus, visitTime,
+				timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		ord.priceOfOrder = RegularOrderController.calcOrderPrice(ord);
 		return ord;
 	}
 
@@ -458,9 +469,9 @@ public class GroupOrderController implements GuiController {
 	private ParkEntry createParkEntry(String ownerID, String parkID) {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
 		int numberOfSubscribers = 0;
-		int priceOfOrder = 100;
 		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.Group, ownerID, parkID, timeOfOrder, null, 1,
-				numberOfSubscribers, true, priceOfOrder); // real number of visitor will be set later
+				numberOfSubscribers, true, 100); // real number of visitor will be set later
+		entry.priceOfOrder = RegularOrderController.calcEntryPrice(entry);
 		return entry;
 	}
 

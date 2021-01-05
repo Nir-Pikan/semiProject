@@ -103,7 +103,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <CheckBox fx:id="FamilyIndicator_checkBox" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="Family Order?" GridPane.rowIndex="6">
+      <CheckBox fx:id="FamilyIndicator_checkBox" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#FamilyCheckBoxClicked" text="Family Order?" GridPane.rowIndex="6">
          <font>
             <Font size="15.0" />
          </font>

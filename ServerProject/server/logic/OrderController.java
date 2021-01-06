@@ -623,7 +623,7 @@ public class OrderController implements IController {
 	private Timestamp[] calcHoursRange(Order order, Park prk) {
 		Timestamp[] res = new Timestamp[2];
 		LocalDateTime tempTime = order.visitTime.toLocalDateTime();
-		Timestamp temp1 = Timestamp.valueOf(tempTime.plusHours(- ((int) prk.avgVisitTime) - 1)); // -1 because of <=,>= in IsOrderAllowed
+		Timestamp temp1 = Timestamp.valueOf(tempTime.minusHours(((int) prk.avgVisitTime)-1)); // -1 because of <=,>= in IsOrderAllowed
 		Timestamp temp2 = Timestamp.valueOf(tempTime.plusHours ((int)prk.avgVisitTime -1)); // -1 because of <=,>= in IsOrderAllowed
 		res[0] = temp1;
 		res[1] = temp2;

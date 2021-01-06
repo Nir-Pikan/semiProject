@@ -146,7 +146,7 @@ public class RegularOrderController implements GuiController {
 		if (Park_ComboBox.getSelectionModel().isEmpty()) {
 			if (!Park_ComboBox.getStyleClass().contains("error"))
 				Park_ComboBox.getStyleClass().add("error");
-			ParkSelectionNote.setText("* Choose park");
+			ParkSelectionNote.setText("* Select park");
 			return false;
 		}
 		Park_ComboBox.getStyleClass().remove("error");

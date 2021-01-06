@@ -34,8 +34,13 @@
          <right>
             <HBox alignment="BOTTOM_RIGHT" prefHeight="87.0" prefWidth="542.0" spacing="20.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="greetingMsg" />
-                  <Button fx:id="Login" mnemonicParsing="false" onAction="#logInOut" style="-fx-background-insets: 1;" text="LogOut" />
+                  <Label fx:id="greetingMsg" alignment="CENTER" styleClass="h2" />
+                  <VBox alignment="BOTTOM_RIGHT" fillWidth="false" prefHeight="87.0" prefWidth="146.0">
+                     <children>
+                        <Label fx:id="todayDateLabel" alignment="TOP_LEFT" prefHeight="61.0" prefWidth="176.0" styleClass="h2" text="Date:" />
+                        <Button fx:id="Login" mnemonicParsing="false" onAction="#logInOut" style="-fx-background-insets: 1;" text="LogOut" />
+                     </children>
+                  </VBox>
                </children>
             </HBox>
          </right>

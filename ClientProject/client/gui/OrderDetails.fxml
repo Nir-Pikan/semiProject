@@ -38,7 +38,7 @@
    <children>
       <Button fx:id="approveBtn" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#ApproveOrder" text="Approve Order" GridPane.columnIndex="3" GridPane.rowIndex="13" />
       <Button fx:id="cancelBtn" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#cancelOrder" text="Cancel Order" GridPane.halignment="RIGHT" GridPane.rowIndex="13" />
-      <Label prefWidth="127.0" styleClass="h2" text="Order Details:" GridPane.columnSpan="2" GridPane.halignment="RIGHT">
+      <Label prefHeight="65.0" prefWidth="203.0" styleClass="h1" text="Order Details:" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowSpan="2">
          <font>
             <Font size="18.0" />
          </font>
@@ -57,7 +57,7 @@
       <TextField fx:id="emailTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9" />
       <TextField fx:id="phoneTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
       <TextField fx:id="priceTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" />
-      <Label fx:id="orderNoTxt" text="##OrderNo##" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+      <Label fx:id="orderNoTxt" styleClass="h2" text="##OrderNo##" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowSpan="2" />
       <Label text="No of Subscribers:" GridPane.rowIndex="8" />
       <TextField fx:id="noOfSubscribersTxt" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
       <Label text="Date:" GridPane.rowIndex="4" />

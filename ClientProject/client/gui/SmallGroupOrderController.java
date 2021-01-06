@@ -22,6 +22,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.util.Callback;
 import logic.OpenOrderTimes;
 import module.GuiController;
@@ -167,7 +168,7 @@ public class SmallGroupOrderController implements GuiController {
 		if (Park_ComboBox.getSelectionModel().isEmpty()) {
 			if (!Park_ComboBox.getStyleClass().contains("error"))
 				Park_ComboBox.getStyleClass().add("error");
-			ParkNote.setText("please choose park");
+			ParkNote.setText("* Choose park");
 			return false;
 		}
 		Park_ComboBox.getStyleClass().remove("error");
@@ -185,13 +186,14 @@ public class SmallGroupOrderController implements GuiController {
 		if (Date_DatePicker.getValue() == null) {
 			if (!Date_DatePicker.getStyleClass().contains("error"))
 				Date_DatePicker.getStyleClass().add("error");
-			DateNote.setText("* Please select date");
+			DateNote.setText("* Select date");
 			return false;
 		}
 		Date_DatePicker.getStyleClass().remove("error");
 		DateNote.setText("*");
 		return true;
 	}
+
 
 	/**
 	 * Check if the email address is filled in appropriate form
@@ -205,7 +207,7 @@ public class SmallGroupOrderController implements GuiController {
 		if (email.equals("")) {
 			if (!Email_textBox.getStyleClass().contains("error"))
 				Email_textBox.getStyleClass().add("error");
-			EmailNote.setText("* Please enter Email");
+			EmailNote.setText("* Enter Email");
 			return false;
 		}
 
@@ -215,7 +217,7 @@ public class SmallGroupOrderController implements GuiController {
 		if (!email.matches(emailFormat)) {
 			if (!Email_textBox.getStyleClass().contains("error"))
 				Email_textBox.getStyleClass().add("error");
-			EmailNote.setText("* Email must be _@_._");
+			EmailNote.setText("* Wrong Format");
 			return false;
 		}
 
@@ -237,7 +239,7 @@ public class SmallGroupOrderController implements GuiController {
 		if (phoneNumber.equals("")) {
 			if (!Phone_textBox.getStyleClass().contains("error"))
 				Phone_textBox.getStyleClass().add("error");
-			PhoneNote.setText("* Please enter Phone Number");
+			PhoneNote.setText("* Enter Number");
 			return false;
 		}
 
@@ -245,7 +247,8 @@ public class SmallGroupOrderController implements GuiController {
 		if (!phoneNumber.matches("([0-9])+")) {
 			if (!Phone_textBox.getStyleClass().contains("error"))
 				Phone_textBox.getStyleClass().add("error");
-			PhoneNote.setText("* Phone Number can only contain digits");
+			PhoneNote.setText("* Worng Format(?)");
+			Tooltip.install(PhoneNote, new Tooltip("Phone Number can only contain digits"));
 			return false;
 		}
 
@@ -253,14 +256,18 @@ public class SmallGroupOrderController implements GuiController {
 		if (phoneNumber.length() != 10) {
 			if (!Phone_textBox.getStyleClass().contains("error"))
 				Phone_textBox.getStyleClass().add("error");
-			PhoneNote.setText("* Phone Number must be 10 digits long");
+			PhoneNote.setText("* Worng Format(?)");
+			Tooltip.install(PhoneNote, new Tooltip("Phone Number must be 10 digits long"));
 			return false;
 		}
 
 		Phone_textBox.getStyleClass().remove("error");
 		PhoneNote.setText("*");
+		Tooltip.uninstall(PhoneNote, new Tooltip("Phone Number can only contain digits"));
+		Tooltip.uninstall(PhoneNote, new Tooltip("Phone Number must be 10 digits long"));
 		return true;
 	}
+
 
 	// TODO Check also the hour if the date that was chosen is today
 	/**
@@ -273,7 +280,7 @@ public class SmallGroupOrderController implements GuiController {
 		if (VisitHour_ComboBox.getValue() == null) {
 			if (!VisitHour_ComboBox.getStyleClass().contains("error"))
 				VisitHour_ComboBox.getStyleClass().add("error");
-			VisitorHourNote.setText("* Please select hour");
+			VisitorHourNote.setText("* Select hour");
 			return false;
 		}
 		VisitHour_ComboBox.getStyleClass().remove("error");

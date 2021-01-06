@@ -115,6 +115,18 @@ public class MainScreenController {
 				Login.fire();
 			}
 		});
+		menu.getScene().setOnKeyReleased((event)->{
+			if(event.isControlDown()) {
+				try {
+					int num = Integer.parseInt(event.getText());
+					if(num<=0||num>menu.getChildren().size())
+						return;
+					((Button)menu.getChildren().get(num-1)).fire();
+					event.consume();
+				} catch (NumberFormatException e) {
+				}
+			}
+		});
 		return body;
 	}
 

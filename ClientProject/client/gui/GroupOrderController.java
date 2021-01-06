@@ -19,6 +19,7 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.util.Callback;
 import logic.OpenOrderTimes;
 import module.GuiController;
@@ -179,7 +180,7 @@ public class GroupOrderController implements GuiController {
 		if (Park_ComboBox.getSelectionModel().isEmpty()) {
 			if (!Park_ComboBox.getStyleClass().contains("error"))
 				Park_ComboBox.getStyleClass().add("error");
-			ParkNote.setText("please choose park");
+			ParkNote.setText("* Choose park");
 			return false;
 		}
 		Park_ComboBox.getStyleClass().remove("error");
@@ -191,7 +192,7 @@ public class GroupOrderController implements GuiController {
 		if (Date_DatePicker.getValue() == null) {
 			if (!Date_DatePicker.getStyleClass().contains("error"))
 				Date_DatePicker.getStyleClass().add("error");
-			DateNote.setText("* Please select date");
+			DateNote.setText("* Select date");
 			return false;
 		}
 		Date_DatePicker.getStyleClass().remove("error");
@@ -203,7 +204,7 @@ public class GroupOrderController implements GuiController {
 		if (VisitHour_ComboBox.getValue() == null) {
 			if (!VisitHour_ComboBox.getStyleClass().contains("error"))
 				VisitHour_ComboBox.getStyleClass().add("error");
-			VisitHourNote.setText("* Please select hour");
+			VisitHourNote.setText("* Select hour");
 			return false;
 		}
 		VisitHour_ComboBox.getStyleClass().remove("error");
@@ -215,7 +216,7 @@ public class GroupOrderController implements GuiController {
 		if (NumberOfVisitors_ComboBox.getValue() == null) {
 			if (!NumberOfVisitors_ComboBox.getStyleClass().contains("error"))
 				NumberOfVisitors_ComboBox.getStyleClass().add("error");
-			NumberOfVisitorsNote.setText("* Please select number of visitors");
+			NumberOfVisitorsNote.setText("* Select number");
 			return false;
 		}
 		NumberOfVisitors_ComboBox.getStyleClass().remove("error");
@@ -223,6 +224,11 @@ public class GroupOrderController implements GuiController {
 		return true;
 	}
 
+	/**
+	 * Check if the email address is filled in appropriate form
+	 * 
+	 * @return true if email address was filled in appropriate form, false otherwise
+	 */
 	private boolean CheckEmail() {
 		String email = Email_textBox.getText();
 
@@ -230,7 +236,7 @@ public class GroupOrderController implements GuiController {
 		if (email.equals("")) {
 			if (!Email_textBox.getStyleClass().contains("error"))
 				Email_textBox.getStyleClass().add("error");
-			EmailNote.setText("* Please enter Email");
+			EmailNote.setText("* Enter Email");
 			return false;
 		}
 
@@ -240,7 +246,7 @@ public class GroupOrderController implements GuiController {
 		if (!email.matches(emailFormat)) {
 			if (!Email_textBox.getStyleClass().contains("error"))
 				Email_textBox.getStyleClass().add("error");
-			EmailNote.setText("* Email must be _@_._");
+			EmailNote.setText("* Wrong Format");
 			return false;
 		}
 
@@ -249,6 +255,12 @@ public class GroupOrderController implements GuiController {
 		return true;
 	}
 
+	/**
+	 * Check if the phone number is filled in appropriate form
+	 * 
+	 * @return return true if id phone number filled in appropriate form, false
+	 *         otherwise
+	 */
 	private boolean CheckPhoneNumber() {
 		String phoneNumber = Phone_textBox.getText();
 
@@ -256,7 +268,7 @@ public class GroupOrderController implements GuiController {
 		if (phoneNumber.equals("")) {
 			if (!Phone_textBox.getStyleClass().contains("error"))
 				Phone_textBox.getStyleClass().add("error");
-			PhoneNote.setText("* Please enter Phone Number");
+			PhoneNote.setText("* Enter Number");
 			return false;
 		}
 
@@ -264,7 +276,8 @@ public class GroupOrderController implements GuiController {
 		if (!phoneNumber.matches("([0-9])+")) {
 			if (!Phone_textBox.getStyleClass().contains("error"))
 				Phone_textBox.getStyleClass().add("error");
-			PhoneNote.setText("* Phone Number can only contain digits");
+			PhoneNote.setText("* Worng Format(?)");
+			Tooltip.install(PhoneNote, new Tooltip("Phone Number can only contain digits"));
 			return false;
 		}
 
@@ -272,12 +285,15 @@ public class GroupOrderController implements GuiController {
 		if (phoneNumber.length() != 10) {
 			if (!Phone_textBox.getStyleClass().contains("error"))
 				Phone_textBox.getStyleClass().add("error");
-			PhoneNote.setText("* Phone Number must be 10 digits long");
+			PhoneNote.setText("* Worng Format(?)");
+			Tooltip.install(PhoneNote, new Tooltip("Phone Number must be 10 digits long"));
 			return false;
 		}
 
 		Phone_textBox.getStyleClass().remove("error");
 		PhoneNote.setText("*");
+		Tooltip.uninstall(PhoneNote, new Tooltip("Phone Number can only contain digits"));
+		Tooltip.uninstall(PhoneNote, new Tooltip("Phone Number must be 10 digits long"));
 		return true;
 	}
 

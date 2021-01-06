@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import entities.Order;
@@ -97,11 +98,7 @@ public class OrderDetailsController implements GuiController {
 
 	@FXML
 	void cancelOrder(ActionEvent event) {
-		PopUp p = new PopUp(AlertType.CONFIRMATION, "Are you sure you wand to cancel?", ButtonType.CANCEL,
-				ButtonType.CLOSE);
-		p.setTitle("Cancel Order");
-		p.setHeaderText("Cancel Order");
-		if (p.showAndWait().get() != ButtonType.CANCEL)
+		if (!PopUp.ask("Cancel Order", "Cancel Order", "Are you sure you wand to cancel?"))
 			return;
 		switch (order.orderStatus) {
 		case IDLE:
@@ -175,6 +172,10 @@ public class OrderDetailsController implements GuiController {
 		if (!response.contains("not found")) {
 			Order o = ServerRequest.gson.fromJson(response, Order.class);
 			checkOrderOwner(o);
+			if (o.visitTime.before(Timestamp.valueOf(LocalDateTime.now()))) {
+				PopUp.showError("Show Order Details", "Order Details", "The Order visit time passed");
+				throw new Navigator.NavigationInterruption();
+			}
 			addOrderDataToFields(o);
 			if (o.orderStatus == OrderStatus.CANCEL || o.orderStatus == OrderStatus.SEMICANCELED) {
 				cancelBtn.setDisable(true);

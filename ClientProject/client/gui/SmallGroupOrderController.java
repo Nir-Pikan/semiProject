@@ -168,7 +168,7 @@ public class SmallGroupOrderController implements GuiController {
 		if (Park_ComboBox.getSelectionModel().isEmpty()) {
 			if (!Park_ComboBox.getStyleClass().contains("error"))
 				Park_ComboBox.getStyleClass().add("error");
-			ParkNote.setText("* Choose park");
+			ParkNote.setText("* Select park");
 			return false;
 		}
 		Park_ComboBox.getStyleClass().remove("error");

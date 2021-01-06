@@ -29,13 +29,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Label fx:id="labelDateToday" text="Date :" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-      <TextField fx:id="textDateToday" editable="false" GridPane.columnIndex="3">
-         <GridPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </GridPane.margin>
-      </TextField>
-      <Label fx:id="labelParkManager" text="Park management " GridPane.columnSpan="2" GridPane.rowSpan="2">
+      <Label fx:id="labelParkManager" styleClass="h1" text="Park management " GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowSpan="2">
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>

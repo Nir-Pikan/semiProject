@@ -20,9 +20,9 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label layoutX="151.0" layoutY="21.0" styleClass="h1" text=" Parks details page">
+      <Label layoutX="125.0" layoutY="14.0" styleClass="h1" text=" Parks details page">
          <font>
-            <Font name="System Bold" size="18.0" />
+            <Font name="System Bold" size="24.0" />
          </font>
       </Label>
       <Button layoutX="10.0" layoutY="501.0" mnemonicParsing="false" onAction="#DeclineRequest" styleClass="btn_no" text="Decline" />

@@ -31,12 +31,6 @@ import module.Report;
 public class ReportExportController implements GuiController {
 
 	@FXML
-	private Label labelDateToday;
-
-	@FXML
-	private Label textDateToday;
-
-	@FXML
 	private Label labelParkManager;
 
 	@FXML
@@ -134,7 +128,7 @@ public class ReportExportController implements GuiController {
 			textParkId.setText(w.getPermissions().GetParkID());
 			ReportSelectionComboBox.getItems().addAll(ReportType.Visitor, ReportType.Usage, ReportType.Income);
 		}
-		textDateToday.setText(LocalDate.now().toString());
+		
 	}
 
 	private boolean CheckAllRequiredFields() {

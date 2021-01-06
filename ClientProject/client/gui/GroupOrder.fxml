@@ -33,7 +33,7 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Label alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="168.0" text="Group order" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <Label alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="168.0" styleClass="h1" text="Group order" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <font>
             <Font name="System Bold Italic" size="28.0" />
          </font>

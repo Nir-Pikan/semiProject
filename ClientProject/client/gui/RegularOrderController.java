@@ -75,11 +75,7 @@ public class RegularOrderController implements GuiController {
 		// parkEntry = null; // to be sure
 		Park_ComboBox.getItems().addAll(parkNames);
 		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
-		// ===================== delete later ===========================
-		Phone_textBox.setText("0545518526");
-		Email_textBox.setText("mirage164@gmail.com");
-		// =============================================================
-
+		
 		// set only relevant dates
 		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
 			@Override

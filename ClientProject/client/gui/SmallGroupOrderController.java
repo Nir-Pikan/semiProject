@@ -92,10 +92,6 @@ public class SmallGroupOrderController implements GuiController {
 		VisitHour_ComboBox.getItems().clear();
 		Park_ComboBox.getItems().addAll(parkNames);
 		String IdentificationID = getIdentificationString();
-		// ===================== delete later ===========================
-		Phone_textBox.setText("0545518526"); // TODO delete this later (Roman)
-		Email_textBox.setText("mirage164@gmail.com");
-		// =============================================================
 
 		stringList = FXCollections.observableArrayList(visitorsIDArray);
 		listViewVisitors.setItems(stringList);

@@ -48,8 +48,7 @@ public class MyMail {
 		infoBox("subject: " + subject + "\n\n" +messageContent, "SMS send", "SMS sent to : "+ cellPhoneNum); //use cell phone number as a header (only for vision)
 		if(!isValidEmailAddress(destinationMail))
 			return false;  // if destination Mail address is invalid return false
-		return true;
-		//return SendEmaill(destinationMail, messageContent, subject); //TODO need to replace when finished! ~Nir Pikan~
+		return SendEmaill(destinationMail, messageContent, subject);
 		
 	}
 

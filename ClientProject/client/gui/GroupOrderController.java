@@ -90,10 +90,6 @@ public class GroupOrderController implements GuiController {
 				"14", "15");
 		PlaceOrder_Button.setDisable(false);
 		checkIfGuide();
-		// ===================== delete later ===========================
-		Phone_textBox.setText("0545518526");
-		Email_textBox.setText("mirage164@gmail.com");
-		// =============================================================
 
 		// set only relevant dates
 		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {

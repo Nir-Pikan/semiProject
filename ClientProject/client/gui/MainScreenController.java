@@ -1,5 +1,6 @@
 package gui;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,9 @@ public class MainScreenController {
 	@FXML
 	private Label greetingMsg;
 
+    @FXML
+    private Label todayDateLabel;
+	
 	@FXML
 	private Button Login;
 
@@ -76,6 +80,9 @@ public class MainScreenController {
 	 * @return the body of the main screen for the navigator
 	 */
 	public Pane init() {
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		todayDateLabel.setText("");
+		todayDateLabel.setText("Date: "+currentTime.toLocalDateTime().toLocalDate().toString());
 		Login.setVisible(false);
 		Login.setManaged(false);
 		clientController.client.logedInSubscriber.AddListener((prop, oldVal, newVal) -> {

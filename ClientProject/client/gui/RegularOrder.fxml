@@ -79,7 +79,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="184.0" text="Regular order" GridPane.columnSpan="3" GridPane.halignment="CENTER">
+      <Label alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="184.0" styleClass="h1" text="Regular order" GridPane.columnSpan="3" GridPane.halignment="CENTER">
          <font>
             <Font name="System Bold Italic" size="28.0" />
          </font>

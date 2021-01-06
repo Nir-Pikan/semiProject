@@ -287,6 +287,8 @@ public class GroupOrderController implements GuiController {
 			if (spontaneous == true) {
 				// ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);
 				parkEntry.numberOfVisitors = Integer.parseInt(NumberOfVisitors_ComboBox.getValue());
+				if(parkEntry.entryType == ParkEntry.EntryType.Subscriber)
+					parkEntry.numberOfSubscribers = parkEntry.numberOfVisitors;
 				parkEntry.priceOfOrder = RegularOrderController.calcEntryPrice(parkEntry);
 				MoveToTheNextPage(ord, parkEntry);
 				return;
@@ -366,13 +368,13 @@ public class GroupOrderController implements GuiController {
 		Park_ComboBox.setDisable(true);
 		VisitHour_ComboBox.setDisable(true);
 		Date_DatePicker.setDisable(true);
-		checkIfGuideByIDAndSetFamilyCheckBox(ownerID);
+		ParkEntry.EntryType entryType = checkIfGuideByIDAndSetFamilyCheckBox(ownerID);
 		ord.email = Email_textBox.getText(); // need this for OrderSummary because is no email in ParkEntry entity
 		ord.phone = Phone_textBox.getText(); // need this for OrderSummary because is no phone in ParkEntry entity
-		parkEntry = createParkEntry(ownerID, parkName);
+		parkEntry = createParkEntry(ownerID, parkName, entryType);
 	}
 
-	private void checkIfGuideByIDAndSetFamilyCheckBox(String id) {
+	private ParkEntry.EntryType checkIfGuideByIDAndSetFamilyCheckBox(String id) {
 		if (!id.contains("S"))
 			id = "S" + id;
 		String response = clientController.client
@@ -382,7 +384,9 @@ public class GroupOrderController implements GuiController {
 			FamilyIndicator_checkBox.setSelected(true);
 			FamilyIndicator_checkBox.setDisable(true);
 			setFamilyDropBox();
+			return ParkEntry.EntryType.Subscriber;
 		}
+		return ParkEntry.EntryType.Group;
 
 	}
 
@@ -450,10 +454,10 @@ public class GroupOrderController implements GuiController {
 		((OrderSummaryController) g).addOrderDataToFields(ord, parkEntry);
 	}
 
-	private ParkEntry createParkEntry(String ownerID, String parkID) {
+	private ParkEntry createParkEntry(String ownerID, String parkID, ParkEntry.EntryType type) {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
 		int numberOfSubscribers = 0;
-		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.Group, ownerID, parkID, timeOfOrder, null, 1,
+		ParkEntry entry = new ParkEntry(type, ownerID, parkID, timeOfOrder, null, 1,
 				numberOfSubscribers, true, 100); // real number of visitor will be set later
 		return entry;
 	}

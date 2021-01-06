@@ -26,11 +26,6 @@ public class ParkManagerParametersUpdateController implements GuiController {
 	private String[] currentParameters;
 	private String parkID;
 
-	@FXML
-	private Label labelDateToday;
-
-	@FXML
-	private TextField textDateToday;
 
 	@FXML
 	private Label labelParkManager;
@@ -176,7 +171,7 @@ public class ParkManagerParametersUpdateController implements GuiController {
 
 	@Override
 	public void init() {
-		textDateToday.setText(LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+		
 		setPark(clientController.client.logedInWorker.getVal().getPermissions().GetParkID());
 	}
 

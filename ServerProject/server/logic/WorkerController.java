@@ -45,8 +45,14 @@ public class WorkerController implements IController {
 			String[] parameters = ServerRequest.gson.fromJson(request.data, String[].class);
 			String userName = parameters[0];
 			String password = parameters[1];
+			try {
 			Worker worker = LogInWorker(userName, password);
 			return ServerRequest.gson.toJson(worker, Worker.class);
+			}catch(IllegalArgumentException ex) {
+				if(ex.getMessage().equals("logged"))
+					return "user already logged in";
+			}
+			
 		}
 		if (request.job.equals("LogOutWorker")) {
 			String userName = request.data;
@@ -113,7 +119,7 @@ public class WorkerController implements IController {
 			boolean isLogged = ParseIsLoginStringToBool(result.getString(8));
 			Permissions permissions = ParseStringToPermissions(result.getString(9));
 			if (isLogged)
-				return null;
+				throw new IllegalArgumentException("logged");
 			isLogged = true;
 			Worker worker = new Worker(userName, FirstName, LastName, WorkerID, Email, WorkerType, password, isLogged,
 					permissions);

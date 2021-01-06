@@ -152,7 +152,7 @@ public class MainScreenController {
 	private static Map<String, MenuItem> createWorkerMap() {
 		Map<String, MenuItem> res = new HashMap<String, MenuItem>();
 
-		res.put("Registration", new MenuItem("Subscriber registration", "RegisterCommonDetails"));
+		res.put("Registration", new MenuItem("Subscriber Registration", "RegisterCommonDetails"));
 		res.put("VistitorsView", new MenuItem("Casual Orders & View visitors", "VisitorsInThePark"));
 		res.put("ReportExport", new MenuItem("Generate Reports", "ReportExport"));
 		res.put("EditParameters", new MenuItem("Change Park Parameters", "ParkManagerParametersUpdate"));

@@ -150,19 +150,19 @@ public class WaitingListController implements IController {
 				"Your Order No: "+nextWaiting.orderID+ " can be accepted,\n"//content
 						+ " Please Go to GoNature and approve/cancel this order."
 						+ "This offer is for one hour only!",
-						"Order "+nextWaiting.orderID+" out if waiting list");//subject
+						"Order "+nextWaiting.orderID+" out of waiting list");//subject
 		
 	}
 	
 	private void notifyNewOrder(Order nextWaiting) {
 		messageC.SendEmailAndSMS(nextWaiting.email, nextWaiting.phone,
 				"Your Order Added to the waiting list:\n" +
-						"OrderId: " + nextWaiting.orderID +"\n" +
+						"Order ID: " + nextWaiting.orderID +"\n" +
 									"visit time: " + nextWaiting.visitTime.toLocalDateTime().toLocalDate() + " " + nextWaiting.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n" +
 									"number of visitors: " + nextWaiting.numberOfVisitors + "\n" +
 									"Price: "+ nextWaiting.priceOfOrder+"\n" + 
 									"Thank for using GoNature",
-						"Order "+nextWaiting.orderID+" out if waiting list");//subject
+						"Order "+nextWaiting.orderID+" added to the waiting list");//subject
 		
 	}
 

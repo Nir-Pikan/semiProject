@@ -15,9 +15,9 @@
 
 <GridPane hgap="10.0" prefHeight="540.0" prefWidth="460.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SmallGroupOrderController">
    <columnConstraints>
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="135.0" minWidth="10.0" prefWidth="92.0" />
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="188.0" minWidth="10.0" prefWidth="160.0" />
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="156.0" minWidth="10.0" prefWidth="148.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="135.0" minWidth="10.0" prefWidth="107.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="188.0" minWidth="10.0" prefWidth="164.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="156.0" minWidth="10.0" prefWidth="147.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="60.0" />
@@ -84,7 +84,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label alignment="BOTTOM_CENTER" text="Small group order" GridPane.columnSpan="3" GridPane.halignment="CENTER">
+      <Label alignment="BOTTOM_CENTER" styleClass="h1" text="Small group order" GridPane.columnSpan="3" GridPane.halignment="CENTER">
          <font>
             <Font name="System Bold Italic" size="28.0" />
          </font>
@@ -94,14 +94,14 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label text="Phone No" GridPane.rowIndex="6">
+      <Label text="Phone Number" GridPane.rowIndex="6">
          <font>
             <Font size="15.0" />
          </font></Label>
       <TextField fx:id="Phone_textBox" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <ListView fx:id="listViewVisitors" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="7" GridPane.rowSpan="5" />
       <Button fx:id="AddVisitor_Button" mnemonicParsing="false" onAction="#AddVisitor_Button_Clicked" prefHeight="25.0" prefWidth="92.0" text="Add Visitor" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="12" />
-      <Button fx:id="RemoveVisitor_Button" disable="true" mnemonicParsing="false" onAction="#RemoveVisitor_Button_Clicked" text="Remove Visitor" GridPane.rowIndex="12" />
+      <Button fx:id="RemoveVisitor_Button" disable="true" mnemonicParsing="false" onAction="#RemoveVisitor_Button_Clicked" prefHeight="25.0" prefWidth="109.0" text="Remove Visitor" GridPane.rowIndex="12" />
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

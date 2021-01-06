@@ -97,6 +97,6 @@
          </padding>
       </Label>
       <Label fx:id="textOrdersCanceled" maxWidth="-Infinity" prefHeight="17.0" prefWidth="314.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-      <PieChart fx:id="pieChartCancel" prefHeight="255.0" prefWidth="227.0" title="Cancel Statisics" GridPane.columnSpan="4" GridPane.rowIndex="10" GridPane.rowSpan="8" />
+      <PieChart fx:id="pieChartCancel" legendVisible="false" prefHeight="197.0" prefWidth="787.0" title="Cancel Statisics" GridPane.columnSpan="4" GridPane.rowIndex="10" GridPane.rowSpan="13" />
    </children>
 </GridPane>

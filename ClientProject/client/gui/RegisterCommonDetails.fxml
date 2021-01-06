@@ -79,7 +79,7 @@
          </toggleGroup></RadioButton>
       <RadioButton fx:id="GuideRadioBtn" mnemonicParsing="false" onAction="#HideFamilySize" text="Guide" toggleGroup="$typeGroup" GridPane.columnIndex="2" GridPane.rowIndex="9" />
       <Label fx:id="FamilySizeLabel" text="Family Size" GridPane.rowIndex="11" />
-      <Spinner fx:id="FamilySizeSpinBox" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+      <Spinner fx:id="FamilySizeSpinBox" GridPane.columnIndex="1" GridPane.rowIndex="11" />
       <Button fx:id="NextBtn" mnemonicParsing="false" onAction="#MoveToNextPage" text="Next" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="12">
          <GridPane.margin>
             <Insets />

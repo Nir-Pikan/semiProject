@@ -73,6 +73,10 @@ public class LoginController implements GuiController
 		ServerRequest serverRequest = new ServerRequest(Manager.Worker,
 				"LogInWorker", ServerRequest.gson.toJson(data,String[].class));
 		String response = clientController.client.sendRequestAndResponse(serverRequest);
+		if(response.equals("user already logged in")) {
+			PopUp.showError("Sign up error", "Faild to log in", "User already logged in");
+			return;
+		}
 		Worker worker = ServerRequest.gson.fromJson(response, Worker.class);
 		if(worker == null)
 		{

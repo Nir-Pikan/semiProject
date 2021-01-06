@@ -432,7 +432,7 @@ public class OrderController implements IController {
 	}
 
 	private String genereteApprovalRequestMessage(Order order) {
-		return "Please Approve or Cancel this order:\n" + "OrderId: " + order.orderID + "\n" + "visit time: "
+		return "Please Approve or Cancel this order:\n" + "Order ID: " + order.orderID + "\n" + "visit time: "
 				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
 				+ order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n"
 				+ "number of visitors: " + order.numberOfVisitors + "\n" + "Price: " + order.priceOfOrder + "\n"
@@ -440,7 +440,7 @@ public class OrderController implements IController {
 	}
 
 	private String genereteMessage(Order order) {
-		return "Your New Order:\n" + "OrderId: " + order.orderID + "\n" + "visit time: "
+		return "Your New Order:\n" + "Order ID: " + order.orderID + "\n" + "visit time: "
 				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
 				+ order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n"
 				+ "number of visitors: " + order.numberOfVisitors + "\n" + "Price: " + order.priceOfOrder + "\n"
@@ -448,7 +448,7 @@ public class OrderController implements IController {
 	}
 
 	private String genereteCanceldMessage(Order order) {
-		return "Your Order Canceld:\n" + "OrderId: " + order.orderID + "\n" + "visit time: "
+		return "Your Order Canceld:\n" + "Order ID: " + order.orderID + "\n" + "visit time: "
 				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
 				+ order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n"
 				+ "number of visitors: " + order.numberOfVisitors + "\n" + "Price: " + order.priceOfOrder + "\n"

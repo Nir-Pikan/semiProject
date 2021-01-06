@@ -124,10 +124,11 @@
 	-fx-text-fill: black;
 }
 
-.default-color0.chart-pie { -fx-pie-color: #83C1D0; }
-.default-color1.chart-pie { -fx-pie-color: #1C2729; }
+
+.default-color3.chart-pie { -fx-pie-color: #1C2729; }
 .default-color2.chart-pie { -fx-pie-color: #538996; }
-.default-color3.chart-pie { -fx-pie-color: #41a9c9; }
+.default-color1.chart-pie { -fx-pie-color: #41a9c9; }
+.default-color0.chart-pie { -fx-pie-color: #83C1D0; }
 .chart-pie-label {-fx-fill: white;}
 
 .spinner .increment-arrow-button,

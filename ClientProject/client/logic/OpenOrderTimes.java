@@ -90,13 +90,13 @@ public class OpenOrderTimes {
 			p.setHeaderText("Available Order Times");
 			ComboBox<LocalTime> alternateTimes = new ComboBox<LocalTime>();
 			alternateTimes.getItems().addAll(available);
-			p.getDialogPane().setGraphic(new VBox(10,
+			p.getDialogPane().setContent(new VBox(10,
 					new Label("Available times for your order at "+ord.visitTime.toLocalDateTime().toLocalDate()),
 					new HBox(10,
 							new Label("Please choose your time: "),
 							alternateTimes)));
 			if(p.showAndWait().get() == ButtonType.OK) {
-				ord.visitTime = Timestamp .valueOf(ord.visitTime.toLocalDateTime().toLocalDate().atTime(alternateTimes.getValue()));
+				ord.visitTime = Timestamp .valueOf(ord.visitTime.toLocalDateTime().toLocalDate().atTime(alternateTimes.getValue()));//TODO times == null
 				return ord;
 			}
 		}

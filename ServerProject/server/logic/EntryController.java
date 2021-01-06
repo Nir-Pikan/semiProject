@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import entities.Park;
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
 import io.DbController;
@@ -114,9 +115,13 @@ public class EntryController implements IController {
 			dbController = DbController.getInstance();
 		createTable();
 
-		if (newEntry.numberOfVisitors > newEntry.numberOfVisitors)
+		if (newEntry.numberOfSubscribers > newEntry.numberOfVisitors)
 			return false;
 
+		Park p = park.getPark(newEntry.parkID);
+		if(newEntry.numberOfVisitors >(p.maxCapacity-p.currentNumOfVisitors) )
+			return false;
+		
 		PreparedStatement pstmt = dbController.getPreparedStatement("INSERT INTO parkEntry"
 				+ "( entryType , personID , parkID , arriveTime , exitTime , numberOfVisitors , numberOfSubscribers , isCasual , priceOfOrder , priceOfEntry ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 		try {

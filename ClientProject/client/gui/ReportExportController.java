@@ -1,17 +1,11 @@
 package gui;
 
-import java.sql.Date;
-import java.sql.Time;
-
 /**
  * Sample Skeleton for 'ReportExportWindowBoundary.fxml' Controller Class
  */
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
 
 import entities.ParkNameAndTimes;
 import entities.Worker;
@@ -23,7 +17,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
-import module.Navigator;
 import module.PopUp;
 import module.Report;
 

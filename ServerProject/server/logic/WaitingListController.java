@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.mysql.cj.protocol.ServerSession;
-
 import entities.Order;
 import entities.Order.IdType;
 import entities.Order.OrderStatus;

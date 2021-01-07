@@ -11,6 +11,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+//TODO add javadoc
 public class ConsoleReplacer {
 
 	private TextFlow flow;

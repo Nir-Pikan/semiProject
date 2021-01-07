@@ -2,7 +2,6 @@ package entities;
 
 /**
  * A class containing the data of a single park.
- * <p>
  */
 public class Park {
 

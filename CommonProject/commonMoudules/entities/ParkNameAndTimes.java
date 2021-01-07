@@ -15,10 +15,10 @@ public class ParkNameAndTimes {
 	/**
 	 * Creates a {@link ParkNameAndTimes}
 	 * 
-	 * @param parkName the park's name
-	 * @param parkID   the park's ID
-	 * @param openTime the park's open time
-	 * @param closeTime  the park's closing time
+	 * @param parkName  the park's name
+	 * @param parkID    the park's ID
+	 * @param openTime  the park's open time
+	 * @param closeTime the park's closing time
 	 */
 	public ParkNameAndTimes(String parkName, String parkID, int openTime, int closeTime) {
 		this.parkName = parkName;

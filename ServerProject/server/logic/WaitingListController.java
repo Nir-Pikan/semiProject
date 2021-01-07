@@ -37,7 +37,7 @@ public class WaitingListController implements IController {
 	
 	private static int AvgVisitTime = 4; //TODO change to park visit Time
 	
-	
+	/** creates the {@link WaitingListController} */
 	public WaitingListController(OrderController order, MessageController messageC) {
 		super();
 		this.order = order;
@@ -92,7 +92,12 @@ public class WaitingListController implements IController {
 		if (isCreated)
 			System.out.println("Table has been created");
 	}
-	
+	//TODO Nir check
+	/**
+	 * Handle Cancel will move status to SEMICANCELED and will wait for respond or will cancel 
+	 * @param canceled the order that could be canceled
+	 * @param thread the thread in which it will run
+	 */
 	private void handelCancel(Order canceled,WakeableThread thread){
 		canceled.orderStatus = OrderStatus.SEMICANCELED;
 		canceled.isUsed = true;
@@ -118,8 +123,12 @@ public class WaitingListController implements IController {
 		canceled.orderStatus = OrderStatus.CANCEL;
 		order.UpdateOrder(canceled);
 	}
-	
-	
+	//TODO Nir check
+	/**
+	 * Adding new order to waiting list
+	 * @param ord the order that will be added to waiting list
+	 * @return if added successfully 
+	 */
 	private boolean AddNewOrderTowaitingList(Order ord) {
 		Platform.runLater(()->{notifyNewOrder(ord);});
 		PreparedStatement ps = dbController
@@ -146,7 +155,11 @@ public class WaitingListController implements IController {
 		}
 		return false;
 	}
-	
+	//TODO Nir check
+	/**
+	 * Notify the waiting order
+	 * @param nextWaiting notify the next waiting order
+	 */
 	private void notifyWaitingOrder(Order nextWaiting) {
 		messageC.SendEmailAndSMS(nextWaiting.email, nextWaiting.phone,
 				"Your Order No: "+nextWaiting.orderID+ " can be accepted,\n"//content
@@ -155,7 +168,11 @@ public class WaitingListController implements IController {
 						"Order "+nextWaiting.orderID+" out of waiting list");//subject
 		
 	}
-	
+	//TODO Nir check
+	/**
+	 * Notify new order
+	 * @param nextWaiting notify new order 
+	 */
 	private void notifyNewOrder(Order nextWaiting) {
 		messageC.SendEmailAndSMS(nextWaiting.email, nextWaiting.phone,
 				"Your Order Added to the waiting list:\n" +
@@ -167,7 +184,11 @@ public class WaitingListController implements IController {
 						"Order "+nextWaiting.orderID+" added to the waiting list");//subject
 		
 	}
-
+	//TODO Nir check
+	/**
+	 * Delete the order from waiting list
+	 * @param order the order that you want to delete
+	 */
 	private void deleteFromWaitingList(Order order) {
 		PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM waitingList WHERE orderID = ?;");
 		try {
@@ -181,10 +202,11 @@ public class WaitingListController implements IController {
 		
 	}
 
+	//TODO Nir check
 	/**
-	 * get next and set to messasge sent
-	 * @param canceled
-	 * @return
+	 * Get next and set to messasge sent
+	 * @param canceled order you want to cancel
+	 * @return the next order waiting
 	 */
 	private synchronized Order getNextOrder(Order canceled) {
 		Timestamp minimum = Timestamp.valueOf(canceled.visitTime.toLocalDateTime().minusSeconds(TimeUnit.HOURS.toSeconds(AvgVisitTime-1)));
@@ -218,7 +240,11 @@ public class WaitingListController implements IController {
 		}
 		return null;
 	}
-	
+	//TODO Nir check
+	/**
+	 * Accept waiting order
+	 * @param orderId the id of the order
+	 */
 	private void acceptWaitingOrder(int orderId) {
 		//set canceled Order as canceled 
 				WakeableThread waitingT = currentWaitingCancelation.get(orderId);
@@ -236,6 +262,12 @@ public class WaitingListController implements IController {
 		waitingT.wake();
 	}
 
+	//TODO Nir check
+	/**
+	 * Get waiting order
+	 * @param orderId the id of the order you want
+	 * @return the order by order id
+	 */
 	private Order getwaitingOrder(int orderId) {
 		ResultSet res = dbController.sendQuery("SELECT * FROM waitingList WHERE orderID = \"" + orderId + "\";");
 		

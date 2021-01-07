@@ -12,8 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import mocks.CardReaderMock;
-//import mocks.CardReaderMock;
-import module.GuiController;
 import module.Navigator;
 
 public class MainClient extends Application{

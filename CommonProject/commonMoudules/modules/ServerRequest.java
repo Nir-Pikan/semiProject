@@ -28,7 +28,7 @@ public class ServerRequest {
 	}
 
 	public enum Manager {
-		Subscriber, Worker, Discount, Park, Order, Entry, WaitingList, Report,Message
+		Subscriber, Worker, Discount, Park, Order, Entry, WaitingList, Report, Message
 	}
 
 	/** serializer for objects */

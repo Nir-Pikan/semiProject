@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
 import io.clientController;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;

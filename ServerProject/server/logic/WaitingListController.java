@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.mysql.cj.protocol.ServerSession;
-
 import entities.Order;
 import entities.Order.IdType;
 import entities.Order.OrderStatus;
@@ -22,25 +20,24 @@ import javafx.application.Platform;
 import modules.IController;
 import modules.PeriodicallyRunner;
 import modules.ServerRequest;
+import modules.SystemConfig;
 import modules.WakeableThread;
 
 
 public class WaitingListController implements IController {
 	private OrderController order; 
 	private MessageController messageC;
-	
+	private ParkController parkC;
 	private DbController dbController;
 	private Map<Integer,WakeableThread> currentWaitingCancelation;//the order who are we waiting for
 	private Map<WakeableThread,Order> currentCancelation;//the canceled order of the thread 
-
-	
-	private static int AvgVisitTime = 4; //TODO change to park visit Time
 	
 	
-	public WaitingListController(OrderController order, MessageController messageC) {
+	public WaitingListController(OrderController order, MessageController messageC,ParkController parkC) {
 		super();
 		this.order = order;
 		this.messageC = messageC;
+		this.parkC = parkC;
 		dbController = DbController.getInstance();
 		currentWaitingCancelation = new HashMap<Integer, WakeableThread>();
 		currentCancelation = new HashMap<WakeableThread, Order>();
@@ -64,7 +61,8 @@ public class WaitingListController implements IController {
 	}
 
 	private void InitWaitingListCleaner() {
-		PeriodicallyRunner.runEveryDayAt(23, 00, ()->{
+		int[] cancel = SystemConfig.configuration.RemoveFromWatingListTime;
+		PeriodicallyRunner.runEveryDayAt(cancel[0], cancel[1], ()->{
 			PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM waitingList WHERE visitTime < ?;");
 			
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
@@ -100,7 +98,7 @@ public class WaitingListController implements IController {
 			final Order orderToNotify = nextWaiting;
 			Platform.runLater(()->{notifyWaitingOrder(orderToNotify);});
 			currentWaitingCancelation.put(nextWaiting.orderID,thread);
-			if(thread.sleepUntillWoken(TimeUnit.HOURS, 1)) {
+			if(thread.sleepUntillWoken(TimeUnit.SECONDS, SystemConfig.configuration.WaitingListTimer)) {
 				//if woken by user interaction
 				if(!currentCancelation.containsKey(thread))
 					return;//exit if finished with this cancellation
@@ -185,6 +183,7 @@ public class WaitingListController implements IController {
 	 * @return
 	 */
 	private synchronized Order getNextOrder(Order canceled) {
+		long AvgVisitTime = new Double(parkC.getAVGvisitTime(canceled.parkSite)).longValue();
 		Timestamp minimum = Timestamp.valueOf(canceled.visitTime.toLocalDateTime().minusSeconds(TimeUnit.HOURS.toSeconds(AvgVisitTime-1)));
 		Timestamp maximum = Timestamp.valueOf(canceled.visitTime.toLocalDateTime().plusSeconds(TimeUnit.HOURS.toSeconds(AvgVisitTime)));
 		 PreparedStatement ps = dbController.getPreparedStatement("SELECT * FROM waitingList WHERE timestamp(visitTime) >= timestamp( ? ) " + 
@@ -227,7 +226,7 @@ public class WaitingListController implements IController {
 				Order acceptedOrder = getwaitingOrder(orderId);
 				
 		acceptedOrder.orderStatus = OrderStatus.IDLE;
-				order.AddNewOrder(acceptedOrder);//TODO Or check if the time is after the approval time and set to confirmed if passed
+				order.AddNewOrder(acceptedOrder);
 				deleteFromWaitingList(acceptedOrder);
 				
 			currentWaitingCancelation.remove(orderId);

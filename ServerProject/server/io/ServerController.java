@@ -3,16 +3,12 @@ package io;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import entities.Permission;
-import entities.Permissions;
-import entities.Worker;
 import gui.ServerGuiController;
 import logic.DiscountController;
 import logic.EntryController;
 import logic.MessageController;
 import logic.OrderController;
 import logic.ParkController;
-import logic.ReportController;
 import logic.SubscriberController;
 import logic.WaitingListController;
 import logic.WorkerController;
@@ -20,6 +16,9 @@ import modules.ServerRequest;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
+/**
+ * the server's controller class
+ */
 public class ServerController extends AbstractServer {
 
 	public static int DEFAULT_SERVER_PORT = 5555;
@@ -35,7 +34,6 @@ public class ServerController extends AbstractServer {
 	private OrderController order;
 	private EntryController entry;
 	private WaitingListController waitingList;
-	private ReportController report;
 
 	/** controller to show user connection */
 	private static ServerGuiController gui;
@@ -56,6 +54,14 @@ public class ServerController extends AbstractServer {
 		}
 	}
 
+	/**
+	 * start running the server
+	 * 
+	 * @param port the server's port
+	 * @param gui  the {@link ServerGuiController} to work with
+	 * @throws SQLException
+	 * @return the {@link ServerController}
+	 */
 	public static ServerController startServer(int port, ServerGuiController gui) throws SQLException {
 		ServerController.gui = gui;
 		return new ServerController(port);
@@ -65,7 +71,7 @@ public class ServerController extends AbstractServer {
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		String parsed = (String) msg;
 		String response = null;
-		System.out.println("received message > "+parsed);
+		System.out.println("received message > " + parsed);
 		ServerRequest sr = ServerRequest.fromJson(parsed);
 		switch (sr.manager) {
 		case Discount:
@@ -79,9 +85,6 @@ public class ServerController extends AbstractServer {
 			break;
 		case Park:
 			response = park.handleRequest(sr);
-			break;
-		case Report:
-			response = report.handleRequest(sr);
 			break;
 		case Subscriber:
 			response = subscriber.handleRequest(sr);
@@ -116,7 +119,6 @@ public class ServerController extends AbstractServer {
 	@Override
 	protected void clientConnected(ConnectionToClient client) {
 		System.out.println("new client connected: " + client);
-		// TODO prototype only code
 		gui.setConnected(client.getInetAddress().getHostAddress(), client.getInetAddress().getHostName());
 		// wait for the client to die and call clientDisconnected
 		new Thread(() -> {
@@ -140,21 +142,22 @@ public class ServerController extends AbstractServer {
 		Object obj = client.getInfo("workerUsername");
 		if (obj != null && obj instanceof String)
 			worker.updateWorkerLogginDB((String) obj, false);
-		// TODO prototype only code
 		gui.setDisconnected();
 	}
 
 	/**
-	 * This method overrides the one in the superclass. Called when the server
-	 * starts listening for connections.
+	 * This method overrides the one in the superclass.
+	 * <p>
+	 * Called when the server starts listening for connections.
 	 */
 	protected void serverStarted() {
 		System.out.println("Server listening for connections on port " + getPort());
 	}
 
 	/**
-	 * This method overrides the one in the superclass. Called when the server stops
-	 * listening for connections.
+	 * This method overrides the one in the superclass.
+	 * <p>
+	 * Called when the server stops listening for connections.
 	 */
 	protected void serverStopped() {
 		System.out.println("Server has stopped listening for connections.");
@@ -178,8 +181,7 @@ public class ServerController extends AbstractServer {
 		order = new OrderController(park, messageC, subscriber, discount);
 		entry = new EntryController(park, messageC, subscriber, discount);
 		//
-		waitingList = new WaitingListController(order, messageC);
-		report = new ReportController(order, entry, park);
+		waitingList = new WaitingListController(order, messageC,park);
 	}
 
 	@Override

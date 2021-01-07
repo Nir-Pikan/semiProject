@@ -13,11 +13,12 @@ public class ParkEntry {
 	public boolean isCasual;
 	public float priceOfOrder;
 	public float priceOfEntry;
-	public  int numberOfSubscribers;
-	
+	public int numberOfSubscribers;
+
 	/**
 	 * <b>Do not use</b>
-	 * <p><b>For usage of db only by receiving data</b>
+	 * <p>
+	 * <b>For usage of DB only by receiving data</b>
 	 */
 	public ParkEntry(EntryType entryType, String personID, String parkID, Timestamp arriveTime, Timestamp exitTime,
 			int numberOfVisitors, int numberOfSubscribers, boolean isCasual, float priceOfOrder, float priceOfEntry) {
@@ -27,24 +28,26 @@ public class ParkEntry {
 		this.arriveTime = arriveTime;
 		this.exitTime = exitTime;
 		this.numberOfVisitors = numberOfVisitors;
-		this.numberOfSubscribers=numberOfSubscribers;
+		this.numberOfSubscribers = numberOfSubscribers;
 		this.isCasual = isCasual;
 		this.priceOfOrder = priceOfOrder;
 		this.priceOfEntry = priceOfEntry;
 	}
 
-/**
- * Constuctor for adding new parkEntry
- * @param entryType can be {Personal, Subscriber, Group, PrivateGroup}
- * @param personID the id of person who made the reservation
- * @param parkID id of the park 
- * @param arriveTime entry time to the park
- * @param exitTime exit time from the park
- * @param numberOfVisitors number of total visitors
- * @param numberOfSubscribers number of subscribers of total visitors
- * @param isCasual true only if it was not orded before
- * @param price will be implied only if isCasual=true
- */
+	/**
+	 * Constructor for adding new parkEntry
+	 * 
+	 * @param entryType           can be {Personal, Subscriber, Group, PrivateGroup}
+	 * @param personID            the ID of person who made the reservation
+	 * @param parkID              ID of the park
+	 * @param arriveTime          entry time to the park
+	 * @param exitTime            exit time from the park
+	 * @param numberOfVisitors    number of total visitors
+	 * @param numberOfSubscribers number of subscribers of total visitors
+	 * @param isCasual            true only if its a casual visit (and not a
+	 *                            registered order)
+	 * @param price               the price of the entry
+	 */
 	public ParkEntry(EntryType entryType, String personID, String parkID, Timestamp arriveTime, Timestamp exitTime,
 			int numberOfVisitors, int numberOfSubscribers, boolean isCasual, float price) {
 		this.entryType = entryType;
@@ -53,7 +56,7 @@ public class ParkEntry {
 		this.arriveTime = arriveTime;
 		this.exitTime = exitTime;
 		this.numberOfVisitors = numberOfVisitors;
-		this.numberOfSubscribers=numberOfSubscribers;
+		this.numberOfSubscribers = numberOfSubscribers;
 		this.isCasual = isCasual;
 		if (isCasual) {
 			this.priceOfEntry = price;

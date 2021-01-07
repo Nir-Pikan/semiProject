@@ -12,9 +12,7 @@ import entities.Order.OrderStatus;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import module.GuiController;
@@ -165,6 +163,7 @@ public class OrderDetailsController implements GuiController {
 	}
 
 	private boolean getOrder(int orederIDint) {
+		lblWaitingList.setVisible(false);
 		String orderID = orederIDint + "";
 		// check if normal order
 		String response = clientController.client

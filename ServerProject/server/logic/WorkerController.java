@@ -88,13 +88,6 @@ public class WorkerController implements IController {
 			return false;
 		}
 		return true;
-
-		// TODO delete, bugged ~Nir Pikan~
-//		return dbController.sendUpdate("INSERT INTO worker VALUES (" + worker.getFirstName() + ","
-//				+ worker.getLastName() + "," + worker.getWorkerID() + "," + worker.getEmail() + ","
-//				+ worker.getUserName() + "," + worker.getWorkerType() + "," + worker.getPassword() + ","
-//				+ ParseIsLoginBoolToString(worker.getIsLogged()) + ","
-//				+ ParsePermissionsToString(worker.getPermissions()) + ");");
 	}
 
 	/**
@@ -126,7 +119,7 @@ public class WorkerController implements IController {
 			if (!updateWorkerLogginDB(worker.getUserName(), true))
 				return null;
 			return worker;
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			return null;
 		}
 	}

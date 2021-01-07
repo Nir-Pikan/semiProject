@@ -28,7 +28,7 @@ public class CardReaderController {
 	 * 
 	 * @param id the ID of visitor to be checked
 	 */
-	public void enterVisitor(String id, int numberOfVisitors) {
+	public void enterVisitor(String id, int numberOfVisitors,int numberOfSubscribers) {
 		// TODO checks if visitor allowed to enter to the park (Roman)
 
 		ServerRequest sr = new ServerRequest(Manager.Order, "GetOrderByVisitorID",
@@ -43,6 +43,13 @@ public class CardReaderController {
 			if (!order.isUsed)
 				if (order.visitTime.getTime() <= ( currentTime.getTime()+ TimeUnit.MINUTES.toMillis(30))
 						&& order.visitTime.getTime() >= (currentTime.getTime())- TimeUnit.MINUTES.toMillis(30)) {
+					if(order.numberOfVisitors<numberOfVisitors || order.numberOfSubscribers<numberOfSubscribers) {
+						
+						PopUp.showInformation("Wrong input", "Wrong input",
+								"Number of people or Number of Subscriber is Larger then in the original order");
+						return;
+					}
+					
 					currentOrder = order;
 					break;
 				}
@@ -58,19 +65,22 @@ public class CardReaderController {
 				PopUp.showInformation("No such order for time", "No such order for time",
 						"In Order :" + currentOrder.numberOfVisitors + "\nCame to the park : " + numberOfVisitors);
 			} else {
-				updateEntry(currentOrder, numberOfVisitors);
+				updateEntry(currentOrder, numberOfVisitors,numberOfSubscribers);
 
 			}
 		}
 
 	}
 
-	private void updateEntry(Order currentOrder, int numberOfVisitors) {
-
+	private void updateEntry(Order currentOrder, int numberOfVisitors,int numberOfSubscribers) {
+		if(currentOrder==null)
+			return;
+		
+		
 		currentOrder.numberOfVisitors = numberOfVisitors;
+		currentOrder.numberOfSubscribers=numberOfSubscribers;
+	
 		currentOrder.isUsed=true;
-		ServerRequest sr = new ServerRequest(Manager.Order, "UpdateOrder",
-				ServerRequest.gson.toJson(currentOrder, Order.class));
 
 		EntryType entryType = null;
 		switch (currentOrder.type) {
@@ -91,14 +101,23 @@ public class CardReaderController {
 			break;
 		}
 
-		ParkEntry parkEntry = new ParkEntry(entryType, String.valueOf(currentOrder.ownerID), currentOrder.parkSite,
-				null, null, numberOfVisitors, 0, false, currentOrder.priceOfOrder);
-		//TODO what with the number of subscribers?
 		
+		ServerRequest sr3 = new ServerRequest(Manager.Discount, "CalculatePriceForEntryByOrder",
+				ServerRequest.gson.toJson(currentOrder, Order.class));
+		String respondString3 = clientController.client.sendRequestAndResponse(sr3);
+		float actualPrice=ServerRequest.gson.fromJson(respondString3, Float.class);
+		currentOrder.priceOfOrder=actualPrice;
+		
+		ServerRequest sr = new ServerRequest(Manager.Order, "UpdateOrder",
+				ServerRequest.gson.toJson(currentOrder, Order.class));
+		String respondString = clientController.client.sendRequestAndResponse(sr);
+
+		ParkEntry parkEntry = new ParkEntry(entryType, String.valueOf(currentOrder.ownerID), currentOrder.parkSite,
+				currentOrder.timeOfOrder, null, currentOrder.numberOfVisitors , currentOrder.numberOfSubscribers, false, 0);
+
 		ServerRequest sr2 = new ServerRequest(Manager.Entry, "AddNewEntry",
 				ServerRequest.gson.toJson(parkEntry, ParkEntry.class));
 
-		String respondString = clientController.client.sendRequestAndResponse(sr);
 		String respondString2 = clientController.client.sendRequestAndResponse(sr2);
 
 		if (respondString.equals("Failed to update order")) {
@@ -106,10 +125,11 @@ public class CardReaderController {
 					"Failed to update order in server");
 		} else if (respondString.equals("Order updated")) {
 			String bodyString = "";
-			bodyString += "orderID:" + currentOrder.orderID + "\n";
-			bodyString += "numberOfVisitors:" + currentOrder.numberOfVisitors + "\n";
-			bodyString += "priceOfOrder:" + currentOrder.priceOfOrder + "\n";
-			bodyString += "visitTime:" + currentOrder.visitTime + "\n";
+			bodyString += "Order ID:" + currentOrder.orderID + "\n";
+			bodyString += "Number Of Visitors:" + currentOrder.numberOfVisitors + "\n";
+			bodyString += "Number Of Subscribers:" + currentOrder.numberOfSubscribers + "\n";			
+			bodyString += "Price Of Order:" + currentOrder.priceOfOrder + "\n";
+			bodyString += "Visit Time:" + currentOrder.visitTime + "\n";
 
 			PopUp.showInformation("Order updated", "Order updated successfully", bodyString);
 		}
@@ -117,12 +137,13 @@ public class CardReaderController {
 		if (respondString2.equals("Failed to update Entry exit got Null")) {
 			PopUp.showInformation("Failed to update Entry exit got Null", "Failed to update Entry exit got Null",
 					"Failed to update Entry exit got Null in server");
-		} else if (respondString2.equals("Entry exit was updated successfully ")) {
+		} else if (respondString2.equals("Entry was updated successfully ")) {
 			String bodyString = "";
-			bodyString += "parkID:" + parkEntry.parkID + "\n";
-			bodyString += "numberOfVisitors:" + parkEntry.numberOfVisitors + "\n";
-			bodyString += "priceOfOrder:" + currentOrder.priceOfOrder + "\n";
-			bodyString += "visitTime:" + parkEntry.arriveTime + "\n";
+			bodyString += "Park ID:" + parkEntry.parkID + "\n";
+			bodyString += "Number Of Visitors:" + parkEntry.numberOfVisitors + "\n";
+			bodyString += "Number Of Subscribers:" + parkEntry.numberOfSubscribers + "\n";		
+			bodyString += "Price Of Order:" + parkEntry.priceOfOrder + "\n";
+			bodyString += "Visit Time:" + parkEntry.arriveTime + "\n";
 
 			PopUp.showInformation("Entry updated", "Entry updated successfully", bodyString);
 		} else if (respondString2.equals("Failed to update Entry exit")) {
@@ -145,7 +166,7 @@ public class CardReaderController {
 
 		String isSuccess = respondString;
 
-		if (isSuccess.equals("Entry exit was updated successfully ")) {
+		if (isSuccess.equals("Exit was updated successfully ")) {
 			PopUp.showInformation("Success exit", "Success Exit update", "Success Exit update of id :" + id);
 
 		} else {

@@ -6,7 +6,6 @@ import java.time.LocalTime;
 import java.util.Map;
 
 import entities.Order;
-import entities.Park;
 import entities.ParkEntry;
 import entities.ParkNameAndTimes;
 import io.clientController;
@@ -115,8 +114,6 @@ public class RegularOrderController implements GuiController {
 				temp = openingTimes.get(parkNames[i]);
 		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
 	}
-
-	// TODO error messages length visual
 
 	/**
 	 * Check if all the fields was filled correctly

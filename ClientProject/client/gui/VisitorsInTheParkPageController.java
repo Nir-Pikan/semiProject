@@ -1,7 +1,6 @@
 package gui;
 
 import entities.Subscriber;
-import entities.Subscriber.Type;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

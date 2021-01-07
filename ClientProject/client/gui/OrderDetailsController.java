@@ -165,6 +165,7 @@ public class OrderDetailsController implements GuiController {
 	}
 
 	private boolean getOrder(int orederIDint) {
+		lblWaitingList.setVisible(false);
 		String orderID = orederIDint + "";
 		// check if normal order
 		String response = clientController.client

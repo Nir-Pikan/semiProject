@@ -20,6 +20,7 @@ import modules.IController;
 import modules.ObservableList;
 import modules.PeriodicallyRunner;
 import modules.ServerRequest;
+import modules.SystemConfig;
 
 public class OrderController implements IController {
 
@@ -185,9 +186,9 @@ public class OrderController implements IController {
 			} else
 				response = "Failed to cancel an order";
 			break;
-		case "SetOrderToIsUsed": 
+		case "SetOrderToIsUsed":
 			orderID = ServerRequest.gson.fromJson(request.data, Integer.class);
-			answer = SetOrderToIsUsed(orderID);  
+			answer = SetOrderToIsUsed(orderID);
 			if (answer)
 				// response = ServerRequest.gson.toJson(answer);
 				response = "Order seted as used";
@@ -281,7 +282,7 @@ public class OrderController implements IController {
 	 *         time
 	 */
 	// TODO check
-	//TODO OR remove not nedded code
+	// TODO OR remove not nedded code
 	private boolean IsOrderAllowed(Order ord) {
 		// int AVGvisitTime =
 		// Double.valueOf(park.getAVGvisitTime(ord.parkSite)).intValue();
@@ -368,9 +369,9 @@ public class OrderController implements IController {
 	}
 
 	private void initMessageReminder() {
-
+		int[] start = SystemConfig.configuration.SendNotificationSendTime;
 		// run this every day at 10AM
-		PeriodicallyRunner.runEveryDayAt(10, 00, () -> {
+		PeriodicallyRunner.runEveryDayAt(start[0], start[1], () -> {
 			ArrayList<Order> resultList = getTomorrowOrders();
 
 			for (Order order : resultList) {
@@ -381,9 +382,9 @@ public class OrderController implements IController {
 			}
 
 		});
-
+		int[] cancel = SystemConfig.configuration.SendNotificationCancelTime;
 		// run this every day at 12AM
-		PeriodicallyRunner.runEveryDayAt(12, 00, () -> {
+		PeriodicallyRunner.runEveryDayAt(cancel[0], cancel[1], () -> {
 			ArrayList<Order> resultList = getTomorrowOrders();
 
 			for (Order order : resultList) {
@@ -623,8 +624,10 @@ public class OrderController implements IController {
 	private Timestamp[] calcHoursRange(Order order, Park prk) {
 		Timestamp[] res = new Timestamp[2];
 		LocalDateTime tempTime = order.visitTime.toLocalDateTime();
-		Timestamp temp1 = Timestamp.valueOf(tempTime.minusHours(((int) prk.avgVisitTime)-1)); // -1 because of <=,>= in IsOrderAllowed
-		Timestamp temp2 = Timestamp.valueOf(tempTime.plusHours ((int)prk.avgVisitTime -1)); // -1 because of <=,>= in IsOrderAllowed
+		Timestamp temp1 = Timestamp.valueOf(tempTime.minusHours(((int) prk.avgVisitTime) - 1)); // -1 because of <=,>=
+																								// in IsOrderAllowed
+		Timestamp temp2 = Timestamp.valueOf(tempTime.plusHours((int) prk.avgVisitTime - 1)); // -1 because of <=,>= in
+																								// IsOrderAllowed
 		res[0] = temp1;
 		res[1] = temp2;
 		return res;

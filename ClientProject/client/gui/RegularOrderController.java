@@ -116,8 +116,6 @@ public class RegularOrderController implements GuiController {
 		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
 	}
 
-	// TODO error messages length visual
-
 	/**
 	 * Check if all the fields was filled correctly
 	 * 

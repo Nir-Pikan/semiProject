@@ -229,7 +229,7 @@ public class WaitingListController implements IController {
 				Order acceptedOrder = getwaitingOrder(orderId);
 				
 		acceptedOrder.orderStatus = OrderStatus.IDLE;
-				order.AddNewOrder(acceptedOrder);//TODO Or check if the time is after the approval time and set to confirmed if passed
+				order.AddNewOrder(acceptedOrder);
 				deleteFromWaitingList(acceptedOrder);
 				
 			currentWaitingCancelation.remove(orderId);

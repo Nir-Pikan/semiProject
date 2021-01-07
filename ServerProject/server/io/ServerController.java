@@ -9,7 +9,6 @@ import logic.EntryController;
 import logic.MessageController;
 import logic.OrderController;
 import logic.ParkController;
-import logic.ReportController;
 import logic.SubscriberController;
 import logic.WaitingListController;
 import logic.WorkerController;
@@ -35,7 +34,6 @@ public class ServerController extends AbstractServer {
 	private OrderController order;
 	private EntryController entry;
 	private WaitingListController waitingList;
-	private ReportController report;
 
 	/** controller to show user connection */
 	private static ServerGuiController gui;
@@ -88,9 +86,6 @@ public class ServerController extends AbstractServer {
 		case Park:
 			response = park.handleRequest(sr);
 			break;
-		case Report:
-			response = report.handleRequest(sr);
-			break;
 		case Subscriber:
 			response = subscriber.handleRequest(sr);
 			break;
@@ -124,7 +119,6 @@ public class ServerController extends AbstractServer {
 	@Override
 	protected void clientConnected(ConnectionToClient client) {
 		System.out.println("new client connected: " + client);
-		// TODO prototype only code
 		gui.setConnected(client.getInetAddress().getHostAddress(), client.getInetAddress().getHostName());
 		// wait for the client to die and call clientDisconnected
 		new Thread(() -> {
@@ -148,7 +142,6 @@ public class ServerController extends AbstractServer {
 		Object obj = client.getInfo("workerUsername");
 		if (obj != null && obj instanceof String)
 			worker.updateWorkerLogginDB((String) obj, false);
-		// TODO prototype only code
 		gui.setDisconnected();
 	}
 
@@ -189,7 +182,6 @@ public class ServerController extends AbstractServer {
 		entry = new EntryController(park, messageC, subscriber, discount);
 		//
 		waitingList = new WaitingListController(order, messageC);
-		report = new ReportController(order, entry, park);
 	}
 
 	@Override

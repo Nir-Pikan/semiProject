@@ -281,21 +281,12 @@ public class OrderController implements IController {
 	 * @return true if the order placed, false if the park is full in this range of
 	 *         time
 	 */
-	// TODO check
-	// TODO OR remove not nedded code
 	private boolean IsOrderAllowed(Order ord) {
-		// int AVGvisitTime =
-		// Double.valueOf(park.getAVGvisitTime(ord.parkSite)).intValue();
-		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
-		// int muxPreOrder = 4; // for test only
 		Park prk = park.getPark(ord.parkSite);
 		int maxPreOrder = prk.maxPreOrders;
 		int resInt = 10000; // to be sure that by default we don't have place in the park, stupid......
 		Timestamp[] hoursRange = new Timestamp[2];
 		hoursRange = calcHoursRange(ord, prk);
-//		Timestamp threeHoursBefor = addTimeInHours(ord.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after visit
-//																						// // time
-//		Timestamp fourHoursAfter = addTimeInHours(ord.visitTime, AVGvisitTime); // calculate 3 hours before
 		try {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
 					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + hoursRange[0]

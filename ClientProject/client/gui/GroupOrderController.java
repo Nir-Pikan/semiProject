@@ -86,11 +86,10 @@ public class GroupOrderController implements GuiController {
 		Park_ComboBox.getItems().clear(); // for what? maybe not necessary
 		VisitHour_ComboBox.getItems().clear();
 		Park_ComboBox.getItems().addAll(parkNames);
-		NumberOfVisitors_ComboBox.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
+		NumberOfVisitors_ComboBox.getItems().addAll("2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
 				"14", "15");
 		PlaceOrder_Button.setDisable(false);
 		checkIfGuide();
-
 		// set only relevant dates
 		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
 			@Override
@@ -145,7 +144,7 @@ public class GroupOrderController implements GuiController {
 		if (FamilyIndicator_checkBox.isSelected()) {
 			setFamilyDropBox();
 		} else {
-			NumberOfVisitors_ComboBox.getItems().addAll("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+			NumberOfVisitors_ComboBox.getItems().addAll("2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
 					"13", "14", "15");
 		}
 	}

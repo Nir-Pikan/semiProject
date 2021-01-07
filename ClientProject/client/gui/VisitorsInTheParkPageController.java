@@ -31,6 +31,10 @@ public class VisitorsInTheParkPageController implements GuiController {
 
 	@FXML
 	void familyOrder(ActionEvent event) {
+		if(!checkParkCapacity(parkNumChoise.getValue().toString())) {
+			PopUp.showInformation("Not enough space", "Not enough space", "Not enough space in the park");
+			return;
+		}
 		String ordererId = PopUp.getUserInput("family/Group Order", "enter Id of the orderer", "id or subscriberId :");
 		if (CheckID(ordererId)) {
 		if (!ordererId.contains("S"))
@@ -48,13 +52,15 @@ public class VisitorsInTheParkPageController implements GuiController {
 		} else
 			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
 					"Please enter appropriate ID");
-//		if (s.type == Type.SUBSCRIBER)TODO check what with this
-//			g.setFamilyOrderOnly();
 
 	}
 
 	@FXML
 	void privateGroupOrder(ActionEvent event) {
+		if(!checkParkCapacity(parkNumChoise.getValue().toString())) {
+			PopUp.showInformation("Not enough space", "Not enough space", "Not enough space in the park");
+			return;
+		}
 		String ordererId = PopUp.getUserInput("private Group Order", "enter Id of the orderer", "id or subscriberId :");
 		if (CheckID(ordererId))
 			((SmallGroupOrderController) Navigator.instance().navigate("SmallGroupOrder")).setSpontaneous(ordererId,
@@ -66,6 +72,10 @@ public class VisitorsInTheParkPageController implements GuiController {
 
 	@FXML
 	void regularOrder(ActionEvent event) {
+		if(!checkParkCapacity(parkNumChoise.getValue().toString())) {
+			PopUp.showInformation("Not enough space", "Not enough space", "Not enough space in the park");
+			return;
+		}
 		String ordererId = PopUp.getUserInput("regular Order", "enter Id of the orderer", "id or subscriberId :");
 		if (CheckID(ordererId))
 			((RegularOrderController) Navigator.instance().navigate("RegularOrder")).setSpontaneous(ordererId,
@@ -101,7 +111,7 @@ public class VisitorsInTheParkPageController implements GuiController {
 					.select(clientController.client.logedInWorker.getVal().getPermissions().GetParkID());
 			parkNumChoise.setDisable(true);
 		}
-		;
+		parkNumChoise.getSelectionModel().select(0);
 	}
 
 	public void setPark(String parkId) {
@@ -119,6 +129,15 @@ public class VisitorsInTheParkPageController implements GuiController {
 		if ((!ID.matches("([0-9])+") || ID.length() != 9) && (!ID.matches("S([0-9])+") || ID.length() != 10)) {
 			return false;
 		}
+		return true;
+	}
+	
+	private boolean checkParkCapacity(String park) {
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Park, "get number of visitor available", park));
+		int availableSpace = ServerRequest.gson.fromJson(response, Integer.class);
+		if (availableSpace < 1)
+			return false;
 		return true;
 	}
 

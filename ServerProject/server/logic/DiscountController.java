@@ -18,7 +18,7 @@ import modules.ServerRequest;
 /**the discount controller class*/
 public class DiscountController implements IController {
 
-	private final static float FullPriceForPerson = 100;// TODO what is the value ?
+	private final static float FullPriceForPerson = 100;
 	private final float orderPersonDiscountRegular = 0.85f, orderPersonalDiscountSubscriber = 0.8f,
 			casualPersonDiscountRegular = 1f, casualPersonalDiscountSubscriber = 0.8f, orderGroupDiscount = 0.75f,
 			inAdvancePayDiscount = 0.88f, orderGroupDiscountInstructor = 0f, casualGroupDiscount = 0.9f,
@@ -58,7 +58,6 @@ public class DiscountController implements IController {
 			DiscountEntity[] discounts = getAllDiscount();
 			response = ServerRequest.gson.toJson(discounts, DiscountEntity[].class);
 			break;
-		// TODO Michael
 		case "CalculatePriceForEntryByOrder": // to orderController
 			 Order order =ServerRequest.gson.fromJson(request.data, Order.class);
 			 if(order==null) {
@@ -69,8 +68,6 @@ public class DiscountController implements IController {
 				response=ServerRequest.gson.toJson(price, Float.class);
 			 }
 			break;
-
-		// TODO Michael need to implement //TODO implemented by Roman please test
 		case "CalculatePriceForEntryCasual":// to entryController
 			ParkEntry entry = ServerRequest.gson.fromJson(request.data, ParkEntry.class);
 			if(entry == null)
@@ -186,7 +183,6 @@ public class DiscountController implements IController {
 	 * @param orderTime           for adding additional discounts if exists
 	 * @return return the price after discounts
 	 */
-	// TODO Michael toTest
 	public float CalculatePriceForEntryByOrder(int TotalVisitors, int numberOfSubscribers, boolean isGroup,
 			Timestamp orderTime) {
 		float inovice;
@@ -232,7 +228,6 @@ public class DiscountController implements IController {
 	 * @param isGroup             to implement the appropriate discounts
 	 * @return return the price after discounts
 	 */
-	// TODO Michael toTest
 	public float CalculatePriceForEntryCasual(int TotalVisitors, int numberOfSubscribers, boolean isGroup) {
 		float inovice;
 
@@ -317,7 +312,6 @@ public class DiscountController implements IController {
 	 *                     the time of order
 	 * @return if succeeded will return the final price after applying discount
 	 */
-	// TODO Michael toTest
 	private float ApplyDiscount(float currentPrice, Timestamp orderTime) {
 
 		float newPrice=0;

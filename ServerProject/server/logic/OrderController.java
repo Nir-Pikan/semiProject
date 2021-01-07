@@ -321,23 +321,16 @@ public class OrderController implements IController {
 	 * @return
 	 */
 	public boolean IsOrderAllowedWaitingList(Order order, int numberOfVisitorsCanceled) {
-		// int muxPreOrder = park.getMaxPreOrder(ord.parkSite); //real method
-		// int maxPreOrder = 4; // for test only
 		Park prk = park.getPark(order.parkSite);
 		int maxPreOrder = prk.maxPreOrders;
 		int resInt = 10000; // to be sure that by default we don't have place in the park, STUPID......
 		Timestamp[] hoursRange = new Timestamp[2];
 		hoursRange = calcHoursRange(order, prk);
-//		Timestamp threeHoursBefor = addTimeInHours(order/*order.visitTime, -(AVGvisitTime - 1)); // calculate 4 hours after
-//																							// visit // time
-//		Timestamp fourHoursAfter = addTimeInHours(order/*order.visitTime, AVGvisitTime*/); // calculate 3 hours before
 		try {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
 					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + hoursRange[0]
 							+ "\" && visitTime <= \"" + hoursRange[1] + "\" && parkSite = \"" + order.parkSite
-							+ "\" && orderStatus <> \"CANCEL\";"); // TODO test this (Roman)
-//			if (ps == null)
-//				return false;
+							+ "\" && orderStatus <> \"CANCEL\";"); 
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();

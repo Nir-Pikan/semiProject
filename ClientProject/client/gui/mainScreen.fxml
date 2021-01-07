@@ -32,17 +32,17 @@
    <top>
       <BorderPane prefWidth="600.0" styleClass="header" BorderPane.alignment="CENTER">
          <right>
-            <HBox alignment="BOTTOM_RIGHT" prefHeight="87.0" prefWidth="542.0" spacing="20.0" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_RIGHT" BorderPane.alignment="TOP_RIGHT">
                <children>
-                  <Label fx:id="greetingMsg" alignment="CENTER" styleClass="h2" />
-                  <VBox alignment="BOTTOM_RIGHT" fillWidth="false" prefHeight="87.0" prefWidth="146.0">
+                  <Label fx:id="todayDateLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="176.0" styleClass="h2" text="Date:" />
+                  <HBox alignment="BOTTOM_RIGHT" prefWidth="542.0" spacing="20.0">
                      <children>
-                        <Label fx:id="todayDateLabel" alignment="TOP_LEFT" prefHeight="61.0" prefWidth="176.0" styleClass="h2" text="Date:" />
+                        <Label fx:id="greetingMsg" alignment="CENTER" styleClass="h2" />
                         <Button fx:id="Login" mnemonicParsing="false" onAction="#logInOut" style="-fx-background-insets: 1;" text="LogOut" />
                      </children>
-                  </VBox>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
          </right>
          <left>
             <ImageView fitHeight="87.0" fitWidth="132.0" pickOnBounds="true" preserveRatio="true" smooth="false" BorderPane.alignment="CENTER">

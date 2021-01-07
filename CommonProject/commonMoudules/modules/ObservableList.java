@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-//TODO add javadoc
+/**
+ * base implementation of ObservableList, support add and remover Properties
+ * @param <T> type of {@link ArrayList}
+ */
 public class ObservableList<T> extends ArrayList<T> {
 
 	/**
@@ -15,22 +18,42 @@ public class ObservableList<T> extends ArrayList<T> {
 	private Property<T> addProperty = new Property<T>();
 	private Property<T> removeProperty = new Property<T>();
 
+	/**
+	 * creates empty List
+	 * @see {@link ArrayList#ArrayList()}
+	 */
 	public ObservableList() {
 		super();
 	}
 
+	/**
+	 * Creates List from given Collection
+	 * @param arg0 {@link Collection} to add
+	 * @see {@link ArrayList#ArrayList(Collection)}
+	 */
 	public ObservableList(Collection<? extends T> arg0) {
 		super(arg0);
 	}
 
+	/**
+	 * Creates List from given Collection
+	 * @param arg0 {@link Collection} to add
+	 * @see {@link ArrayList#ArrayList(int)}
+	 */
 	public ObservableList(int arg0) {
 		super(arg0);
 	}
 
+	/**
+	 * @return {@link Property} for adding items
+	 */
 	public Property<T> getAddProperty() {
 		return addProperty;
 	}
 
+	/**
+	 * @return {@link Property} for removing items
+	 */
 	public Property<T> getRemoveProperty() {
 		return removeProperty;
 	}

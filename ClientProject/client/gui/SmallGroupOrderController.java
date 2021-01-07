@@ -88,7 +88,7 @@ public class SmallGroupOrderController implements GuiController {
 
 	@Override
 	public void init() {
-		Park_ComboBox.getItems().clear(); // for what? maybe not necessary
+		Park_ComboBox.getItems().clear();
 		VisitHour_ComboBox.getItems().clear();
 		Park_ComboBox.getItems().addAll(parkNames);
 		String IdentificationID = getIdentificationString();
@@ -120,7 +120,7 @@ public class SmallGroupOrderController implements GuiController {
 	}
 
 	private String[] CreateWorkingHours(ParkNameAndTimes parkDetails) {
-		VisitHour_ComboBox.getItems().clear(); // some warning thrown sometimes
+		VisitHour_ComboBox.getItems().clear(); 
 		int numberOfWorkingHours = parkDetails.closeTime - parkDetails.openTime;
 		String[] res = new String[numberOfWorkingHours];
 		for (int i = parkDetails.openTime; i < parkDetails.closeTime; i++) {
@@ -292,7 +292,7 @@ public class SmallGroupOrderController implements GuiController {
 	 */
 	@FXML
 	void AddVisitor_Button_Clicked(ActionEvent event) { // could the visitor be for different parks? time? date ?
-		String ordererId = PopUp.getUserInput("private Group Order", "enter Id of the orderer", "id or subscriberId :");
+		String ordererId = PopUp.getUserInput("Private Group Order", "Enter ID of the visitor", "ID or Subscriber ID");
 
 		if (!CheckID(ordererId)) {
 			PopUp.showInformation("Please enter appropriate ID", "Please enter appropriate ID",
@@ -302,7 +302,7 @@ public class SmallGroupOrderController implements GuiController {
 			PopUp.showInformation("This ID already is added", "This ID already is added", "This ID already is added");
 		} else {
 			visitorsIDArray.add(ordererId);
-			PopUp.showInformation("Visitor Edded", "Visitor Edded", "Visitor Edded"); // TODO maybe delete
+			PopUp.showInformation("Visitor Added", "Visitor Added", "Visitor Added"); // TODO maybe delete
 			visitorsCounter++;
 			listViewVisitors.getItems().add("visitor #" + visitorsCounter + " " + "(" + ordererId + ")");
 			PlaceOrder_Button.setDisable(false);
@@ -318,10 +318,11 @@ public class SmallGroupOrderController implements GuiController {
 	@FXML // TODO disable buttons when they dont needed
 	void RemoveVisitor_Button_Clicked(ActionEvent event) {
 		int index = listViewVisitors.getSelectionModel().getSelectedIndex();
-		if (index == -1) {
-			System.out.println("NOTHING SELECTED!"); // TODO PopUp
+		if (index == -1 || index ==0 ) {
+			PopUp.showInformation("Visitor remove", "Visitor remove", "Please select one of the additional visitor");
 			return;
-		} else if (index == 0) {
+		} 
+		if (listViewVisitors.getItems().size()==1) {
 			PlaceOrder_Button.setDisable(true);
 			RemoveVisitor_Button.setDisable(true);
 		}
@@ -362,7 +363,6 @@ public class SmallGroupOrderController implements GuiController {
 
 			String response = clientController.client.sendRequestAndResponse(
 					new ServerRequest(Manager.Order, "IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
-			// TODO remove all the not necessary cases after integration (Roman)
 			switch (response) {
 			case "Order was added successfully":
 				PopUp.showInformation("Order placed success", "Order placed success",
@@ -388,15 +388,11 @@ public class SmallGroupOrderController implements GuiController {
 						"Failed to cancel an order");
 				break;
 			case "No more orders allowed in this time":
-//				PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
-//						"No more orders allowed in this time");
 				Order newSelectedOrder  = OpenOrderTimes.askForWaitingListAndShowOptions(ord);
 				if(newSelectedOrder == null)
 					return;
 				else
 					MoveToTheNextPage(newSelectedOrder,null);
-//					 response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order,
-//							"IsOrderAllowed", ServerRequest.gson.toJson(newSelectedOrder, Order.class)));
 				break;
 			case "Order Canceled":
 				PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");
@@ -451,7 +447,7 @@ public class SmallGroupOrderController implements GuiController {
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = getIdentificationString();
-		int numberOfSubscribers = NumberOfSubscribers(); // in a group order this is not relevant
+		int numberOfSubscribers = NumberOfSubscribers();
 		Order ord = new Order(parkName, numberOfVisitors, orderID, 100, email, phone, type, orderStatus,
 				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		ord.priceOfOrder = RegularOrderController.calcOrderPrice(ord);
@@ -463,8 +459,6 @@ public class SmallGroupOrderController implements GuiController {
 			return clientController.client.visitorID.getVal().intern();
 		if (clientController.client.logedInSubscriber.getVal() != null)
 			return clientController.client.logedInSubscriber.getVal().personalID;
-//		if(clientController.client.logedInWorker.getVal() != null)
-//			return clientController.client.logedInWorker.getVal().getWorkerID();
 		return null;
 	}
 
@@ -512,25 +506,9 @@ public class SmallGroupOrderController implements GuiController {
 		int numberOfSubscribers = NumberOfSubscribers();
 		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.PrivateGroup, ownerID, parkID, timeOfOrder, null, visitorsCounter,
 				numberOfSubscribers, true, 100);
-		//entry.priceOfOrder = RegularOrderController.calcEntryPrice(entry);
 		return entry;
 	}
-	/* don't delete */
-//	private Order createSpontaneousOrderDetails(String ownerID, String parkName) {
-//		int orderID = getNextOrderID();
-//		int priceOfOrder = 100;
-//		int numberOfVisitors = visitorsCounter;
-//		String email = Email_textBox.getText();
-//		String phone = Phone_textBox.getText();
-//		Order.IdType type = Order.IdType.PRIVATEGROUP; // by default
-//		Order.OrderStatus orderStatus = Order.OrderStatus.CONFIRMED;
-//		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
-//		boolean isUsed = true;
-//		int numberOfSubscribers = NumberOfSubscribers();
-//		Order ord = new Order(parkName, numberOfVisitors, orderID, priceOfOrder, email, phone, type, orderStatus,
-//				timeOfOrder, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
-//		return ord;
-//	}
+
 
 	private int getNextOrderID() {
 		String response = clientController.client

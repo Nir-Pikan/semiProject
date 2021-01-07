@@ -14,8 +14,8 @@
 
 <GridPane hgap="10.0" prefHeight="540.0" prefWidth="460.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegularOrderController">
   <columnConstraints>
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="135.0" minWidth="10.0" prefWidth="92.0" />
-    <ColumnConstraints hgrow="ALWAYS" maxWidth="188.0" minWidth="10.0" prefWidth="182.0" />
+      <ColumnConstraints hgrow="ALWAYS" maxWidth="135.0" minWidth="10.0" prefWidth="102.0" />
+    <ColumnConstraints hgrow="ALWAYS" maxWidth="188.0" minWidth="10.0" prefWidth="179.0" />
     <ColumnConstraints hgrow="ALWAYS" maxWidth="182.0" minWidth="10.0" prefWidth="136.0" />
   </columnConstraints>
   <rowConstraints>
@@ -89,7 +89,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label text="Phone No" GridPane.rowIndex="6">
+      <Label text="Phone Number" GridPane.rowIndex="6">
          <font>
             <Font size="15.0" />
          </font></Label>

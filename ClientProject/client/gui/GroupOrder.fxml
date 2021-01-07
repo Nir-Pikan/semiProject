@@ -103,7 +103,7 @@
             <Font size="15.0" />
          </font>
       </CheckBox>
-      <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="135.0" text="Phone No" GridPane.rowIndex="8">
+      <Label alignment="BASELINE_LEFT" prefHeight="25.0" prefWidth="135.0" text="Phone Number" GridPane.rowIndex="8">
          <font>
             <Font size="15.0" />
          </font>

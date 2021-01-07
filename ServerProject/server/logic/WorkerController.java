@@ -119,7 +119,7 @@ public class WorkerController implements IController {
 			if (!updateWorkerLogginDB(worker.getUserName(), true))
 				return null;
 			return worker;
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			return null;
 		}
 	}

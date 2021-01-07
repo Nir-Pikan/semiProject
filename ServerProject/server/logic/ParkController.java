@@ -159,7 +159,6 @@ public class ParkController implements IController {
 		Park p = getPark(parkId);
 		if (p == null)
 			return -1;
-		//TODO or check
 		PreparedStatement setValue = db
 				.getPreparedStatement("UPDATE park SET currentNumOfVisitors = ? WHERE parkId = ?");
 		int newVal = p.currentNumOfVisitors + delta;

@@ -22,7 +22,6 @@ public class DbController implements IDbController {
 	private static final String dbSchemeName = "parkdb";
 	private static final String dbUser = "root";
 	private static final String dbPass = "Aa123456";
-
 	private Connection conn;
 
 	/**

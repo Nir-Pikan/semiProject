@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.mysql.cj.protocol.ServerSession;
-
 import entities.Order;
 import entities.Order.IdType;
 import entities.Order.OrderStatus;
@@ -29,19 +27,17 @@ import modules.WakeableThread;
 public class WaitingListController implements IController {
 	private OrderController order; 
 	private MessageController messageC;
-	
+	private ParkController parkC;
 	private DbController dbController;
 	private Map<Integer,WakeableThread> currentWaitingCancelation;//the order who are we waiting for
 	private Map<WakeableThread,Order> currentCancelation;//the canceled order of the thread 
-
-	
-	private static int AvgVisitTime = 4; //TODO change to park visit Time
 	
 	/** creates the {@link WaitingListController} */
-	public WaitingListController(OrderController order, MessageController messageC) {
+	public WaitingListController(OrderController order, MessageController messageC,ParkController parkC) {
 		super();
 		this.order = order;
 		this.messageC = messageC;
+		this.parkC = parkC;
 		dbController = DbController.getInstance();
 		currentWaitingCancelation = new HashMap<Integer, WakeableThread>();
 		currentCancelation = new HashMap<WakeableThread, Order>();
@@ -209,6 +205,7 @@ public class WaitingListController implements IController {
 	 * @return the next order waiting
 	 */
 	private synchronized Order getNextOrder(Order canceled) {
+		long AvgVisitTime = new Double(parkC.getAVGvisitTime(canceled.parkSite)).longValue();
 		Timestamp minimum = Timestamp.valueOf(canceled.visitTime.toLocalDateTime().minusSeconds(TimeUnit.HOURS.toSeconds(AvgVisitTime-1)));
 		Timestamp maximum = Timestamp.valueOf(canceled.visitTime.toLocalDateTime().plusSeconds(TimeUnit.HOURS.toSeconds(AvgVisitTime)));
 		 PreparedStatement ps = dbController.getPreparedStatement("SELECT * FROM waitingList WHERE timestamp(visitTime) >= timestamp( ? ) " + 

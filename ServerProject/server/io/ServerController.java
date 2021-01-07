@@ -181,7 +181,7 @@ public class ServerController extends AbstractServer {
 		order = new OrderController(park, messageC, subscriber, discount);
 		entry = new EntryController(park, messageC, subscriber, discount);
 		//
-		waitingList = new WaitingListController(order, messageC);
+		waitingList = new WaitingListController(order, messageC,park);
 	}
 
 	@Override

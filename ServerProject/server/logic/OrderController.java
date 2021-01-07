@@ -32,7 +32,15 @@ public class OrderController implements IController {
 	private DbController dbController;
 
 	public ObservableList<Order> canceled; // list of canceled Orders
+	// TODO Nir check
 
+	/**
+	 * 
+	 * @param park       instance of ParkController
+	 * @param messageC   instance of MessageController
+	 * @param subscriber instance of SubscriberController
+	 * @param discount   instance of DiscountController
+	 */
 	public OrderController(ParkController park, MessageController messageC, SubscriberController subscriber,
 			DiscountController discount) {
 		this.park = park;
@@ -321,7 +329,7 @@ public class OrderController implements IController {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
 					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + hoursRange[0]
 							+ "\" && visitTime <= \"" + hoursRange[1] + "\" && parkSite = \"" + order.parkSite
-							+ "\" && orderStatus <> \"CANCEL\";"); 
+							+ "\" && orderStatus <> \"CANCEL\";");
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();
@@ -333,6 +341,12 @@ public class OrderController implements IController {
 		return false;
 	}
 
+	// TODO Nir check
+	/**
+	 * For calculate serial number of the next order should be
+	 * 
+	 * @return Next number of Order
+	 */
 	public int NextOrderID() {
 		int res = 1; // in a case of empty table
 		try {
@@ -352,6 +366,10 @@ public class OrderController implements IController {
 		return res;
 	}
 
+	// TODO Nir check
+	/**
+	 * Reminder for all orders for next day
+	 */
 	private void initMessageReminder() {
 		int[] start = SystemConfig.configuration.SendNotificationSendTime;
 		// run this every day at 10AM
@@ -386,7 +404,9 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * @return
+	 * To recieve Tommorow orders
+	 * 
+	 * @return Array of orders for tommorow
 	 */
 	private ArrayList<Order> getTomorrowOrders() {
 		LocalDate tomorow = LocalDate.now().plusDays(1);
@@ -416,6 +436,13 @@ public class OrderController implements IController {
 		return resultList;
 	}
 
+	// TODO Nir check
+	/**
+	 * Genrate Aprroval Request Message for order
+	 * 
+	 * @param order
+	 * @return the Approval message
+	 */
 	private String genereteApprovalRequestMessage(Order order) {
 		return "Please Approve or Cancel this order:\n" + "Order ID: " + order.orderID + "\n" + "visit time: "
 				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
@@ -424,6 +451,13 @@ public class OrderController implements IController {
 				+ "If not accepted until 12:00, the order will be cancelrd automaticly\n" + "Thank for using GoNature";
 	}
 
+	// TODO Nir check
+	/**
+	 * Genrate Message for order
+	 * 
+	 * @param order
+	 * @return the message
+	 */
 	private String genereteMessage(Order order) {
 		return "Your New Order:\n" + "Order ID: " + order.orderID + "\n" + "visit time: "
 				+ order.visitTime.toLocalDateTime().toLocalDate() + " "

@@ -16,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import module.PopUp;
 
 public class CardReaderSystem implements Initializable{
 
@@ -29,6 +30,9 @@ public class CardReaderSystem implements Initializable{
     private TextField NoPeopleTextField;
     
     @FXML
+    private TextField NoSubscribersTextField;
+    
+    @FXML
     private Button ReadButton;
 
     @FXML
@@ -39,6 +43,9 @@ public class CardReaderSystem implements Initializable{
 
     @FXML
     private TableColumn<Card, Integer> NumberOfPeopleCol;
+   
+    @FXML
+    private TableColumn<Card, Integer> NumberOfSubscribersCol;
 
     @FXML
     private Label AckLabel;
@@ -59,10 +66,33 @@ public class CardReaderSystem implements Initializable{
     /** Card reader reads the card and add it to a TableView **/
     @FXML
     void ReadCardID(ActionEvent event) {
-    	String cardNum = CardNumTextField.getText(); // read the number from the TextFiled
+      	String cardNum = null ;
+    	int numberOfPeople =-2;
+    	int numberOfSubsribers = -1 ;
+    	try {
+			
+    	 cardNum = CardNumTextField.getText(); // read the number from the TextFiled
     	String numberOfPeopleString= NoPeopleTextField.getText();
-    	int numberOfPeople = Integer.valueOf(numberOfPeopleString);
-    	Card card = new Card(cardNum,numberOfPeople);
+    	 numberOfPeople = Integer.valueOf(numberOfPeopleString);
+    	String numberOfSubscribersString= NoSubscribersTextField.getText();
+    	 numberOfSubsribers = Integer.valueOf(numberOfSubscribersString);
+    	} catch (Exception e) {
+    		PopUp.showInformation("Wrong input", "Wrong input",
+					"Please enter appopriate data");
+    		return;
+    	}
+    	
+    	if (numberOfPeople<numberOfSubsribers) {
+			PopUp.showInformation("Wrong input", "Wrong input",
+					"Number of subscribers is larger then visitors");
+			return;
+    	}
+    	if(numberOfPeople==0) {
+    		PopUp.showInformation("Wrong input", "Wrong input",
+					"Number of visitors is 0");
+			return;
+    	}
+    	Card card = new Card(cardNum,numberOfPeople,numberOfSubsribers);
     	data.add(card);
     	CardsTableView.setItems(data);
     }
@@ -70,9 +100,12 @@ public class CardReaderSystem implements Initializable{
 
     @FXML
     void VisitorEnterToThePark(ActionEvent event) {
-    	Card selectedItem = CardsTableView.getSelectionModel().getSelectedItem();
     	
-    	cardReaderController.enterVisitor(selectedItem.getCard(), selectedItem.getNumberOfPeople());
+    	Card selectedItem = CardsTableView.getSelectionModel().getSelectedItem();
+    
+    	
+    	
+    	cardReaderController.enterVisitor(selectedItem.getCard(), selectedItem.getNumberOfPeople(),selectedItem.getNumberOfSubscribers());
     	//cardReaderController.enterVisitor(selectedItem.getCard()); //method enterVisitor need to be implemented 
     	
     	
@@ -106,6 +139,8 @@ public class CardReaderSystem implements Initializable{
     	CardsTableView.setEditable(true);
 		IDCol.setCellValueFactory(new PropertyValueFactory<Card,String>("card"));
 		NumberOfPeopleCol.setCellValueFactory(new PropertyValueFactory<Card, Integer>("numberOfPeople"));
+		NumberOfSubscribersCol.setCellValueFactory(new PropertyValueFactory<Card, Integer>("numberOfSubscribers"));
+		
 	//	CardsTableView.getColumns().addAll(IDCol, NumberOfPeopleCol);
 		cardReaderController=new CardReaderController();
 	}

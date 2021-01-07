@@ -76,7 +76,7 @@ public class IncomeReportController implements GuiController,Report{
     private TableColumn<Cell, Integer> visitorsColumn;
 
     @FXML
-    private TableColumn<Cell, Integer> incomeColumn;
+    private TableColumn<Cell, Float> incomeColumn;
 
     @FXML
     private Button buttonPrint;
@@ -104,7 +104,7 @@ public class IncomeReportController implements GuiController,Report{
     	this.parkName = parkName;
     	dateColumn.setCellValueFactory(new PropertyValueFactory<Cell,String>("Date"));
     	visitorsColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("Visitors"));
-    	incomeColumn.setCellValueFactory(new PropertyValueFactory<Cell,Integer>("Income"));
+    	incomeColumn.setCellValueFactory(new PropertyValueFactory<Cell,Float>("Income"));
     	createReport();
     }
     
@@ -133,7 +133,7 @@ public class IncomeReportController implements GuiController,Report{
 		}
     	for (Map.Entry<myDate, ArrayList<ParkEntry>> dayEntrys : map.entrySet())
     	{
-			int income = 0;
+			float income = 0;
 			int visitors = 0;
 			myDate date = dayEntrys.getKey();
 			
@@ -151,9 +151,10 @@ public class IncomeReportController implements GuiController,Report{
     	textReportDate.setText("from " + reportStartAndEndTimes[0].toLocalDateTime().toLocalDate().toString() + " to "
 				+ reportStartAndEndTimes[1].toLocalDateTime().toLocalDate().toString());
     	textTotalIncome.setText(TotalIncome + ""); 
-    	int avgIncome = 0;
-    	if(map.size() != 0)
+    	float avgIncome = 0;
+    	if(map.size() != 0) {
     		avgIncome = TotalIncome/map.size();
+    	}
     	textAVGIncomeDay.setText(avgIncome + "");
     	incomeTable.setItems(FXCollections.observableArrayList(cellsList));
     }
@@ -165,7 +166,7 @@ public class IncomeReportController implements GuiController,Report{
 
     public class Cell
     {
-    	public int Income;
+    	public float Income;
     	public int Visitors;
     	public String Date;
     	
@@ -185,15 +186,15 @@ public class IncomeReportController implements GuiController,Report{
 			this.Date = date;
 		}
 
-		public int getIncome() {
+		public float getIncome() {
 			return Income;
 		}
 
-		public void setIncome(int price) {
+		public void setIncome(float price) {
 			this.Income = price;
 		}
 
-		public Cell(String date, int visitors, int price)
+		public Cell(String date, int visitors, float price)
     	{
 			this.Date = date;
 			this.Visitors = visitors;

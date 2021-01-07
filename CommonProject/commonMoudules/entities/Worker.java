@@ -12,7 +12,7 @@ public class Worker {
 	private String LastName;
 	private String WorkerID;
 	private String Email;
-	private String WorkerType; //TODO Why String and not Enum? ~Nir Pikan~
+	private String WorkerType;
 	private String Password;
 	private Boolean isLogged;
 	private Permissions permissions;

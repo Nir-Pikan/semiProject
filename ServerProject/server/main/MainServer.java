@@ -1,7 +1,5 @@
 package main;
 
-import java.util.List;
-
 import gui.ServerGuiController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -11,6 +9,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+/**
+ * main class to run the server
+ */
 public class MainServer extends Application {
 
 	public static void main(String[] args) {

@@ -19,7 +19,7 @@ public class DiscountEntity {
 	 * 
 	 * @param discountID    the discount's ID
 	 * @param discountValue the discount's percentage value
-	 * @param startTime     the discount's start time 
+	 * @param startTime     the discount's start time
 	 * @param endTime       the discount's end time
 	 */
 	public DiscountEntity(String discountID, float discountValue, Timestamp startTime, Timestamp endTime,

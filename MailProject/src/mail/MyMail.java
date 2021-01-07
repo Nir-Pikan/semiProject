@@ -14,17 +14,23 @@ import javax.mail.internet.MimeMessage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * a class responsible for sending mails and SMS from GoNature
+ */
 public class MyMail {
 
 	private static final String FROM = "g1.gonature@gmail.com"; // GoNature mail address
-	private static final String HOST= "smtp.gmail.com"; // Host of the mail address
+	private static final String HOST = "smtp.gmail.com"; // Host of the mail address
 	private static final int PORT = 587;
-	private static final String USERNAME = "g1.gonature"; // GoNature mail username
-	private static final String PASSWORD= "Aa123456!"; // Host of the mail password
-	
+	private static final String USERNAME = "g1.gonature"; // GoNature mail user name
+	private static final String PASSWORD = "Aa123456!"; // Host of the mail password
+
 	Session session; // for some internal usage of mail sending process
 
-	public MyMail() { // Initialize GoNature Email address and other preferences
+	/**
+	 * Initialize GoNature Email address and other preferences
+	 */
+	public MyMail() {
 		Properties mailProps = new Properties();
 		mailProps.put("mail.smtp.from", FROM);
 		mailProps.put("mail.smtp.host", HOST);
@@ -36,24 +42,41 @@ public class MyMail {
 
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(USERNAME,PASSWORD );
+				return new PasswordAuthentication(USERNAME, PASSWORD);
 			}
 
 		});
 
 	}
 
-	/** send Mail and SMS as Pop up window. return true if mail sending succeeded **/
-	public boolean SendEmailAndSMS(String destinationMail,String cellPhoneNum, String messageContent, String subject) {
-		infoBox("subject: " + subject + "\n\n" +messageContent, "SMS send", "SMS sent to : "+ cellPhoneNum); //use cell phone number as a header (only for vision)
-		if(!isValidEmailAddress(destinationMail))
-			return false;  // if destination Mail address is invalid return false
+	/**
+	 * send Mail and SMS as Pop up window.
+	 * 
+	 * @param destinationMail the email address to send mail to
+	 * @param cellPhoneNum    the phone number to send SMS to
+	 * @param messageContent  the content of both messages
+	 * @param subject         the subject of mail
+	 * @return true if mail sending succeeded
+	 **/
+	public boolean SendEmailAndSMS(String destinationMail, String cellPhoneNum, String messageContent, String subject) {
+		infoBox("subject: " + subject + "\n\n" + messageContent, "SMS send", "SMS sent to : " + cellPhoneNum);
+
+		if (!isValidEmailAddress(destinationMail))
+			return false; // if destination Mail address is invalid return false
 		return SendEmaill(destinationMail, messageContent, subject);
-		
+
 	}
 
-	private boolean SendEmaill(String destinationMail, String messageContent, String subject) { 
-		
+	/**
+	 * sends Mail from GoNature to destination email.
+	 * 
+	 * @param destinationMail the email address to send mail to
+	 * @param messageContent  the content of both messages
+	 * @param subject         the subject of mail
+	 * @return true if mail sending succeeded
+	 */
+	private boolean SendEmaill(String destinationMail, String messageContent, String subject) {
+
 		try {
 			// Create a default MimeMessage object.
 			MimeMessage message = new MimeMessage(session);
@@ -70,7 +93,7 @@ public class MyMail {
 			message.setText(messageContent);
 			// Send message
 			Transport.send(message);
-			System.out.println("Sent message successfully...."); //TODO remove later (Roman)
+			System.out.println("Sent email successfully....");
 		} catch (MessagingException mex) {
 			return false;
 		}
@@ -78,6 +101,13 @@ public class MyMail {
 		return true;
 	}
 
+	/**
+	 * creates a pop up information box to mimic an SMS
+	 * 
+	 * @param infoMessage   the message to be written in the info box
+	 * @param titleBar      the title of the pop up
+	 * @param headerMessage the info box's header message
+	 */
 	private void infoBox(String infoMessage, String titleBar, String headerMessage) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle(titleBar);
@@ -86,7 +116,12 @@ public class MyMail {
 		alert.show();
 	}
 
-	/** validation of a email address **/
+	/**
+	 * validation of a email address
+	 * 
+	 * @param email the email to be verified
+	 * @return true if email matches format, false otherwise
+	 */
 	public boolean isValidEmailAddress(String email) {
 		return email.matches("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)+$");
 	}

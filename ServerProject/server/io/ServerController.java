@@ -3,9 +3,6 @@ package io;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import entities.Permission;
-import entities.Permissions;
-import entities.Worker;
 import gui.ServerGuiController;
 import logic.DiscountController;
 import logic.EntryController;
@@ -20,6 +17,9 @@ import modules.ServerRequest;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
+/**
+ * the server's controller class
+ */
 public class ServerController extends AbstractServer {
 
 	public static int DEFAULT_SERVER_PORT = 5555;
@@ -56,6 +56,14 @@ public class ServerController extends AbstractServer {
 		}
 	}
 
+	/**
+	 * start running the server
+	 * 
+	 * @param port the server's port
+	 * @param gui  the {@link ServerGuiController} to work with
+	 * @throws SQLException
+	 * @return the {@link ServerController}
+	 */
 	public static ServerController startServer(int port, ServerGuiController gui) throws SQLException {
 		ServerController.gui = gui;
 		return new ServerController(port);
@@ -65,7 +73,7 @@ public class ServerController extends AbstractServer {
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		String parsed = (String) msg;
 		String response = null;
-		System.out.println("received message > "+parsed);
+		System.out.println("received message > " + parsed);
 		ServerRequest sr = ServerRequest.fromJson(parsed);
 		switch (sr.manager) {
 		case Discount:
@@ -145,16 +153,18 @@ public class ServerController extends AbstractServer {
 	}
 
 	/**
-	 * This method overrides the one in the superclass. Called when the server
-	 * starts listening for connections.
+	 * This method overrides the one in the superclass.
+	 * <p>
+	 * Called when the server starts listening for connections.
 	 */
 	protected void serverStarted() {
 		System.out.println("Server listening for connections on port " + getPort());
 	}
 
 	/**
-	 * This method overrides the one in the superclass. Called when the server stops
-	 * listening for connections.
+	 * This method overrides the one in the superclass.
+	 * <p>
+	 * Called when the server stops listening for connections.
 	 */
 	protected void serverStopped() {
 		System.out.println("Server has stopped listening for connections.");

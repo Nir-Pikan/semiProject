@@ -22,6 +22,7 @@ import javafx.application.Platform;
 import modules.IController;
 import modules.PeriodicallyRunner;
 import modules.ServerRequest;
+import modules.SystemConfig;
 import modules.WakeableThread;
 
 
@@ -64,7 +65,8 @@ public class WaitingListController implements IController {
 	}
 
 	private void InitWaitingListCleaner() {
-		PeriodicallyRunner.runEveryDayAt(23, 00, ()->{
+		int[] cancel = SystemConfig.configuration.RemoveFromWatingListTime;
+		PeriodicallyRunner.runEveryDayAt(cancel[0], cancel[1], ()->{
 			PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM waitingList WHERE visitTime < ?;");
 			
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
@@ -100,7 +102,7 @@ public class WaitingListController implements IController {
 			final Order orderToNotify = nextWaiting;
 			Platform.runLater(()->{notifyWaitingOrder(orderToNotify);});
 			currentWaitingCancelation.put(nextWaiting.orderID,thread);
-			if(thread.sleepUntillWoken(TimeUnit.HOURS, 1)) {
+			if(thread.sleepUntillWoken(TimeUnit.SECONDS, SystemConfig.configuration.WaitingListTimer)) {
 				//if woken by user interaction
 				if(!currentCancelation.containsKey(thread))
 					return;//exit if finished with this cancellation

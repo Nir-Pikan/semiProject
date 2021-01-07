@@ -37,12 +37,12 @@ public class EntryController implements IController {
 	 * Creates the DB table
 	 */
 	private void createTable() {
-		boolean isCreated =dbController.createTable("parkEntry " + "(entryType ENUM('Personal','Subscriber','Group','PrivateGroup') , "
+		boolean isCreated = dbController.createTable("parkEntry "
+				+ "(entryType ENUM('Personal','Subscriber','Group','PrivateGroup') , "
 				+ "personID varchar(20) NOT NULL , " + "parkID varchar(20) NULL , "
 				+ "arriveTime TIMESTAMP(1) NOT NULL , " + "exitTime TIMESTAMP(1) NULL , "
 				+ "numberOfVisitors  int NULL , numberOfSubscribers  int NULL , " + "isCasual TINYINT NULL ,"
-				+ "priceOfOrder FLOAT NULL , " + "priceOfEntry FLOAT NULL , "
-				+ "primary key(personID , arriveTime));");
+				+ "priceOfOrder FLOAT NULL , " + "priceOfEntry FLOAT NULL , " + "primary key(personID , arriveTime));");
 		if (isCreated) {
 			System.out.println("Table parkEntry created successful");
 		}
@@ -54,7 +54,6 @@ public class EntryController implements IController {
 		String response = null;
 		switch (job) {
 
-        
 		case "getEntriesByDate":
 			Timestamp[] times = ServerRequest.gson.fromJson(request.data, Timestamp[].class);
 			if (times == null || times.length != 2) {
@@ -111,7 +110,7 @@ public class EntryController implements IController {
 	 * @return true if succeeded to enter new
 	 */
 	private boolean AddNewEntry(ParkEntry newEntry) {
-		if(dbController==null)
+		if (dbController == null)
 			dbController = DbController.getInstance();
 		createTable();
 
@@ -119,9 +118,9 @@ public class EntryController implements IController {
 			return false;
 
 		Park p = park.getPark(newEntry.parkID);
-		if(newEntry.numberOfVisitors >(p.maxCapacity-p.currentNumOfVisitors) )
+		if (newEntry.numberOfVisitors > (p.maxCapacity - p.currentNumOfVisitors))
 			return false;
-		
+
 		PreparedStatement pstmt = dbController.getPreparedStatement("INSERT INTO parkEntry"
 				+ "( entryType , personID , parkID , arriveTime , exitTime , numberOfVisitors , numberOfSubscribers , isCasual , priceOfOrder , priceOfEntry ) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? );");
 		try {
@@ -136,14 +135,19 @@ public class EntryController implements IController {
 			pstmt.setInt(7, newEntry.numberOfSubscribers);
 			pstmt.setBoolean(8, newEntry.isCasual);
 			boolean isGroup = newEntry.entryType == EntryType.Group ? true : false;
-			pstmt.setFloat(9, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
-					newEntry.numberOfSubscribers, isGroup));
-			pstmt.setFloat(10, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
-					newEntry.numberOfSubscribers, isGroup));
-
-			
+			if (newEntry.isCasual) {
+				pstmt.setFloat(9, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
+						newEntry.numberOfSubscribers, isGroup));
+				pstmt.setFloat(10, discount.CalculatePriceForEntryCasual(newEntry.numberOfVisitors,
+						newEntry.numberOfSubscribers, isGroup));
+			} else {
+				pstmt.setFloat(9, discount.CalculatePriceForEntryByOrder(newEntry.numberOfVisitors,
+						newEntry.numberOfSubscribers, isGroup, newEntry.arriveTime));
+				pstmt.setFloat(10, discount.CalculatePriceForEntryByOrder(newEntry.numberOfVisitors,
+						newEntry.numberOfSubscribers, isGroup, newEntry.arriveTime));
+			}
 			park.updateNumberOfCurrentVisitor(newEntry.parkID, newEntry.numberOfVisitors);
-			
+
 			return pstmt.executeUpdate() == 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -168,20 +172,20 @@ public class EntryController implements IController {
 		if (rs == null)
 			return false;
 
-		PreparedStatement pstmt = dbController.getPreparedStatement(
-				"UPDATE parkEntry SET exitTime = ? WHERE  personID = ? AND exitTime is NULL ;");
+		PreparedStatement pstmt = dbController
+				.getPreparedStatement("UPDATE parkEntry SET exitTime = ? WHERE  personID = ? AND exitTime is NULL ;");
 		try {
 			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 			pstmt.setTimestamp(1, currentTime);
 			pstmt.setString(2, personID);
-			if  (rs.next()) {
+			if (rs.next()) {
 
 				String parkID = rs.getString(3);
 				int numberOfVisitors = rs.getInt(6);
 
 				park.updateNumberOfCurrentVisitor(parkID, -numberOfVisitors);
 				rs.close();
-				return pstmt.executeUpdate()==1;
+				return pstmt.executeUpdate() == 1;
 
 			}
 			return false;

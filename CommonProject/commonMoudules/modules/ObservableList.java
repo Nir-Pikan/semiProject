@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * base implementation of ObservableList, support add and remover Properties
+ * 
  * @param <T> type of {@link ArrayList}
  */
 public class ObservableList<T> extends ArrayList<T> {
@@ -20,6 +21,7 @@ public class ObservableList<T> extends ArrayList<T> {
 
 	/**
 	 * creates empty List
+	 * 
 	 * @see {@link ArrayList#ArrayList()}
 	 */
 	public ObservableList() {
@@ -28,6 +30,7 @@ public class ObservableList<T> extends ArrayList<T> {
 
 	/**
 	 * Creates List from given Collection
+	 * 
 	 * @param arg0 {@link Collection} to add
 	 * @see {@link ArrayList#ArrayList(Collection)}
 	 */
@@ -37,6 +40,7 @@ public class ObservableList<T> extends ArrayList<T> {
 
 	/**
 	 * Creates List from given Collection
+	 * 
 	 * @param arg0 {@link Collection} to add
 	 * @see {@link ArrayList#ArrayList(int)}
 	 */

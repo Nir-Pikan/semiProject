@@ -1,8 +1,7 @@
 package entities;
 
 /**
- * a class containing Subscriber's data
- * <p>
+ * a class containing Subscriber's data <br>
  * a Subscriber may contain one {@link CreditCard}
  */
 public class Subscriber {
@@ -69,8 +68,7 @@ public class Subscriber {
 	}
 
 	/**
-	 * a class containing Credit card's data
-	 * <p>
+	 * a class containing Credit card's data <br>
 	 * a Credit card may be used by multiple {@link Subscriber}s
 	 */
 	public static class CreditCard {

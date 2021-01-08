@@ -2,9 +2,7 @@ package entities;
 
 import java.sql.Timestamp;
 
-/**
- * a class containing the data of a single order
- */
+/** a class containing the data of a single order */
 public class Order {
 	public enum IdType {
 		PRIVATE, PRIVATEGROUP, GUIDE, FAMILY

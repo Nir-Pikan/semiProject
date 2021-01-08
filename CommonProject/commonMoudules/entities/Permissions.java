@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class containing a list of {@link Permission}.
- * <p>
+ * A class containing a list of {@link Permission}. <br>
  * Each list is for a specific {@link Park}
  */
 public class Permissions {

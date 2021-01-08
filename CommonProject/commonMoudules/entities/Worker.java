@@ -1,8 +1,7 @@
 package entities;
 
 /**
- * A class containing the data of a GoNature's worker.
- * <p>
+ * A class containing the data of a GoNature's worker. <br>
  * Each worker contains {@link Permissions}
  */
 public class Worker {

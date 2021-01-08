@@ -14,7 +14,7 @@ import modules.ServerRequest.Manager;
 public class CardReaderController {
 
 	/**
-	 * creates {@link CardReaderController}
+	 * creates the {@link CardReaderController}
 	 */
 	public CardReaderController() {
 
@@ -26,9 +26,11 @@ public class CardReaderController {
 	/**
 	 * method that checks if visitor is allowed to enter to the park
 	 * 
-	 * @param id the ID of visitor to be checked
+	 * @param id                  the ID of visitor to be checked
+	 * @param numberOfVisitors    amount of visitors who want to enter the park
+	 * @param numberOfSubscribers amount of subscribers who want to enter the park
 	 */
-	public void enterVisitor(String id, int numberOfVisitors,int numberOfSubscribers) {
+	public void enterVisitor(String id, int numberOfVisitors, int numberOfSubscribers) {
 
 		ServerRequest sr = new ServerRequest(Manager.Order, "GetOrderByVisitorID",
 				ServerRequest.gson.toJson(id, String.class));
@@ -40,23 +42,22 @@ public class CardReaderController {
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		for (Order order : orders) {
 			if (!order.isUsed)
-				if (order.visitTime.getTime() <= ( currentTime.getTime()+ TimeUnit.MINUTES.toMillis(30))
-						&& order.visitTime.getTime() >= (currentTime.getTime())- TimeUnit.MINUTES.toMillis(30)) {
-					if(order.numberOfVisitors<numberOfVisitors || order.numberOfSubscribers<numberOfSubscribers) {
-						
+				if (order.visitTime.getTime() <= (currentTime.getTime() + TimeUnit.MINUTES.toMillis(30))
+						&& order.visitTime.getTime() >= (currentTime.getTime()) - TimeUnit.MINUTES.toMillis(30)) {
+					if (order.numberOfVisitors < numberOfVisitors || order.numberOfSubscribers < numberOfSubscribers) {
+
 						PopUp.showInformation("Wrong input", "Wrong input",
 								"Number of people or Number of Subscriber is Larger then in the original order");
 						return;
 					}
-					
+
 					currentOrder = order;
 					break;
 				}
 
 		}
 		if (currentOrder == null) {
-			PopUp.showInformation("No such order for time", "No such order for time",
-					"No such order for time");
+			PopUp.showInformation("No such order for time", "No such order for time", "No such order for time");
 
 		} else {
 			if (currentOrder.numberOfVisitors < numberOfVisitors) {
@@ -64,22 +65,28 @@ public class CardReaderController {
 				PopUp.showInformation("No such order for time", "No such order for time",
 						"In Order :" + currentOrder.numberOfVisitors + "\nCame to the park : " + numberOfVisitors);
 			} else {
-				updateEntry(currentOrder, numberOfVisitors,numberOfSubscribers);
+				updateEntry(currentOrder, numberOfVisitors, numberOfSubscribers);
 
 			}
 		}
 
 	}
 
-	private void updateEntry(Order currentOrder, int numberOfVisitors,int numberOfSubscribers) {
-		if(currentOrder==null)
+	/**
+	 * creates an {@link ParkEntry} according to {@link Order} and {@link Card}
+	 * 
+	 * @param currentOrder        the entery's {@link Order}
+	 * @param numberOfVisitors    amount of visitors that entered the park
+	 * @param numberOfSubscribers amount of subscribers that entered the park
+	 */
+	private void updateEntry(Order currentOrder, int numberOfVisitors, int numberOfSubscribers) {
+		if (currentOrder == null)
 			return;
-		
-		
+
 		currentOrder.numberOfVisitors = numberOfVisitors;
-		currentOrder.numberOfSubscribers=numberOfSubscribers;
-	
-		currentOrder.isUsed=true;
+		currentOrder.numberOfSubscribers = numberOfSubscribers;
+
+		currentOrder.isUsed = true;
 
 		EntryType entryType = null;
 		switch (currentOrder.type) {
@@ -100,19 +107,19 @@ public class CardReaderController {
 			break;
 		}
 
-		
 		ServerRequest sr3 = new ServerRequest(Manager.Discount, "CalculatePriceForEntryByOrder",
 				ServerRequest.gson.toJson(currentOrder, Order.class));
 		String respondString3 = clientController.client.sendRequestAndResponse(sr3);
-		float actualPrice=ServerRequest.gson.fromJson(respondString3, Float.class);
-		currentOrder.priceOfOrder=actualPrice;
-		
+		float actualPrice = ServerRequest.gson.fromJson(respondString3, Float.class);
+		currentOrder.priceOfOrder = actualPrice;
+
 		ServerRequest sr = new ServerRequest(Manager.Order, "UpdateOrder",
 				ServerRequest.gson.toJson(currentOrder, Order.class));
 		String respondString = clientController.client.sendRequestAndResponse(sr);
 
 		ParkEntry parkEntry = new ParkEntry(entryType, String.valueOf(currentOrder.ownerID), currentOrder.parkSite,
-				currentOrder.timeOfOrder, null, currentOrder.numberOfVisitors , currentOrder.numberOfSubscribers, false, 0);
+				currentOrder.timeOfOrder, null, currentOrder.numberOfVisitors, currentOrder.numberOfSubscribers, false,
+				0);
 
 		ServerRequest sr2 = new ServerRequest(Manager.Entry, "AddNewEntry",
 				ServerRequest.gson.toJson(parkEntry, ParkEntry.class));
@@ -126,7 +133,7 @@ public class CardReaderController {
 			String bodyString = "";
 			bodyString += "Order ID:" + currentOrder.orderID + "\n";
 			bodyString += "Number Of Visitors:" + currentOrder.numberOfVisitors + "\n";
-			bodyString += "Number Of Subscribers:" + currentOrder.numberOfSubscribers + "\n";			
+			bodyString += "Number Of Subscribers:" + currentOrder.numberOfSubscribers + "\n";
 			bodyString += "Price Of Order:" + currentOrder.priceOfOrder + "\n";
 			bodyString += "Visit Time:" + currentOrder.visitTime + "\n";
 
@@ -140,7 +147,7 @@ public class CardReaderController {
 			String bodyString = "";
 			bodyString += "Park ID:" + parkEntry.parkID + "\n";
 			bodyString += "Number Of Visitors:" + parkEntry.numberOfVisitors + "\n";
-			bodyString += "Number Of Subscribers:" + parkEntry.numberOfSubscribers + "\n";		
+			bodyString += "Number Of Subscribers:" + parkEntry.numberOfSubscribers + "\n";
 			bodyString += "Price Of Order:" + parkEntry.priceOfOrder + "\n";
 			bodyString += "Visit Time:" + parkEntry.arriveTime + "\n";
 

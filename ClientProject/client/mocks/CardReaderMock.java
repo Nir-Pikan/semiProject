@@ -5,8 +5,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class CardReaderMock  {
+/** the gui class for the {@link CardReaderSystem} */
+public class CardReaderMock {
 
+	/** start the {@link CardReaderMock} */
 	public CardReaderMock(Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
@@ -22,10 +24,10 @@ public class CardReaderMock  {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// ============================ main is only for demonstration
-		// ====================
-		// in the real this window will be opened with the main window at the beginning
-		// of the program
-		
-	}
+	// ====================
+	// in the real this window will be opened with the main window at the beginning
+	// of the program
+
+}

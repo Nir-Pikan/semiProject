@@ -3,9 +3,7 @@ package entities;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-/**
- * a class containing the data of a single discount
- */
+/** a class containing the data of a single discount */
 public class DiscountEntity {
 
 	public String DiscountID;

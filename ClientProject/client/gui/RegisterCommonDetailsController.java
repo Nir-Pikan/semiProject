@@ -109,8 +109,8 @@ public class RegisterCommonDetailsController implements GuiController {
 	}
 
 	/**
-	 * Will move to the next page if all required fields are filled. Next page is
-	 * determined by the CreditCardCheckBox
+	 * Will move to the next page if all required fields are filled.<br>
+	 * Next page is determined by the CreditCardCheckBox
 	 */
 	@FXML
 	void MoveToNextPage(ActionEvent event) {
@@ -166,8 +166,8 @@ public class RegisterCommonDetailsController implements GuiController {
 	}
 
 	/**
-	 * Checks if all required fields on the page are filled correctly. If not, marks
-	 * the problems with fields for the user
+	 * Checks if all required fields on the page are filled correctly.<br>
+	 * If not, marks the problems with fields for the user
 	 * 
 	 * @return true if all required fields are filled correctly, false otherwise
 	 */
@@ -182,8 +182,8 @@ public class RegisterCommonDetailsController implements GuiController {
 	}
 
 	/**
-	 * Check if FirstName field is field correctly. If not, marks the problem with
-	 * the field for the user
+	 * Check if FirstName field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -220,8 +220,8 @@ public class RegisterCommonDetailsController implements GuiController {
 	}
 
 	/**
-	 * Check if LastName field is field correctly. If not, marks the problem with
-	 * the field for the user
+	 * Check if LastName field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -258,8 +258,8 @@ public class RegisterCommonDetailsController implements GuiController {
 	}
 
 	/**
-	 * Check if ID field is field correctly. If not, marks the problem with the
-	 * field for the user
+	 * Check if ID field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -296,8 +296,8 @@ public class RegisterCommonDetailsController implements GuiController {
 	}
 
 	/**
-	 * Check if PhoneNumber field is field correctly. If not, marks the problem with
-	 * the field for the user
+	 * Check if PhoneNumber field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -334,8 +334,8 @@ public class RegisterCommonDetailsController implements GuiController {
 	}
 
 	/**
-	 * Check if Email field is field correctly. If not, marks the problem with the
-	 * field for the user
+	 * Check if Email field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */

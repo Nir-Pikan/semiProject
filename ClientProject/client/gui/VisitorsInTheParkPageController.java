@@ -19,31 +19,31 @@ public class VisitorsInTheParkPageController implements GuiController {
 	@FXML
 	private TextField availableVisitorsAmountText;
 
-
 	@FXML
 	private TextField visitorsAmountText;
 
 	@FXML
 	private Button closeButton;
 
+	/** create a casual family order */
 	@FXML
 	void familyOrder(ActionEvent event) {
-		if(!checkParkCapacity(parkNumChoise.getValue().toString())) {
+		if (!checkParkCapacity(parkNumChoise.getValue().toString())) {
 			PopUp.showInformation("Not enough space", "Not enough space", "Not enough space in the park");
 			return;
 		}
 		String ordererId = PopUp.getUserInput("family/Group Order", "enter Id of the orderer", "id or subscriberId :");
 		if (CheckID(ordererId)) {
-		if (!ordererId.contains("S"))
-			ordererId = "S" + ordererId;
-		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ordererId));
-		if (response.contains("was not found")) {
-			PopUp.showInformation("Please enter subscriber ID", "Please enter subscriber ID",
-					"Please enter subscriber ID");
-			return;
-		}
-		Subscriber s = ServerRequest.gson.fromJson(response, Subscriber.class);
+			if (!ordererId.contains("S"))
+				ordererId = "S" + ordererId;
+			String response = clientController.client
+					.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ordererId));
+			if (response.contains("was not found")) {
+				PopUp.showInformation("Please enter subscriber ID", "Please enter subscriber ID",
+						"Please enter subscriber ID");
+				return;
+			}
+			Subscriber s = ServerRequest.gson.fromJson(response, Subscriber.class);
 			GroupOrderController g = (GroupOrderController) Navigator.instance().navigate("GroupOrder");
 			g.setSpontaneous(ordererId, parkNumChoise.getValue());
 		} else
@@ -52,9 +52,10 @@ public class VisitorsInTheParkPageController implements GuiController {
 
 	}
 
+	/** create a casual private group order */
 	@FXML
 	void privateGroupOrder(ActionEvent event) {
-		if(!checkParkCapacity(parkNumChoise.getValue().toString())) {
+		if (!checkParkCapacity(parkNumChoise.getValue().toString())) {
 			PopUp.showInformation("Not enough space", "Not enough space", "Not enough space in the park");
 			return;
 		}
@@ -67,9 +68,10 @@ public class VisitorsInTheParkPageController implements GuiController {
 					"Please enter appropriate ID");
 	}
 
+	/** create a casual regular order */
 	@FXML
 	void regularOrder(ActionEvent event) {
-		if(!checkParkCapacity(parkNumChoise.getValue().toString())) {
+		if (!checkParkCapacity(parkNumChoise.getValue().toString())) {
 			PopUp.showInformation("Not enough space", "Not enough space", "Not enough space in the park");
 			return;
 		}
@@ -111,24 +113,38 @@ public class VisitorsInTheParkPageController implements GuiController {
 		parkNumChoise.getSelectionModel().select(0);
 	}
 
+	/**
+	 * sets the park field
+	 * 
+	 * @param parkId the chosen {@link Park}'s id
+	 */
 	public void setPark(String parkId) {
 		parkNumChoise.setDisable(true);
 		parkNumChoise.getSelectionModel().select(parkId);
 	}
 
 	/**
-	 * Checks if the ID is from a type of 9 numbers or S and 9 numbers
+	 * Checks if the ID is a 9 digits number<br>
+	 * or S + 9 digits number
 	 * 
-	 * @param ID
-	 * @return true if ID entered as expected, false otherwise
+	 * @param id the id to check
+	 * @return true if ID is in right format<br>
+	 *         false otherwise
 	 */
-	private boolean CheckID(String ID) {
-		if ((!ID.matches("([0-9])+") || ID.length() != 9) && (!ID.matches("S([0-9])+") || ID.length() != 10)) {
+	private boolean CheckID(String id) {
+		if ((!id.matches("([0-9])+") || id.length() != 9) && (!id.matches("S([0-9])+") || id.length() != 10)) {
 			return false;
 		}
 		return true;
 	}
-	
+
+	/**
+	 * check if there is free space in {@link Park}
+	 * 
+	 * @param park the wanted {@link Park}'s ID
+	 * @return true if the is free space<br>
+	 *         false if park is full
+	 */
 	private boolean checkParkCapacity(String park) {
 		String response = clientController.client
 				.sendRequestAndResponse(new ServerRequest(Manager.Park, "get number of visitor available", park));

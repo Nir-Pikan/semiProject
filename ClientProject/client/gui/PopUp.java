@@ -164,7 +164,7 @@ public class PopUp extends Alert {
 	 * @param header the text to show in the upper part of the alert
 	 * @param body   the text to show in the lower part of the alert(next to the
 	 *               text field)
-	 * @return the text inputes by the user
+	 * @return the text inputs by the user
 	 */
 	public static String getUserInput(String title, String header, String body) {
 		Alert alert = new PopUp(AlertType.INFORMATION);

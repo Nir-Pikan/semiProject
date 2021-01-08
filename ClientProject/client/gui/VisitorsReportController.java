@@ -155,7 +155,7 @@ public class VisitorsReportController implements GuiController, Report {
 
 					// privateGroup
 					if (entry.entryType.equals(ParkEntry.EntryType.PrivateGroup)) {
-						singleVisitorsCounter += entry.numberOfVisitors- entry.numberOfSubscribers;
+						singleVisitorsCounter += entry.numberOfVisitors - entry.numberOfSubscribers;
 						subscriberVisitorsCounter += entry.numberOfSubscribers;
 						totalVisitorsCounter += entry.numberOfVisitors;
 					}
@@ -168,7 +168,6 @@ public class VisitorsReportController implements GuiController, Report {
 			textTotalVisitors.setText(String.valueOf(totalVisitorsCounter));
 
 			// update the bar chart
-			// TODO Work on how this looks ~Nir Pikan~ ~Michael Gindin~
 
 			DayOfWeek[] dayOfWeeks = DayOfWeek.values();
 			for (int i = 1; i < dayOfWeeks.length; i++) {
@@ -199,7 +198,8 @@ public class VisitorsReportController implements GuiController, Report {
 			for (DayOfWeek dayOfWeek : dayOfWeeks) {
 				int counter = 0;
 				for (ParkEntry parkEntry : entries) {
-					if (parkEntry.parkID.equals(parkID)	&& parkEntry.arriveTime.toLocalDateTime().toLocalDate().getDayOfWeek().equals(dayOfWeek)) {
+					if (parkEntry.parkID.equals(parkID)
+							&& parkEntry.arriveTime.toLocalDateTime().toLocalDate().getDayOfWeek().equals(dayOfWeek)) {
 						counter += parkEntry.numberOfVisitors;
 					}
 				}

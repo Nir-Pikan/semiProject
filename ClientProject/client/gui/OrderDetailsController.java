@@ -61,10 +61,11 @@ public class OrderDetailsController implements GuiController {
 
 	@FXML
 	private TextField noOfSubscribersTxt;
-	
-	@FXML
-    private Label lblWaitingList;
 
+	@FXML
+	private Label lblWaitingList;
+
+	/** approves the observed {@link Order} */
 	@FXML
 	void ApproveOrder(ActionEvent event) {
 		switch (order.orderStatus) {
@@ -91,6 +92,7 @@ public class OrderDetailsController implements GuiController {
 
 	}
 
+	/** cancels the observed {@link Order} */
 	@FXML
 	void cancelOrder(ActionEvent event) {
 		if (!PopUp.ask("Cancel Order", "Cancel Order", "Are you sure you wand to cancel?"))
@@ -114,11 +116,22 @@ public class OrderDetailsController implements GuiController {
 		}
 	}
 
+	/**
+	 * puts data from {@link Order} into fields<br>
+	 * using initFields()
+	 * 
+	 * @param order the {@link Order} to get data from
+	 */
 	public void addOrderDataToFields(Order order) {
 		this.order = order;
 		initFields(order);
 	}
 
+	/**
+	 * initialize the window fields using the data from {@link Order}<br>
+	 * 
+	 * @param order the {@link Order} to get data from
+	 */
 	private void initFields(Order order) {
 		approveBtn.setDisable(false);
 		orderNoTxt.setText("Order #: " + String.valueOf(order.orderID));
@@ -134,11 +147,23 @@ public class OrderDetailsController implements GuiController {
 		priceTxt.setText(String.valueOf(order.priceOfOrder));
 	}
 
+	/**
+	 * create a time String from Time stamp
+	 * 
+	 * @param stamp the Timestamp to get time from
+	 * @return the time String
+	 */
 	private String toTime(Timestamp stamp) { // added by (Roman)
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		return sdf.format(stamp);
 	}
 
+	/**
+	 * create a date String from Time stamp
+	 * 
+	 * @param stamp the Timestamp to get date from
+	 * @return the date String
+	 */
 	private String toDate(long timestamp) { // added by (Roman)
 		Date date = new Date(timestamp);
 		return new SimpleDateFormat("MM/dd/yyyy").format(date);
@@ -159,6 +184,13 @@ public class OrderDetailsController implements GuiController {
 //		Navigator.instance().back();
 	}
 
+	/**
+	 * get the {@link Order} from DB
+	 * 
+	 * @param orederIDint the wanted {@link Order}'s ID
+	 * @return true if succeeded<br>
+	 *         false otherwise
+	 */
 	private boolean getOrder(int orederIDint) {
 		lblWaitingList.setVisible(false);
 		String orderID = orederIDint + "";
@@ -206,6 +238,11 @@ public class OrderDetailsController implements GuiController {
 		return false;
 	}
 
+	/**
+	 * checks if the logged in user is the owner of wanted {@link Order}
+	 * 
+	 * @param o the wanted {@link Order}
+	 */
 	private void checkOrderOwner(Order o) {
 		if (clientController.client.logedInSubscriber.getVal() != null) {
 			if (!clientController.client.logedInSubscriber.getVal().subscriberID.equals('S' + o.ownerID)) {

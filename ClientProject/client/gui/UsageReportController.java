@@ -73,6 +73,7 @@ public class UsageReportController implements GuiController, Report {
 	@FXML
 	private Button buttonPrint;
 
+	/** prints the report */
 	@FXML
 	void printButton_OnClick(ActionEvent event) {
 		JavafxPrinter.printThisWindow(buttonPrint.getScene().getWindow());
@@ -141,36 +142,37 @@ public class UsageReportController implements GuiController, Report {
 //=================================================================================================================		
 
 //=========== create the table ==================================================================================== 			
-	
-			DateCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,String>, ObservableValue<String>>() {
-				
-				@Override
-				public ObservableValue<String> call(CellDataFeatures<UsageRow, String> param) {
-					return param.getValue().getValue().getDate();
-				}
-			});
+
+			DateCol.setCellValueFactory(
+					new Callback<TreeTableColumn.CellDataFeatures<UsageRow, String>, ObservableValue<String>>() {
+
+						@Override
+						public ObservableValue<String> call(CellDataFeatures<UsageRow, String> param) {
+							return param.getValue().getValue().getDate();
+						}
+					});
 			DateCol.setSortable(false);
-			
-			visitorsCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,Number>, ObservableValue<Number>>() {
-				
-				@Override
-				public ObservableValue<Number> call(CellDataFeatures<UsageRow, Number> param) {
-					return param.getValue().getValue().getVisitors();
-				}
-			});
+
+			visitorsCol.setCellValueFactory(
+					new Callback<TreeTableColumn.CellDataFeatures<UsageRow, Number>, ObservableValue<Number>>() {
+
+						@Override
+						public ObservableValue<Number> call(CellDataFeatures<UsageRow, Number> param) {
+							return param.getValue().getValue().getVisitors();
+						}
+					});
 			visitorsCol.setSortable(false);
 
-			usageCol.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<UsageRow,Number>, ObservableValue<Number>>() {
-				
-		
-				@Override
-				public ObservableValue<Number> call(CellDataFeatures<UsageRow, Number> param) {
-					return param.getValue().getValue().getUsage();
-				}
-			});
+			usageCol.setCellValueFactory(
+					new Callback<TreeTableColumn.CellDataFeatures<UsageRow, Number>, ObservableValue<Number>>() {
+
+						@Override
+						public ObservableValue<Number> call(CellDataFeatures<UsageRow, Number> param) {
+							return param.getValue().getValue().getUsage();
+						}
+					});
 			usageCol.setSortable(false);
-			
-			
+
 			ParkNameAndTimes p = clientController.client.openingTimes.get(parkID);
 
 			String dates = reportDate[0].toLocalDateTime().toLocalDate().toString() + " to "
@@ -192,7 +194,7 @@ public class UsageReportController implements GuiController, Report {
 				double usage = ((double) visitorsPerDay[i])
 						/ (maxCapacity * (p.closeTime - p.openTime) / Double.parseDouble(parkParameters[2]));
 				usage *= 10000;
-				usage =((int)usage)/100.0;
+				usage = ((int) usage) / 100.0;
 				TreeItem<UsageRow> dayItem = new TreeItem<UsageRow>(new UsageRow(day, visitorsPerDay[i], usage));
 				int[] visitorsAtHour = new int[24];
 				for (int j = 0; j < visitorsAtHour.length; j++) {
@@ -204,23 +206,21 @@ public class UsageReportController implements GuiController, Report {
 					for (ParkEntry entry : entries) {
 						// only for wanted park and hour
 						if (entry.parkID.equals(parkID) && entry.arriveTime.toLocalDateTime().getHour() <= j
-								&& entry.exitTime.toLocalDateTime().getHour() >= j && entry.arriveTime.toLocalDateTime().toLocalDate().getDayOfMonth()==(i+1))
+								&& entry.exitTime.toLocalDateTime().getHour() >= j
+								&& entry.arriveTime.toLocalDateTime().toLocalDate().getDayOfMonth() == (i + 1))
 							visitors += entry.numberOfVisitors;
 					}
-					usage = ((double) visitors)
-							/ (maxCapacity ) ;
-					
-				
+					usage = ((double) visitors) / (maxCapacity);
+
 					usage *= 10000;
-					usage =((int)usage)/100.0;
+					usage = ((int) usage) / 100.0;
 					TreeItem<UsageRow> hourItem = new TreeItem<UsageRow>(new UsageRow(hourString, visitors, usage));
 					dayItem.getChildren().add(hourItem);
 
 				}
 				rootData.getChildren().add(dayItem);
 			}
-			
-			  
+
 			usageTreeTable.setRoot(rootData);
 			usageTreeTable.setShowRoot(false);
 		}
@@ -234,20 +234,22 @@ public class UsageReportController implements GuiController, Report {
 		SimpleStringProperty date;
 		SimpleIntegerProperty visitors;
 		SimpleDoubleProperty usage;
-		
+
 		public UsageRow(String date, int visitors, double usage) {
 			this.date = new SimpleStringProperty(date);
-			this.visitors =  new SimpleIntegerProperty(visitors);
+			this.visitors = new SimpleIntegerProperty(visitors);
 			this.usage = new SimpleDoubleProperty(usage);
 		}
+
 		public void setDate(String date) {
-			this.date = new SimpleStringProperty(date);;
+			this.date = new SimpleStringProperty(date);
+			;
 		}
-		
+
 		public void setVisitors(int visitors) {
 			this.visitors = new SimpleIntegerProperty(visitors);
 		}
-		
+
 		public void setUsage(double usage) {
 			this.usage = new SimpleDoubleProperty(usage);
 		}

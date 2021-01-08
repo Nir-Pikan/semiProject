@@ -29,7 +29,6 @@ public class CardReaderController {
 	 * @param id the ID of visitor to be checked
 	 */
 	public void enterVisitor(String id, int numberOfVisitors,int numberOfSubscribers) {
-		// TODO checks if visitor allowed to enter to the park (Roman)
 
 		ServerRequest sr = new ServerRequest(Manager.Order, "GetOrderByVisitorID",
 				ServerRequest.gson.toJson(id, String.class));

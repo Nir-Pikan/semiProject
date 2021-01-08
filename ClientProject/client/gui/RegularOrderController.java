@@ -8,6 +8,7 @@ import java.util.Map;
 import entities.Order;
 import entities.ParkEntry;
 import entities.ParkNameAndTimes;
+import entities.Subscriber;
 import io.clientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,6 +65,11 @@ public class RegularOrderController implements GuiController {
 	@FXML
 	private Label PhoneNote;
 
+	/**  //TODO edit ~nir~
+	 * Initialize the GUI: limits the Date picker and set subscriber data if found //TODO
+	 * edit ~nir~
+	 * 
+	 */
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear();
@@ -71,7 +77,7 @@ public class RegularOrderController implements GuiController {
 		// parkEntry = null; // to be sure
 		Park_ComboBox.getItems().addAll(parkNames);
 		PlaceOrder_Button.setDisable(false); // why disabling the button by default??
-		
+		isSubscriber(null);
 		// set only relevant dates
 		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
 			@Override
@@ -92,7 +98,11 @@ public class RegularOrderController implements GuiController {
 		Date_DatePicker.setDayCellFactory(callB);
 
 	}
-
+	/**  //TODO edit ~nir~
+	 * Creates and returns String array with working hours of the park
+	 * @param parkDetails
+	 * @return
+	 */
 	private String[] CreateWorkingHours(ParkNameAndTimes parkDetails) {
 		VisitHour_ComboBox.getItems().clear();
 		int numberOfWorkingHours = parkDetails.closeTime - parkDetails.openTime;
@@ -102,7 +112,10 @@ public class RegularOrderController implements GuiController {
 		}
 		return res;
 	}
-
+	/**  //TODO edit ~nir~
+	 * When park was chosen set the visit hour comboBox to park working hours 
+	 * @param event
+	 */
 	@FXML
 	void parkWasChosen(ActionEvent event) {
 		ParkNameAndTimes temp = null;
@@ -112,7 +125,7 @@ public class RegularOrderController implements GuiController {
 		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
 	}
 
-	/**
+	/**  //TODO edit ~nir~
 	 * Check if all the fields was filled correctly
 	 * 
 	 * @return return true if all the fields are correct, false otherwise
@@ -127,7 +140,7 @@ public class RegularOrderController implements GuiController {
 		return res;
 	}
 
-	/**
+	/**  //TODO edit ~nir~
 	 * Check that park site was chosen
 	 * 
 	 * @return true if field is not empty, false otherwise
@@ -144,7 +157,7 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**
+	/**  //TODO edit ~nir~
 	 * Check if date was selected Only relevant dates are can be chosen, no need to
 	 * check if the date is relevant
 	 * 
@@ -162,8 +175,7 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	// TODO Check also the hour if the date that was chosen is today
-	/**
+	/**  //TODO edit ~nir~
 	 * Check if hour of a visit was selected DONT CHECK IF THE HOUR IS NOT RELEVANT
 	 * IF TODAY WAS CHOSEN
 	 * 
@@ -181,7 +193,7 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**
+	/**  //TODO edit ~nir~
 	 * Check if the email address is filled in appropriate form
 	 * 
 	 * @return true if email address was filled in appropriate form, false otherwise
@@ -212,7 +224,7 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**
+	/**  //TODO edit ~nir~
 	 * Check if the phone number is filled in appropriate form
 	 * 
 	 * @return return true if id phone number filled in appropriate form, false
@@ -254,65 +266,27 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**
-	 * Listener that responsible for PlaceOrder button
-	 * 
-	 * @param event that send a request of new order to the DB through
-	 *              OrderController and get the answer from OrderController
-	 */
-
-	// in a case you want to see the order that been initialized
-//		System.out.println(o.parkSite);
-//		System.out.println(o.numberOfVisitors);
-//		System.out.println(o.orderID);
-//		System.out.println(o.priceOfOrder);
-//		System.out.println(o.email);
-//		System.out.println(o.phone);
-//		System.out.println(o.type);
-//		System.out.println(o.orderStatus);
-//		System.out.println(o.visitTime);
-//		System.out.println(o.timeOfOrder);
-//		System.out.println(o.isUsed);
-
-//================  examples of some functions i used to test the methods from OrderController  =====================
-
-//		String startTimeAndEndTimeAndParkSite[] = new String[3];
-//		startTimeAndEndTimeAndParkSite[0] = ServerRequest.gson.toJson(start, Timestamp.class);
-//		startTimeAndEndTimeAndParkSite[1] = ServerRequest.gson.toJson(end, Timestamp.class);
-//		startTimeAndEndTimeAndParkSite[2] = parkSite;
-//		String response = clientController.client
-//				.sendRequestAndResponse(new ServerRequest(Manager.Order, "GetAllListOfOrders", null));
-//		Order[] res = ServerRequest.gson.fromJson(response, Order[].class);
-
-//		String response = clientController.client.sendRequestAndResponse(
-//				new ServerRequest(Manager.Order, "AddNewOrder", ServerRequest.gson.toJson(o, Order.class)));
-//		String response = clientController.client.sendRequestAndResponse(
-//				new ServerRequest(Manager.Order, "CancelOrderByOrderID", ServerRequest.gson.toJson(1, Integer.class)));
-
-	// write into the DB
-//		String response = clientController.client.sendRequestAndResponse(
-//				new ServerRequest(Manager.Order, "AddNewOrder", ServerRequest.gson.toJson(o, Order.class)));
-
-	/**
-	 * when Place Order button clicked checks if this order can be booked
-	 * 
+	/**  //TODO edit ~nir~
+	 * when Place Order button clicked checks if this order  can be booked or check capacity of the park in case of casual entry
+	 * by connecting with the server. Get response from the server and show appropriate popUp window
 	 * @param event
 	 */
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
 		if (CheckAllRequiredFields()) {
 			if (spontaneous == true) {
-				// ord = createSpontaneousOrderDetails(ord.ownerID,ord.parkSite);
-				// parkEntry = createParkEntry(parkEntry);
+				if (!checkParkCapacity(parkEntry.parkID)) {
+					PopUp.showInformation("Not enough space", "Not enough space", "Not enough space in the park");
+					return;
+				}
+				ord.email = Email_textBox.getText();
+				ord.phone = Phone_textBox.getText();
 				MoveToTheNextPage(ord, parkEntry);
 				return;
 			}
 			ord = createOrderDetails();
-//			String response = clientController.client.sendRequestAndResponse(
-//			new ServerRequest(Manager.Order, "SetOrderToIsUsed", ServerRequest.gson.toJson(11, Integer.class)));
 			String response = clientController.client.sendRequestAndResponse(
 					new ServerRequest(Manager.Order, "IsOrderAllowed", ServerRequest.gson.toJson(ord, Order.class)));
-			// TODO remove all the not necessary cases after integration (Roman)
 			switch (response) {
 			case "Order was added successfully":
 				PopUp.showInformation("Order placed success", "Order placed success",
@@ -338,15 +312,11 @@ public class RegularOrderController implements GuiController {
 						"Failed to cancel an order");
 				break;
 			case "No more orders allowed in this time":
-//					PopUp.showInformation("No more orders allowed in this time", "No more orders allowed in this time",
-//							"No more orders allowed in this time"); // another options will be displayed and offer to waiting list
 				Order newSelectedOrder = OpenOrderTimes.askForWaitingListAndShowOptions(ord);
 				if (newSelectedOrder == null)
 					return;
 				else
 					MoveToTheNextPage(newSelectedOrder, null);
-//						 response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Order,
-//								"IsOrderAllowed", ServerRequest.gson.toJson(newSelectedOrder, Order.class)));
 				break;
 			case "Order Canceled":
 				PopUp.showInformation("Order Canceled", "Order Canceled", "Order Canceled");
@@ -375,33 +345,33 @@ public class RegularOrderController implements GuiController {
 		}
 
 	}
-
+	/**  //TODO edit ~nir~
+	 * Check if park is not full
+	 * @param park
+	 * @return
+	 */
+	private boolean checkParkCapacity(String park) {
+		String response = clientController.client
+				.sendRequestAndResponse(new ServerRequest(Manager.Park, "get number of visitor available", park));
+		int availableSpace = ServerRequest.gson.fromJson(response, Integer.class);
+		if (availableSpace < 1)
+			return false;
+		return true;
+	}
+	
+	/**  //TODO edit ~nir~
+	 * Send the Order and Entry Entities to OrderSummary window
+	 * @param ord (Order Entity)s
+	 * @param parkEntry	
+	 */
 	private void MoveToTheNextPage(Order ord, ParkEntry entry) {
 		Navigator n = Navigator.instance();
 		GuiController g = n.navigate("OrderSummary");
 		((OrderSummaryController) g).addOrderDataToFields(ord, entry);
 	}
 
-//	public void addOrderDataToFields(Order order) {
-//		ord = order;
-//		initFields(ord);
-//	}
-//
-//	/**
-//	 * initialize fields by Order entity
-//	 * 
-//	 * @param order
-//	 */
-//	private void initFields(Order order) {
-//		Park_ComboBox.setValue(order.parkSite);
-//		Date_DatePicker.setValue(order.visitTime.toLocalDateTime().toLocalDate());
-//		VisitHour_ComboBox.setValue(order.visitTime.getHours() + ":" + order.visitTime.getMinutes() + "0");
-//		Email_textBox.setText(order.email);
-//		Phone_textBox.setText(order.phone);
-//	}
-
-	/**
-	 * Create Order Entity from the fields that was willed by the user on a GUI
+	/**  //TODO edit ~nir~
+	 * Create Order Entity from the fields that was filled by the user on a GUI
 	 * 
 	 * @return return the Order Entity that was created
 	 */
@@ -419,39 +389,56 @@ public class RegularOrderController implements GuiController {
 		String phone = Phone_textBox.getText();
 		Order.OrderStatus orderStatus = Order.OrderStatus.IDLE; // default status of order before some changes
 		String ownerID = getIdentificationString();
-		int numberOfSubscribers = isSubscriber();
-		Order ord = new Order(parkName, numberOfVisitors, orderID, 100, email, phone, type, orderStatus,
-				visitTime, timeOfOrder, isUsed, ownerID, numberOfSubscribers);
+		int numberOfSubscribers = isSubscriber(ownerID);
+		Order ord = new Order(parkName, numberOfVisitors, orderID, 100, email, phone, type, orderStatus, visitTime,
+				timeOfOrder, isUsed, ownerID, numberOfSubscribers);
 		ord.priceOfOrder = calcOrderPrice(ord);
 		return ord;
 	}
-
+	/**  //TODO edit ~nir~
+	 * Returns the ID String of a visitor from the clientController
+	 * @return
+	 */
 	private String getIdentificationString() {
 		if (clientController.client.visitorID.getVal() != null)
 			return clientController.client.visitorID.getVal().intern();
 		if (clientController.client.logedInSubscriber.getVal() != null)
 			return clientController.client.logedInSubscriber.getVal().personalID;
-//		if(clientController.client.logedInWorker.getVal() != null)
-//			return clientController.client.logedInWorker.getVal().getWorkerID();
 		return null;
 	}
 
-	private int checkIfSubscriberInDB(String id) {
-		if (!id.contains("S"))
-			id = "S" + id;
+	/**  //TODO edit ~nir~
+	 * Check if subscriber by ID or by logged visitor in the ClientController (one of them)
+	 * and if subscriber found fill the email address and phone number in the GUI
+	 * @param ID
+	 * @return
+	 */
+	private int isSubscriber(String ID) {
+		if (clientController.client.logedInSubscriber.getVal() != null) {
+			Email_textBox.setText(clientController.client.logedInSubscriber.getVal().email);
+			Phone_textBox.setText(clientController.client.logedInSubscriber.getVal().phone);
+			return 1;
+		}
+		if(ID == null)
+			return 0;
+		if (!ID.contains("S"))
+			ID = "S" + ID;
 		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", id));
-		if (!response.contains("was not found"))
+				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ID));
+		if (!response.contains("was not found")) {
+			Subscriber sub = ServerRequest.gson.fromJson(response, Subscriber.class);
+			Email_textBox.setText(sub.email);
+			Phone_textBox.setText(sub.phone);
 			return 1;
+		}
 		return 0;
 	}
-
-	private int isSubscriber() {
-		if (clientController.client.logedInSubscriber.getVal() != null)
-			return 1;
-		return 0;
-	}
-
+	/**  //TODO edit ~nir~
+	 * This method called in a case of casual entry, disables park, visit time and date.
+	 * Set park, visit time to current values
+	 * @param ownerID
+	 * @param parkName
+	 */
 	public void setSpontaneous(String ownerID, String parkName) {
 		spontaneous = true;
 		Park_ComboBox.setValue(parkName);
@@ -461,57 +448,49 @@ public class RegularOrderController implements GuiController {
 		Park_ComboBox.setDisable(true);
 		VisitHour_ComboBox.setDisable(true);
 		Date_DatePicker.setDisable(true);
-		ord.email = Email_textBox.getText(); // need this for OrderSummary because is no email in ParkEntry entity
-		ord.phone = Phone_textBox.getText(); // need this for OrderSummary because is no phone in ParkEntry entity
 		parkEntry = createParkEntry(ownerID, parkName);
-//		ord.ownerID = ownerID;
-//		ord.parkSite = parkName;
 	}
-
+	
+	/** //TODO edit ~nir~
+	 * Creates park entry ny ownerID and parkID
+	 * @param ownerID
+	 * @param parkID
+	 * @return
+	 */
 	private ParkEntry createParkEntry(String ownerID, String parkID) {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
-		int numberOfSubscribers = checkIfSubscriberInDB(ownerID);
+		int numberOfSubscribers = isSubscriber(ownerID);
 		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.Personal, ownerID, parkID, timeOfOrder, null, 1,
 				numberOfSubscribers, true, 100);
 		entry.priceOfOrder = calcEntryPrice(entry);
 		return entry;
 	}
-	
+	/**  //TODO edit ~nir~
+	 * return the price of Order by prices in DiscountController
+	 * @param order
+	 * @return
+	 */
 	protected static float calcOrderPrice(Order order) {
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
 				"CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
 		return ServerRequest.gson.fromJson(response, Float.class);
 	}
-
+	 
+	/**  //TODO edit ~nir~
+	 * return the price of Entry (casual) by prices in DiscountController
+	 * @param order
+	 * @return
+	 */
 	protected static float calcEntryPrice(ParkEntry entry) {
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
 				"CalculatePriceForEntryCasual", ServerRequest.gson.toJson(entry, ParkEntry.class)));
 		return ServerRequest.gson.fromJson(response, Float.class);
 	}
-	/* don't delete */
-//	private ParkEntry createParkEntry(Order spOrder) {
-//		ParkEntry entry = new ParkEntry(ParkEntry.EntryType.Personal, spOrder.ownerID, spOrder.parkSite,
-//				spOrder.visitTime, null, spOrder.numberOfVisitors, spOrder.numberOfSubscribers, true,
-//				spOrder.priceOfOrder);
-//		return entry;
-//	}
-
-	/* don't delete */
-//	private Order createSpontaneousOrderDetails(String ownerID, String parkName) {
-//		int orderID = getNextOrderID();
-//		int priceOfOrder = 100;
-//		String email = Email_textBox.getText();
-//		String phone = Phone_textBox.getText();
-//		Order.IdType type = Order.IdType.PRIVATE; // by default
-//		Order.OrderStatus orderStatus = Order.OrderStatus.CONFIRMED;
-//		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
-//		boolean isUsed = true;
-//		int numberOfSubscribers = checkIfSubscriberInDB(ownerID);
-//		Order ord = new Order(parkName, 1, orderID, priceOfOrder, email, phone, type, orderStatus, timeOfOrder,
-//				timeOfOrder, isUsed, ownerID, numberOfSubscribers);
-//		return ord;
-//	}
-
+	
+	/**  //TODO edit ~nir~
+	 * Ask DB for next Order number 
+	 * @return
+	 */
 	private int getNextOrderID() {
 		String response = clientController.client
 				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));

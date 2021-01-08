@@ -122,14 +122,12 @@ public class OrderController implements IController {
 			ord = ServerRequest.gson.fromJson(request.data, Order.class);
 
 			// first check if order already exists
-			if (GetOrderByID(ord.orderID) != null) { // TODO this checking is duplicated, but better not to delete in my
-														// opinion (Roman)
+			if (GetOrderByID(ord.orderID) != null) { 
 				response = "Order already exists";
 				break;
 			}
 			// second check if Order Allowed
-			if (!IsOrderAllowed(ord)) { // TODO this checking is duplicated, but better not to delete in my opinion
-										// (Roman)
+			if (!IsOrderAllowed(ord)) { 
 				response = "No more orders allowed in this time";
 				break;
 			}
@@ -299,7 +297,7 @@ public class OrderController implements IController {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
 					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + hoursRange[0]
 							+ "\" && visitTime <= \"" + hoursRange[1] + "\" && parkSite = \"" + ord.parkSite
-							+ "\" && orderStatus <> \"CANCEL\";"); // TODO test this (Roman)
+							+ "\" && orderStatus <> \"CANCEL\";"); 
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();
@@ -511,7 +509,7 @@ public class OrderController implements IController {
 	 * 
 	 * @return
 	 */
-	public Order[] GetAllListOfOrders() { // TODO maybe not necessary (Roman)
+	public Order[] GetAllListOfOrders() { 
 		ResultSet res = dbController.sendQuery("SELECT * FROM orders");
 		if (res == null)
 			return null;
@@ -537,7 +535,6 @@ public class OrderController implements IController {
 	 * @param ID
 	 * @return Array of Orders
 	 */
-	// TODO should we add more conditions?
 	public Order[] GetOrdersByVisitorID(String ID) {
 		ResultSet res = dbController.sendQuery("SELECT * FROM orders WHERE ownerID =" + ID + "");
 		if (res == null)
@@ -618,7 +615,6 @@ public class OrderController implements IController {
 	 * @param orderID
 	 * @return true if Order was found and deleted, false otherwise
 	 */
-	// TODO check if needed
 	public boolean deleteOrder(int orderID) {
 		PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM orders WHERE orderID = ?;");
 		try {

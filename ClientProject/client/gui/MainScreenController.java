@@ -35,9 +35,9 @@ public class MainScreenController {
 	@FXML
 	private Label greetingMsg;
 
-    @FXML
-    private Label todayDateLabel;
-	
+	@FXML
+	private Label todayDateLabel;
+
 	@FXML
 	private Button Login;
 
@@ -51,6 +51,7 @@ public class MainScreenController {
 		Navigator.instance().back();
 	}
 
+	/** when the logout button is clicked log out of the logged in user */
 	@FXML
 	void logInOut(ActionEvent event) {
 		Login.setVisible(false);
@@ -82,7 +83,7 @@ public class MainScreenController {
 	public Pane init() {
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		todayDateLabel.setText("");
-		todayDateLabel.setText("Date: "+currentTime.toLocalDateTime().toLocalDate().toString());
+		todayDateLabel.setText("Date: " + currentTime.toLocalDateTime().toLocalDate().toString());
 		Login.setVisible(false);
 		Login.setManaged(false);
 		clientController.client.logedInSubscriber.AddListener((prop, oldVal, newVal) -> {
@@ -107,7 +108,8 @@ public class MainScreenController {
 		clientController.client.logedInWorker.AddListener((prop, oldVal, newVal) -> {
 			if (newVal != null) {
 				Worker w = clientController.client.logedInWorker.getVal();
-				greetingMsg.setText("Hello "+w.getFirstName()+ " "+w.getLastName() +"("+w.getWorkerType()+")");
+				greetingMsg
+						.setText("Hello " + w.getFirstName() + " " + w.getLastName() + "(" + w.getWorkerType() + ")");
 				Login.setVisible(true);
 				Login.setManaged(true);
 				List<MenuItem> menuItems = new ArrayList<>();
@@ -117,18 +119,18 @@ public class MainScreenController {
 				setMenu(menuItems);
 			}
 		});
-		clientController.client.observable.addObserver((obs,event)->{
-			if(event == clientController.SERVER_CLOSED) {
+		clientController.client.observable.addObserver((obs, event) -> {
+			if (event == clientController.SERVER_CLOSED) {
 				Login.fire();
 			}
 		});
-		menu.getScene().setOnKeyReleased((event)->{
-			if(event.isControlDown()) {
+		menu.getScene().setOnKeyReleased((event) -> {
+			if (event.isControlDown()) {
 				try {
 					int num = Integer.parseInt(event.getText());
-					if(num<=0||num>menu.getChildren().size())
+					if (num <= 0 || num > menu.getChildren().size())
 						return;
-					((Button)menu.getChildren().get(num-1)).fire();
+					((Button) menu.getChildren().get(num - 1)).fire();
 					event.consume();
 				} catch (NumberFormatException e) {
 				}
@@ -137,6 +139,11 @@ public class MainScreenController {
 		return body;
 	}
 
+	/**
+	 * adds the items to the left pane menu
+	 * 
+	 * @param menuItems the items to be added
+	 */
 	private void setMenu(List<MenuItem> menuItems) {
 		menu.getChildren().clear();
 		for (MenuItem entry : menuItems) {
@@ -148,6 +155,7 @@ public class MainScreenController {
 		}
 	}
 
+	/** create the list of menu items for visitors */
 	private static List<MenuItem> createVisitorMap() {
 		List<MenuItem> res = new ArrayList<>();
 		res.add(new MenuItem("New Single Order", "RegularOrder"));
@@ -156,6 +164,10 @@ public class MainScreenController {
 		return res;
 	}
 
+	/**
+	 * create the list of menu items for workers<br>
+	 * according to the {@link Worker}'s {@link Permissions}
+	 */
 	private static Map<String, MenuItem> createWorkerMap() {
 		Map<String, MenuItem> res = new HashMap<String, MenuItem>();
 
@@ -169,6 +181,7 @@ public class MainScreenController {
 		return res;
 	}
 
+	/** create the list of menu items for subscribers */
 	private static List<MenuItem> createSubscriberMap() {
 		List<MenuItem> res = new ArrayList<>();
 		res.addAll(VISITOR_MAP);
@@ -176,13 +189,16 @@ public class MainScreenController {
 		return res;
 	}
 
+	/** a class for menu items */
 	private static class MenuItem {
 		String buttonContent;
 		String pageToOpen;
 
 		/**
-		 * @param buttonContent
-		 * @param pageToOpen
+		 * create a menu item
+		 * 
+		 * @param buttonContent the text on the button
+		 * @param pageToOpen    the page to be opened when clicked
 		 */
 		public MenuItem(String buttonContent, String pageToOpen) {
 			this.buttonContent = buttonContent;

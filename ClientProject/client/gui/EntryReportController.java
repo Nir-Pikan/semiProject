@@ -75,7 +75,13 @@ public class EntryReportController implements GuiController, Report {
 		JavafxPrinter.printThisWindow(buttonExtractReport.getScene().getWindow());
 	}
 
-	/** initialize the report's fields */
+	/**
+	 * initialize the report's fields Important Notice:
+	 * 
+	 * @param parkName                the park's name
+	 * @param parkID                  the park's ID
+	 * @param reportStartAndEndTimes: [0]: start, [1]: end
+	 */
 	public void initReport(String parkName, String parkID, Timestamp[] dates) {
 		if (isDataShown)
 			return;

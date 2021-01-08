@@ -2,6 +2,9 @@ package entities;
 
 import java.sql.Timestamp;
 
+/**
+ * a class containing the data of a single park entry
+ */
 public class ParkEntry {
 
 	public EntryType entryType;

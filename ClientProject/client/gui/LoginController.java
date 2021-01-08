@@ -14,8 +14,8 @@ import javafx.scene.layout.GridPane;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
-public class LoginController implements GuiController 
-{
+/** the Login page controller */
+public class LoginController implements GuiController {
 
 	@FXML
 	private GridPane visitorLoginForm;
@@ -36,11 +36,10 @@ public class LoginController implements GuiController
 	private TextField txtUsername;
 
 	@FXML
-    private PasswordField txtPassword;
+	private PasswordField txtPassword;
 
 	@FXML
 	private CheckBox cbUserWorker;
-	
 
 	/** when clicking on the user/worker check box hide/reveal wanted fields */
 	@FXML
@@ -50,10 +49,8 @@ public class LoginController implements GuiController
 			visitorLoginForm.setVisible(false);
 			workerLoginForm.setManaged(true);
 			workerLoginForm.setVisible(true);
-			
-		} 
-		else
-		{
+
+		} else {
 			visitorLoginForm.setManaged(true);
 			visitorLoginForm.setVisible(true);
 			workerLoginForm.setManaged(false);
@@ -61,113 +58,130 @@ public class LoginController implements GuiController
 		}
 	}
 
+	/** when trying to log in using worker fields */
 	@FXML
-	void WorkerLogin(ActionEvent event)
-	{
+	void WorkerLogin(ActionEvent event) {
 		String[] data = new String[2];
 		data[0] = txtUsername.getText();
 		data[1] = txtPassword.getText();
-		ServerRequest serverRequest = new ServerRequest(Manager.Worker,
-				"LogInWorker", ServerRequest.gson.toJson(data,String[].class));
+		ServerRequest serverRequest = new ServerRequest(Manager.Worker, "LogInWorker",
+				ServerRequest.gson.toJson(data, String[].class));
 		String response = clientController.client.sendRequestAndResponse(serverRequest);
-		if(response.equals("user already logged in")) {
+		if (response.equals("user already logged in")) {
 			PopUp.showError("Sign up error", "Faild to log in", "User already logged in");
 			return;
 		}
 		Worker worker = ServerRequest.gson.fromJson(response, Worker.class);
-		if(worker == null)
-		{
+		if (worker == null) {
 			PopUp.showError("Sign up error", "Faild to log in", "Please check the user name and the password");
 			return;
 		}
 		clientController.client.logedInWorker.setVal(worker);
 		Navigator.instance().clearHistory();
 	}
-	
+
+	/** when trying to log in as a visitor/subscriber */
 	@FXML
-	void UserLogin(ActionEvent event) 
-	{
+	void UserLogin(ActionEvent event) {
 		String userID = txtId.getText();
-		if(isSubscriberID(userID))
-		{
+		if (isSubscriberID(userID)) {
 			LoginSubscriber(userID, "This subscriber ID not exist \nPlease check the input", true);
-			return;		
+			return;
 		}
-		if(isID(userID))
-		{
-			 if(LoginSubscriber("S"+userID,"",false))
-				 return;
-			 clientController.client.visitorID.setVal(userID);
-			 Navigator.instance().clearHistory();
-			 return;
+		if (isID(userID)) {
+			if (LoginSubscriber("S" + userID, "", false))
+				return;
+			clientController.client.visitorID.setVal(userID);
+			Navigator.instance().clearHistory();
+			return;
 		}
-		PopUp.showError("Error", "Faild to identify", "Please check the input:\nID: 9 digit number\nSubscriber ID: need to start with 'S'");
+		PopUp.showError("Error", "Faild to identify",
+				"Please check the input:\nID: 9 digit number\nSubscriber ID: need to start with 'S'");
 	}
 
-
-	//return true if success to log in the subscriber
-	private boolean LoginSubscriber(String subscriberID, String ErrorMessageForPopUp, boolean needPopUpForFail)
-	{
-		ServerRequest serverRequest = new ServerRequest(Manager.Subscriber,
-				"GetSubscriberData", subscriberID);
+	/**
+	 * try to log in as a {@link Subscriber}
+	 * 
+	 * @param subscriberID         the ID to use
+	 * @param ErrorMessageForPopUp the message to show in case of an error
+	 * @param needPopUpForFail     indicator if an error pop up is needed
+	 * @return true if logged in successfully<br>
+	 *         false otherwise
+	 */
+	private boolean LoginSubscriber(String subscriberID, String ErrorMessageForPopUp, boolean needPopUpForFail) {
+		ServerRequest serverRequest = new ServerRequest(Manager.Subscriber, "GetSubscriberData", subscriberID);
 		String response = clientController.client.sendRequestAndResponse(serverRequest);
-		if(response.endsWith("not found"))
-		{
-			if(needPopUpForFail)
-			     PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
+		if (response.endsWith("not found")) {
+			if (needPopUpForFail)
+				PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
 			return false;
 		}
 		Subscriber subscriber = ServerRequest.gson.fromJson(response, Subscriber.class);
-		if(subscriber == null)
-		{
-			if(needPopUpForFail)
-			    PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
+		if (subscriber == null) {
+			if (needPopUpForFail)
+				PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
 			return false;
 		}
 		clientController.client.logedInSubscriber.setVal(subscriber);
 		Navigator.instance().clearHistory();
 		return true;
 	}
-	
-	private boolean isSubscriberID(String idString)
-	{
-		if(idString.length() > 0 && idString.charAt(0) == 'S')
+
+	/**
+	 * checks if id is in Subscriber ID format
+	 * 
+	 * @param idString the id to check
+	 * @return true if id is in right format<br>
+	 *         false otherwise
+	 */
+	private boolean isSubscriberID(String idString) {
+		if (idString.length() > 0 && idString.charAt(0) == 'S')
 			return true;
 		return false;
 	}
-	
-	private boolean isID(String idString)
-	{
-		if(idString.length()!= 9)
+
+	/**
+	 * checks if id is in ID format
+	 * 
+	 * @param idString the id to check
+	 * @return true if id is in right format<br>
+	 *         false otherwise
+	 */
+	private boolean isID(String idString) {
+		if (idString.length() != 9)
 			return false;
-		for (char num : idString.toCharArray())
-		{
-			if(!isNumber(num))
+		for (char num : idString.toCharArray()) {
+			if (!isNumber(num))
 				return false;
 		}
 		return true;
 	}
-	
-	private boolean isNumber(char num)
-	{
+
+	/**
+	 * checks if a character is a digit
+	 * 
+	 * @param num the character to check
+	 * @return true if character is a digit<br>
+	 *         false otherwise
+	 */
+	private boolean isNumber(char num) {
 		return (0 <= num - '0') && (9 >= num - '0');
 	}
-	
-	
-	public void init()
-	{
+
+	/** initialize the login window fields */
+	public void init() {
 		workerLoginForm.setManaged(false);
-		workerLoginForm.setVisible(false);	
-		txtUsername.setOnKeyReleased((event)->{
-			if(event.getCode()==KeyCode.ENTER)
+		workerLoginForm.setVisible(false);
+		txtUsername.setOnKeyReleased((event) -> {
+			if (event.getCode() == KeyCode.ENTER)
 				btnWorkerLogin.fire();
 		});
-		txtPassword.setOnKeyReleased((event)->{
-			if(event.getCode()==KeyCode.ENTER)
+		txtPassword.setOnKeyReleased((event) -> {
+			if (event.getCode() == KeyCode.ENTER)
 				btnWorkerLogin.fire();
 		});
-		txtId.setOnKeyReleased((event)->{
-			if(event.getCode()==KeyCode.ENTER)
+		txtId.setOnKeyReleased((event) -> {
+			if (event.getCode() == KeyCode.ENTER)
 				btnUserLogin.fire();
 		});
 	}

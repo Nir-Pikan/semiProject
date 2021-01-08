@@ -29,53 +29,53 @@ public class AddDiscountController implements GuiController {
 	@FXML
 	private TextField txtDiscountValue;
 
-
 	@Override
 	public void init() {
-		   Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
-	            @Override
-	            public DateCell call(final DatePicker param) {
-	                return new DateCell() {
-	                    @Override
-	                    public void updateItem(LocalDate item, boolean empty) {
-	                        super.updateItem(item, empty); 
-	                        LocalDate today = LocalDate.now();
-	                        if(dateEndDate.getValue()!=null)
-	                        setDisable(empty || item.compareTo(today) < 0 || item.compareTo(dateEndDate.getValue().minusDays(1))>0);
-	                        else {
-	                        	setDisable(empty || item.compareTo(today) < 0);
-							}
-	                    }
+		Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
+			@Override
+			public DateCell call(final DatePicker param) {
+				return new DateCell() {
+					@Override
+					public void updateItem(LocalDate item, boolean empty) {
+						super.updateItem(item, empty);
+						LocalDate today = LocalDate.now();
+						if (dateEndDate.getValue() != null)
+							setDisable(empty || item.compareTo(today) < 0
+									|| item.compareTo(dateEndDate.getValue().minusDays(1)) > 0);
+						else {
+							setDisable(empty || item.compareTo(today) < 0);
+						}
+					}
 
-	                };
-	            }
+				};
+			}
 
-	        };
-	        dateStartDate.setDayCellFactory(callB);
-	        Callback<DatePicker, DateCell> callB2 = new Callback<DatePicker, DateCell>() {
-	            @Override
-	            public DateCell call(final DatePicker param) {
-	                return new DateCell() {
-	                    @Override
-	                    public void updateItem(LocalDate item, boolean empty) {
-	                        super.updateItem(item, empty); 
-	                      	LocalDate startDate;
-	                        if(dateStartDate.getValue()!=null)
-	                        	 startDate = dateStartDate.getValue();
-	                        else {
-								startDate=LocalDate.now();
-							}
-	                        setDisable(empty || item.compareTo(startDate.plusDays(1)) < 0);
-	                    }
+		};
+		dateStartDate.setDayCellFactory(callB);
+		Callback<DatePicker, DateCell> callB2 = new Callback<DatePicker, DateCell>() {
+			@Override
+			public DateCell call(final DatePicker param) {
+				return new DateCell() {
+					@Override
+					public void updateItem(LocalDate item, boolean empty) {
+						super.updateItem(item, empty);
+						LocalDate startDate;
+						if (dateStartDate.getValue() != null)
+							startDate = dateStartDate.getValue();
+						else {
+							startDate = LocalDate.now();
+						}
+						setDisable(empty || item.compareTo(startDate.plusDays(1)) < 0);
+					}
 
-	                };
-	            }
+				};
+			}
 
-	        };
-	        dateEndDate.setDayCellFactory(callB2);
+		};
+		dateEndDate.setDayCellFactory(callB2);
 	}
 
-  /** submits a discount according to AddDiscount page fields */
+	/** submits a discount according to AddDiscount page fields */
 	@FXML
 	void submitDiscount(ActionEvent event) {
 
@@ -138,7 +138,6 @@ public class AddDiscountController implements GuiController {
 
 			ServerRequest sr = new ServerRequest(Manager.Discount, "AddNewDiscount",
 					ServerRequest.gson.toJson(discountEntity, DiscountEntity.class));
-
 
 			String respond = clientController.client.sendRequestAndResponse(sr);
 			if (respond.equals("Failed to add Discount") || respond.equals("")) {

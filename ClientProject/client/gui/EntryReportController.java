@@ -23,7 +23,7 @@ import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 
 /** the EntryReport page controller */
-public class EntryReportController implements GuiController ,Report{
+public class EntryReportController implements GuiController, Report {
 
 	@FXML
 	private Label labelDateToaday;
@@ -66,18 +66,20 @@ public class EntryReportController implements GuiController ,Report{
 
 	@FXML
 	private NumberAxis table2_NumOfVisitorsAxis;
-	
-	private boolean isDataShown=false;
-	
+
+	private boolean isDataShown = false;
+
+	/** prints the report */
 	@FXML
 	void ExtractReport(ActionEvent event) {
 		JavafxPrinter.printThisWindow(buttonExtractReport.getScene().getWindow());
 	}
 
-	public void initReport(String parkName, String parkID,Timestamp[] dates) {
-		if(isDataShown)
+	/** initialize the report's fields */
+	public void initReport(String parkName, String parkID, Timestamp[] dates) {
+		if (isDataShown)
 			return;
-		isDataShown=true;
+		isDataShown = true;
 		textDateToday.setText(LocalDate.now().toString());
 		textReportDate.setText("From " + dates[0].toLocalDateTime().toLocalDate().toString() + " To "
 				+ dates[1].toLocalDateTime().toLocalDate().toString());
@@ -93,16 +95,17 @@ public class EntryReportController implements GuiController ,Report{
 			return;
 		}
 		// ---First Chart---//
-	
+
 		double[] avgStayArray = new double[ParkEntry.EntryType.values().length];
 		int[] totalPeopleType = new int[ParkEntry.EntryType.values().length];
 
-		for (int i = 0; i < ParkEntry.EntryType.values().length ; i++) {
+		for (int i = 0; i < ParkEntry.EntryType.values().length; i++) {
 			avgStayArray[i] = 0;
 		}
 
 		for (ParkEntry parkEntry : entries) {
-			if(!parkEntry.parkID.equals(parkID))continue;
+			if (!parkEntry.parkID.equals(parkID))
+				continue;
 			long stay = Math.abs(parkEntry.exitTime.getTime() - parkEntry.arriveTime.getTime());
 			double duration = stay / (1000 * 60);
 			avgStayArray[parkEntry.entryType.ordinal()] += (duration * parkEntry.numberOfVisitors);
@@ -110,7 +113,6 @@ public class EntryReportController implements GuiController ,Report{
 
 		}
 
-		
 		for (EntryType entryType : ParkEntry.EntryType.values()) {
 			XYChart.Series<String, Double> addSeries = new XYChart.Series<String, Double>();
 			addSeries.setName(entryType.toString());
@@ -119,13 +121,13 @@ public class EntryReportController implements GuiController ,Report{
 						(avgStayArray[entryType.ordinal()] / totalPeopleType[entryType.ordinal()]) / 60));
 			} else {
 				addSeries.getData().add(new XYChart.Data<String, Double>(entryType.toString(), (double) 0));
-				
+
 			}
 			table1_AVGvisitStay.getData().add(addSeries);
 
 		}
-	
-		//--- Second Chart ---//
+
+		// --- Second Chart ---//
 
 		int[][] sumPeople = new int[ParkEntry.EntryType.values().length][24];
 		for (int i = 0; i < ParkEntry.EntryType.values().length; i++) {
@@ -134,34 +136,33 @@ public class EntryReportController implements GuiController ,Report{
 			}
 		}
 
-		int minimalHour=23;
-		int maximalHour=0;
-		
+		int minimalHour = 23;
+		int maximalHour = 0;
+
 		for (ParkEntry parkEntry : entries) {
-			if(parkEntry.parkID.equals(parkID))
-			{
-			sumPeople[parkEntry.entryType.ordinal()][parkEntry.arriveTime.toLocalDateTime()
-					.getHour()] += parkEntry.numberOfVisitors;
-			if(parkEntry.arriveTime.toLocalDateTime().getHour()<minimalHour)
-				minimalHour=parkEntry.arriveTime.toLocalDateTime().getHour();
-			if(parkEntry.arriveTime.toLocalDateTime().getHour()>maximalHour)
-				maximalHour=parkEntry.arriveTime.toLocalDateTime().getHour();
+			if (parkEntry.parkID.equals(parkID)) {
+				sumPeople[parkEntry.entryType.ordinal()][parkEntry.arriveTime.toLocalDateTime()
+						.getHour()] += parkEntry.numberOfVisitors;
+				if (parkEntry.arriveTime.toLocalDateTime().getHour() < minimalHour)
+					minimalHour = parkEntry.arriveTime.toLocalDateTime().getHour();
+				if (parkEntry.arriveTime.toLocalDateTime().getHour() > maximalHour)
+					maximalHour = parkEntry.arriveTime.toLocalDateTime().getHour();
 			}
 		}
 
 		for (EntryType entryType : ParkEntry.EntryType.values()) {
-			
+
 			XYChart.Series<String, Integer> addSeries = new XYChart.Series<String, Integer>();
-			
+
 			addSeries.setName(entryType.toString());
 			for (int i = minimalHour; i <= maximalHour; i++) {
-				addSeries.getData()
-						.add(new XYChart.Data<String, Integer>(String.valueOf(i)+":00", sumPeople[entryType.ordinal()][i]));
+				addSeries.getData().add(new XYChart.Data<String, Integer>(String.valueOf(i) + ":00",
+						sumPeople[entryType.ordinal()][i]));
 			}
 			table2_AVGentry.getData().add(addSeries);
-			
+
 		}
-		
+
 	}
 
 	@Override

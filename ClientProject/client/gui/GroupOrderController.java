@@ -82,9 +82,9 @@ public class GroupOrderController implements GuiController {
 	private Label ParkNote;
 
 	/**
-	 * Initialize the GUI: limits the Date picker and set group/family size //TODO  edit ~nir~
+	 * Initialize the GUI: <br>
+	 * limits the Date picker and set group/family size <br>
 	 * and set subscriber data if found
-	 * 
 	 */
 	@Override
 	public void init() {
@@ -116,10 +116,10 @@ public class GroupOrderController implements GuiController {
 	}
 
 	/**
-	 * Set the working hours by the park working times//TODO edit ~nir~
+	 * Set the working hours according to park's working times
 	 * 
-	 * @param parkDetails
-	 * @return the String[] with all the working hours
+	 * @param parkDetails the park's name, ID and working times
+	 * @return a string array with all the working hours
 	 */
 	private String[] CreateWorkingHours(ParkNameAndTimes parkDetails) {
 		VisitHour_ComboBox.getItems().clear();
@@ -132,8 +132,7 @@ public class GroupOrderController implements GuiController {
 	}
 
 	/**
-	 * When park was chosen set the working hours of the park//TODO edit ~nir~
-	 * 
+	 * When park was chosen set the working hours of the park
 	 */
 	@FXML
 	void parkWasChosen(ActionEvent event) {
@@ -145,9 +144,8 @@ public class GroupOrderController implements GuiController {
 	}
 
 	/**
-	 * Check if the visitor is a guide and set family checkBox and call to method
-	 * that sets subscriber email and phone number//TODO edit ~nir~
-	 * 
+	 * Check if the visitor is a guide and set family checkBox,<br>
+	 * then call the method that sets subscriber email and phone number
 	 */
 	private void checkIfGuide() {
 		if (clientController.client.logedInSubscriber.getVal() != null)
@@ -167,8 +165,7 @@ public class GroupOrderController implements GuiController {
 	}
 
 	/**
-	 * Sets subscriber email and phone number in the window//TODO edit ~nir~
-	 * 
+	 * Sets subscriber email and phone number in the window
 	 */
 	private void initSubscriberPhoneAndMail() {
 		String subscriberID;
@@ -183,9 +180,8 @@ public class GroupOrderController implements GuiController {
 	}
 
 	/**
-	 * When family checkBox clicked set appropriate size of group or family in the
-	 * dropBox//TODO edit ~nir~
-	 * 
+	 * When family checkBox is clicked set appropriate size of group or family<br>
+	 * in the dropBox.
 	 */
 	@FXML
 	private void FamilyCheckBoxClicked(ActionEvent event) {
@@ -199,9 +195,8 @@ public class GroupOrderController implements GuiController {
 	}
 
 	/**
-	 * Set the family size dropBox by the number of subscriber family size //TODO edit ~nir~
-	 * 
-	 * 
+	 * Set the family size dropBox according to the number<br>
+	 * of subscriber's family size
 	 */
 	private void setFamilyDropBox() {
 		int familySize;
@@ -214,6 +209,7 @@ public class GroupOrderController implements GuiController {
 			NumberOfVisitors_ComboBox.getItems().add("" + i);
 	}
 
+	/** checks if all required fields are filled correctly */
 	private boolean CheckAllRequiredFields() {
 		boolean res = true;
 		res &= CheckParkSelection();
@@ -225,6 +221,7 @@ public class GroupOrderController implements GuiController {
 		return res;
 	}
 
+	/** checks if park was selected */
 	private boolean CheckParkSelection() {
 		if (Park_ComboBox.getSelectionModel().isEmpty()) {
 			if (!Park_ComboBox.getStyleClass().contains("error"))
@@ -237,6 +234,7 @@ public class GroupOrderController implements GuiController {
 		return true;
 	}
 
+	/** checks if date was selected */
 	private boolean CheckDateSelection() {
 		if (Date_DatePicker.getValue() == null) {
 			if (!Date_DatePicker.getStyleClass().contains("error"))
@@ -249,6 +247,7 @@ public class GroupOrderController implements GuiController {
 		return true;
 	}
 
+	/** checks if visit hour was selected */
 	private boolean CheckVisitorHour() {
 		if (VisitHour_ComboBox.getValue() == null) {
 			if (!VisitHour_ComboBox.getStyleClass().contains("error"))
@@ -261,6 +260,7 @@ public class GroupOrderController implements GuiController {
 		return true;
 	}
 
+	/** checks if number of visitors was selected */
 	private boolean CheckNumberOfVisitors() {
 		if (NumberOfVisitors_ComboBox.getValue() == null) {
 			if (!NumberOfVisitors_ComboBox.getStyleClass().contains("error"))
@@ -274,7 +274,7 @@ public class GroupOrderController implements GuiController {
 	}
 
 	/**
-	 * Check if the email address is filled in appropriate form //TODO edit ~nir~
+	 * Checks if the email address is filled according to appropriate format
 	 * 
 	 * @return true if email address was filled in appropriate form, false otherwise
 	 */
@@ -305,10 +305,10 @@ public class GroupOrderController implements GuiController {
 	}
 
 	/**
-	 * Check if the phone number is filled in appropriate form  //TODO edit ~nir~
+	 * Checks if the phone number is filled according to appropriate format
 	 * 
-	 * @return return true if id phone number filled in appropriate form, false
-	 *         otherwise
+	 * @return true if phone number is filled according to appropriate format<br>
+	 *         false otherwise
 	 */
 	private boolean CheckPhoneNumber() {
 		String phoneNumber = Phone_textBox.getText();
@@ -345,12 +345,14 @@ public class GroupOrderController implements GuiController {
 		Tooltip.uninstall(PhoneNote, new Tooltip("Phone Number must be 10 digits long"));
 		return true;
 	}
-	/**  //TODO edit ~nir~
-	 * When Place Order button clicked check if all the fields filled correctly.
-	 * Create Order Entity or parkEntry Entity and 
-	 * contact with the server to check if Order or Casual entry  is available.
-	 * Get server response and shows appropriate popUp window 
-	 * @param event
+
+	/**
+	 * When the Place Order button is clicked:<br>
+	 * Check if all the fields are filled correctly.<br>
+	 * Then create {@link Order} or {@link ParkEntry} and contact<br>
+	 * the server to check if Order or Casual entry is available.<br>
+	 * Get server's response and show appropriate popUp window
+	 * 
 	 */
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
@@ -431,12 +433,14 @@ public class GroupOrderController implements GuiController {
 		}
 
 	}
+
 	/**
-	 *   //TODO edit ~nir~
-	 * Check available space in the park 
-	 * @param park
-	 * @param visitorsNum
-	 * @return true if the park have enough free space, otherwise false
+	 * Check available space in the park
+	 * 
+	 * @param park        the park to be checked
+	 * @param visitorsNum the amount of visitors to check
+	 * @return true if the park have enough free space<br>
+	 *         false otherwise
 	 */
 	private boolean checkAvailableSpaceInThePark(String park, int visitorsNum) {
 		String response = clientController.client
@@ -446,13 +450,16 @@ public class GroupOrderController implements GuiController {
 			return false;
 		return true;
 	}
-	
-	/**  //TODO edit ~nir~
-	 * This method called from casual entry window.
-	 * Disables park and visit hour comboBox and set visit time to current time
-	 * Creates a parkEntry Entity by ownerID parkName by calling createParkEntry method
-	 * @param ownerID
-	 * @param parkName
+
+	/**
+	 * This method is called from casual entry window.<br>
+	 * Disables the park and visit hour comboBoxs<br>
+	 * and sets visit time to current time.<br>
+	 * Then creates a {@link ParkEntry} using ownerID parkName<br>
+	 * by calling the createParkEntry method
+	 * 
+	 * @param ownerID  the owner ID to create {@link ParkEntry} for
+	 * @param parkName the entry's park name
 	 */
 	public void setSpontaneous(String ownerID, String parkName) {
 		spontaneous = true;
@@ -469,10 +476,13 @@ public class GroupOrderController implements GuiController {
 		parkEntry = createParkEntry(ownerID, parkName, entryType);
 	}
 
-	/**  //TODO edit ~nir~
-	 * Set a family box to selected or not selected mode according to subscriber or guide type and number of family members
-	 * @param id
-	 * @return the type of a subscriber guide or family
+	/**
+	 * Enable or disable the family check box<br>
+	 * according to subscriber or guide type<br>
+	 * and the number of family members
+	 * 
+	 * @param id the entry's owner ID
+	 * @return the type of a subscriber: GUIDE or FAMILY
 	 */
 	private ParkEntry.EntryType checkIfGuideByIDAndSetFamilyCheckBox(String id) {
 		if (!id.contains("S"))
@@ -498,8 +508,10 @@ public class GroupOrderController implements GuiController {
 		return ParkEntry.EntryType.Group;
 
 	}
-	/**  //TODO edit ~nir~
-	 * Ask DB for next Order number 
+
+	/**
+	 * Ask DB for next Order number
+	 * 
 	 * @return
 	 */
 	private int getNextOrderID() {
@@ -507,9 +519,12 @@ public class GroupOrderController implements GuiController {
 				.sendRequestAndResponse(new ServerRequest(Manager.Order, "NextOrderID", null));
 		return ServerRequest.gson.fromJson(response, Integer.class);
 	}
-	/**  //TODO edit ~nir~
-	 * Creates Order Entity details by filled data in the window and type of a subscriber
-	 * @return Order Entity
+
+	/**
+	 * Creates {@link Order} details according to the filled data<br>
+	 * in the window and the subscriber's type
+	 * 
+	 * @return the created {@link Order}
 	 */
 	private Order createOrderDetails() {
 		String parkName = Park_ComboBox.getValue();
@@ -531,9 +546,12 @@ public class GroupOrderController implements GuiController {
 		ord.priceOfOrder = RegularOrderController.calcOrderPrice(ord);
 		return ord;
 	}
-	/**  //TODO edit ~nir~
+
+	/**
 	 * Returns Identification ID String from logged subscriber in cliendControler
-	 * @return
+	 * 
+	 * @return the Identification ID String<br>
+	 *         null if not found
 	 */
 	private String getIdentificationString() {
 		if (clientController.client.visitorID.getVal() != null)
@@ -542,36 +560,43 @@ public class GroupOrderController implements GuiController {
 			return clientController.client.logedInSubscriber.getVal().personalID;
 		return null;
 	}
-	/**  //TODO edit ~nir~
-	 * Check and return the type of subscriber, Family or guide
-	 * @return
+
+	/**
+	 * Check and return the type of subscriber according to check box
+	 * 
+	 * @return the type, can be: GUIDE or FAMILY
 	 */
 	private Order.IdType familyOrGuideCheckBox() {
 		if (FamilyIndicator_checkBox.isSelected())
 			return Order.IdType.FAMILY;
 		return Order.IdType.GUIDE;
 	}
-	/**  //TODO edit ~nir~
-	 * Send the Order and Entry Entities to OrderSummary window
-	 * @param ord (Order Entity)s
-	 * @param parkEntry	
+
+	/**
+	 * Send the {@link Order} and {@link ParkEntry} to the Order Summary window
+	 * 
+	 * @param ord       the {@link Order} to send
+	 * @param parkEntry the {@link ParkEntry} to send
 	 */
 	private void MoveToTheNextPage(Order ord, ParkEntry parkEntry) {
 		Navigator n = Navigator.instance();
 		GuiController g = n.navigate("OrderSummary");
 		((OrderSummaryController) g).addOrderDataToFields(ord, parkEntry);
 	}
-	/**  //TODO edit ~nir~
-	 * Creates parkEntry Entity by current time, ownerID, parkID and subscriber type
-	 * @param ownerID
-	 * @param parkID
-	 * @param type
-	 * @return
+
+	/**
+	 * Creates {@link ParkEntry} using<br>
+	 * current time, ownerID, parkID and subscriber type
+	 * 
+	 * @param ownerID the entry's owner ID
+	 * @param parkID  the entry's park ID
+	 * @param type    the entry's type
+	 * @return the created {@link ParkEntry}
 	 */
 	private ParkEntry createParkEntry(String ownerID, String parkID, ParkEntry.EntryType type) {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
 		int numberOfSubscribers = 0;
-		ParkEntry entry = new ParkEntry(type, ownerID, parkID, timeOfOrder, null, 1, numberOfSubscribers, true, 100); 
+		ParkEntry entry = new ParkEntry(type, ownerID, parkID, timeOfOrder, null, 1, numberOfSubscribers, true, 100);
 		return entry;
 	}
 

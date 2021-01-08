@@ -18,8 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import db.DbController;
 import entities.Park;
-import io.DbController;
 
 class ParkControllerTest {
 	@Mock

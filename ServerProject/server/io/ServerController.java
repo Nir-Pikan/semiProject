@@ -3,6 +3,7 @@ package io;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import db.DbController;
 import gui.ServerGuiController;
 import logic.DiscountController;
 import logic.EntryController;
@@ -189,4 +190,9 @@ public class ServerController extends AbstractServer {
 		System.out.println("Server has stopped");
 	}
 
+	@Override
+	protected synchronized void clientException(ConnectionToClient client, Throwable exception) {
+		System.out.println(client);
+		exception.printStackTrace();
+	}
 }

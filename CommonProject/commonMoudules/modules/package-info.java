@@ -6,6 +6,6 @@
  * it includes the
  * IController,ObservableList,PeriodicallyRunner,Property,PropertyListener,
  * <p>
- * ServerRequest,WakeableThread.
+ * ServerRequest,WakeableThread,JavafxPrinter,MovingMassage.
  */
 package modules;

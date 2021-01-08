@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import db.DbController;
+import db.IDbController;
 import entities.Park;
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
-import io.DbController;
-import io.IDbController;
 import modules.IController;
 import modules.ServerRequest;
 

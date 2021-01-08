@@ -13,9 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import module.GuiController;
-import module.JavafxPrinter;
-import module.Report;
+import modules.JavafxPrinter;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

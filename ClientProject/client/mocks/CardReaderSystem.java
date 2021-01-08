@@ -3,6 +3,7 @@ package mocks;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import gui.PopUp;
 import io.CardReaderController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +17,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import module.PopUp;
 
 public class CardReaderSystem implements Initializable{
 

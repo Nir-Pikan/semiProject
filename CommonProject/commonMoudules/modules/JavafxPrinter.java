@@ -1,4 +1,4 @@
-package module;
+package modules;
 
 import javafx.print.PageLayout;
 import javafx.print.PageRange;

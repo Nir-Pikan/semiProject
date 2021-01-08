@@ -3,8 +3,7 @@ package gui;
 import io.clientController;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
-import module.GuiController;
-import module.MovingMessage;
+import modules.MovingMessage;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

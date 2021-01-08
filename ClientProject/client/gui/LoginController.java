@@ -11,9 +11,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import module.GuiController;
-import module.Navigator;
-import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

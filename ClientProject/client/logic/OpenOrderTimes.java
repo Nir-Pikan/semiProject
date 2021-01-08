@@ -8,6 +8,8 @@ import java.util.List;
 
 import entities.Order;
 import entities.ParkNameAndTimes;
+import gui.Navigator;
+import gui.PopUp;
 import io.clientController;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -18,8 +20,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import module.Navigator;
-import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

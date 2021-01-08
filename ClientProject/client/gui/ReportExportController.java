@@ -16,9 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import module.GuiController;
-import module.PopUp;
-import module.Report;
 
 /** the ReportExport page controller */
 public class ReportExportController implements GuiController {

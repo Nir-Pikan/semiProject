@@ -1,10 +1,8 @@
-package module;
+package gui;
 
 import java.io.IOException;
 import java.net.URL;
 
-import gui.LoginController;
-import gui.MainScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;

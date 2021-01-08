@@ -1,10 +1,9 @@
-package module;
+package gui;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Stack;
 
-import gui.MainScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;

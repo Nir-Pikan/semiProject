@@ -15,9 +15,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import module.GuiController;
-import module.JavafxPrinter;
-import module.Report;
+import modules.JavafxPrinter;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

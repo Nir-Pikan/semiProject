@@ -24,9 +24,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableView;
 import javafx.util.Callback;
-import module.GuiController;
-import module.JavafxPrinter;
-import module.Report;
+import modules.JavafxPrinter;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

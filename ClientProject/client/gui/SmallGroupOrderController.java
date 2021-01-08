@@ -25,9 +25,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.util.Callback;
 import logic.OpenOrderTimes;
-import module.GuiController;
-import module.Navigator;
-import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

@@ -4,10 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import db.DbController;
 import entities.Subscriber;
 import entities.Subscriber.CreditCard;
 import entities.Subscriber.Type;
-import io.DbController;
 import modules.IController;
 import modules.ServerRequest;
 

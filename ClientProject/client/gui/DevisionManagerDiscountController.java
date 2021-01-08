@@ -15,8 +15,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-import module.GuiController;
-import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

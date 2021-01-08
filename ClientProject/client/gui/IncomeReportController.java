@@ -20,9 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import module.GuiController;
-import module.JavafxPrinter;
-import module.Report;
+import modules.JavafxPrinter;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import entities.Order;
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
-import module.PopUp;
+import gui.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

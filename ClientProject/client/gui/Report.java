@@ -1,4 +1,4 @@
-package module;
+package gui;
 
 import java.sql.Timestamp;
 

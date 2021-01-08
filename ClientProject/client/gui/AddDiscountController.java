@@ -11,8 +11,6 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
-import module.GuiController;
-import module.PopUp;
 import modules.ServerRequest;
 import modules.ServerRequest.Manager;
 

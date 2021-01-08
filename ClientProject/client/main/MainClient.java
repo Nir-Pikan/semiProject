@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import gui.LoginController;
 import gui.MainScreenController;
+import gui.Navigator;
 import io.clientController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +13,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import mocks.CardReaderMock;
-import module.Navigator;
 
 public class MainClient extends Application{
 

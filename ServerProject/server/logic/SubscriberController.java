@@ -11,20 +11,19 @@ import entities.Subscriber.Type;
 import modules.IController;
 import modules.ServerRequest;
 
-/**the subscriber controller class*/
+/** the subscriber controller class */
 public class SubscriberController implements IController {
 
 	DbController dbController;
 
-	/**creates the {@link SubscriberController}*/
+	/** creates the {@link SubscriberController} */
 	public SubscriberController() {
 		dbController = DbController.getInstance();
 		createTable();
 	}
 
 	/**
-	 * Create Subscribers table in DB if not exists
-	 * <p>
+	 * Create Subscribers table in DB if not exists <br>
 	 * table of {@link Subscriber}s
 	 */
 	private void createTable() {
@@ -82,8 +81,9 @@ public class SubscriberController implements IController {
 	/**
 	 * Ask DB for wanted subscriber data
 	 * 
-	 * @param subscriberID the wanted subscriber
-	 * @return object of wanted subscriber
+	 * @param subscriberID the wanted {@link Subscriber}
+	 * @return object of wanted {@link Subscriber}<br>
+	 *         null if failed
 	 */
 	private Subscriber GetSubscriberData(String subscriberID) {
 		String statment = "SELECT * FROM subscribers WHERE subscriberID = \"" + subscriberID + "\";";
@@ -130,14 +130,15 @@ public class SubscriberController implements IController {
 	}
 
 	/**
-	 * Ask DB to add a new subscriber to the Subscribers table
+	 * Ask DB to add a new {@link Subscriber} to the Subscribers table
 	 * 
-	 * @param sub Subscriber to add
-	 * @return boolean did the function succeed
+	 * @param sub the {@link Subscriber} to add
+	 * @return true if succeeded<br>
+	 *         false otherwise
 	 */
 	private boolean AddNewSubscriber(Subscriber sub) {
 
-		// if subscriber got a credit card add it to the creditcards table
+		// if subscriber got a credit card add it to the credit cards table
 		if (sub.creditCard != null) {
 			PreparedStatement ps = dbController
 					.getPreparedStatement("INSERT IGNORE INTO creditcards VALUES (?, ?, ?, ?, ?, ?, ?);");
@@ -149,8 +150,9 @@ public class SubscriberController implements IController {
 				ps.setString(5, sub.creditCard.expirationDateMonth);
 				ps.setString(6, sub.creditCard.expirationDateYear);
 				ps.setString(7, sub.creditCard.cardType.toString());
-				if(ps.executeUpdate()==0) {
-					String statment2 = "SELECT * FROM creditcards WHERE creditCardNumber = " + sub.creditCardNumber + ";";
+				if (ps.executeUpdate() == 0) {
+					String statment2 = "SELECT * FROM creditcards WHERE creditCardNumber = " + sub.creditCardNumber
+							+ ";";
 					ResultSet res2 = dbController.sendQuery(statment2);
 
 					if (res2 != null)
@@ -159,11 +161,11 @@ public class SubscriberController implements IController {
 								CreditCard c = new CreditCard(res2.getString(1), res2.getString(2), res2.getString(3),
 										res2.getString(4), res2.getString(5), res2.getString(6),
 										Subscriber.CardType.valueOf(res2.getString(7)));
-							if(!c.equals(sub.creditCard))
-								return false;
+								if (!c.equals(sub.creditCard))
+									return false;
 							}
 							res2.close();
-							
+
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}

@@ -22,6 +22,7 @@ import modules.PeriodicallyRunner;
 import modules.ServerRequest;
 import modules.SystemConfig;
 
+/** the order controller class */
 public class OrderController implements IController {
 
 	private ParkController park;
@@ -32,14 +33,14 @@ public class OrderController implements IController {
 	private DbController dbController;
 
 	public ObservableList<Order> canceled; // list of canceled Orders
-	// TODO Nir check
 
 	/**
+	 * creates the {@link OrderController}
 	 * 
-	 * @param park       instance of ParkController
-	 * @param messageC   instance of MessageController
-	 * @param subscriber instance of SubscriberController
-	 * @param discount   instance of DiscountController
+	 * @param park       instance of {@link ParkController}
+	 * @param messageC   instance of {@link MessageController}
+	 * @param subscriber instance of {@link SubscriberController}
+	 * @param discount   instance of {@link DiscountController}
 	 */
 	public OrderController(ParkController park, MessageController messageC, SubscriberController subscriber,
 			DiscountController discount) {
@@ -54,7 +55,8 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Create Order table in DB if not exists
+	 * Create Order table in DB if not exists<br>
+	 * table of {@link Order}s
 	 */
 	private void createTable() {
 		// please consider that type (enum value) name was changed from IDtype to type,
@@ -90,7 +92,7 @@ public class OrderController implements IController {
 	 * 
 	 * UpdateOrder - Updates all the fields of Order entity with the same orderID,
 	 * how to use: get the Order from DB change all fields you want BUT NOT THE orderID! and send the new Order to this function
-	 * PLEASE use this function ONLY if realy necessary. Don't use it for example to set status of Order to used.
+	 * PLEASE use this function ONLY if really necessary. Don't use it for example to set status of Order to used.
 	 * </pre>
 	 */
 	@Override
@@ -122,12 +124,12 @@ public class OrderController implements IController {
 			ord = ServerRequest.gson.fromJson(request.data, Order.class);
 
 			// first check if order already exists
-			if (GetOrderByID(ord.orderID) != null) { 
+			if (GetOrderByID(ord.orderID) != null) {
 				response = "Order already exists";
 				break;
 			}
 			// second check if Order Allowed
-			if (!IsOrderAllowed(ord)) { 
+			if (!IsOrderAllowed(ord)) {
 				response = "No more orders allowed in this time";
 				break;
 			}
@@ -249,10 +251,11 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Ask DB to add a new Order to the orders table
+	 * adds a new {@link Order} to the orders table in DB
 	 * 
-	 * @param Order to write in the DB
-	 * @return boolean did the function succeed or not
+	 * @param ord {@link Order} to add
+	 * @return true if succeeded to add<br>
+	 *         false otherwise
 	 */
 	public boolean AddNewOrder(Order ord) {
 		PreparedStatement ps = dbController
@@ -280,12 +283,14 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Check if the order is allowed by checking the amount of order in DB in orders
-	 * date and in range depends on AVG visit time in the park
+	 * Check if the order is allowed<br>
+	 * by checking the amount of {@link Order}s in DB<br>
+	 * within the date and time range.<br>
+	 * (depends on the AVG visit time of the {@link Park})
 	 * 
-	 * @param ord The Order entity that will be added to the DB
-	 * @return true if the order placed, false if the park is full in this range of
-	 *         time
+	 * @param ord The {@link Order} that will be added to the DB
+	 * @return true if the order placed<br>
+	 *         false if the park is full in this range of time
 	 */
 	private boolean IsOrderAllowed(Order ord) {
 		Park prk = park.getPark(ord.parkSite);
@@ -297,7 +302,7 @@ public class OrderController implements IController {
 			ResultSet ps = dbController.sendQuery( // count the number of orders 3 hours before and 4 hours after
 					"SELECT SUM(numberOfVisitors)" + " FROM orders " + " WHERE visitTime >= \"" + hoursRange[0]
 							+ "\" && visitTime <= \"" + hoursRange[1] + "\" && parkSite = \"" + ord.parkSite
-							+ "\" && orderStatus <> \"CANCEL\";"); 
+							+ "\" && orderStatus <> \"CANCEL\";");
 			if (ps.next())
 				resInt = ps.getInt(1);
 			ps.close();
@@ -312,10 +317,13 @@ public class OrderController implements IController {
 
 	/**
 	 * Method only for waiting list
+	 * <p>
+	 * checks if the {@link Order} is allowed for waiting list
 	 * 
-	 * @param order
-	 * @param numberOfVisitorsCanceled
-	 * @return
+	 * @param order                    the {@link Order} to be checked
+	 * @param numberOfVisitorsCanceled amount of visitors who canceled their order
+	 * @return true if allowed<br>
+	 *         false otherwise
 	 */
 	public boolean IsOrderAllowedWaitingList(Order order, int numberOfVisitorsCanceled) {
 		Park prk = park.getPark(order.parkSite);
@@ -339,11 +347,10 @@ public class OrderController implements IController {
 		return false;
 	}
 
-	// TODO Nir check
 	/**
-	 * For calculate serial number of the next order should be
+	 * calculates the serial number of the next {@link Order}
 	 * 
-	 * @return Next number of Order
+	 * @return Next number of {@link Order}
 	 */
 	public int NextOrderID() {
 		int res = 1; // in a case of empty table
@@ -364,9 +371,8 @@ public class OrderController implements IController {
 		return res;
 	}
 
-	// TODO Nir check
 	/**
-	 * Reminder for all orders for next day
+	 * sends the reminder for all {@link Order}s for next day
 	 */
 	private void initMessageReminder() {
 		int[] start = SystemConfig.configuration.SendNotificationSendTime;
@@ -402,9 +408,9 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * To recieve Tommorow orders
+	 * To receive tomorrow's {@link Order}s
 	 * 
-	 * @return Array of orders for tommorow
+	 * @return Array of {@link Order}s for tomorrow
 	 */
 	private ArrayList<Order> getTomorrowOrders() {
 		LocalDate tomorow = LocalDate.now().plusDays(1);
@@ -434,12 +440,11 @@ public class OrderController implements IController {
 		return resultList;
 	}
 
-	// TODO Nir check
 	/**
-	 * Genrate Aprroval Request Message for order
+	 * generates approval request message for {@link Order}
 	 * 
-	 * @param order
-	 * @return the Approval message
+	 * @param order the {@link Order} to send message to
+	 * @return the approval message
 	 */
 	private String genereteApprovalRequestMessage(Order order) {
 		return "Please Approve or Cancel this order:\n" + "Order ID: " + order.orderID + "\n" + "visit time: "
@@ -449,11 +454,10 @@ public class OrderController implements IController {
 				+ "If not accepted until 12:00, the order will be cancelrd automaticly\n" + "Thank for using GoNature";
 	}
 
-	// TODO Nir check
 	/**
-	 * Genrate Message for order
+	 * generates message for new {@link Order}
 	 * 
-	 * @param order
+	 * @param order the {@link Order} to send message to
 	 * @return the message
 	 */
 	private String genereteMessage(Order order) {
@@ -464,6 +468,12 @@ public class OrderController implements IController {
 				+ "Thank for using GoNature";
 	}
 
+	/**
+	 * generates message for canceled {@link Order}
+	 * 
+	 * @param order the {@link Order} to send message to
+	 * @return the message
+	 */
 	private String genereteCanceldMessage(Order order) {
 		return "Your Order Canceld:\n" + "Order ID: " + order.orderID + "\n" + "visit time: "
 				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
@@ -473,13 +483,14 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Method that return all the Orders entity from DB that in a range of time (
-	 * start < visit time < end ) and date and from chosen park site
+	 * Method that returns all the {@link Order}s from DB<br>
+	 * that are in date and time range ( start < visit time < end ) <br>
+	 * from chosen {@link Park}.
 	 * 
-	 * @param start
-	 * @param end
-	 * @param parkSite
-	 * @return array of orders in that range of time
+	 * @param start    start of date and time range
+	 * @param end      end of date and time range
+	 * @param parkSite the {@link Park}'s ID
+	 * @return array of {@link Order}s in that date and time range
 	 */
 	public Order[] GetOrderListForDate(Timestamp start, Timestamp end, String parkSite) {
 		ResultSet res = dbController.sendQuery("SELECT *\r\n" + " FROM orders \r\n" + " WHERE visitTime >= \"" + start
@@ -505,11 +516,11 @@ public class OrderController implements IController {
 
 	// maybe will be needed at least for testing
 	/**
-	 * Returns all the Orders from all the parks
+	 * Returns all the {@link Order}s from all the {@link Park}s
 	 * 
-	 * @return
+	 * @return array of {@link Order}s
 	 */
-	public Order[] GetAllListOfOrders() { 
+	public Order[] GetAllListOfOrders() {
 		ResultSet res = dbController.sendQuery("SELECT * FROM orders");
 		if (res == null)
 			return null;
@@ -530,10 +541,11 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Methods returns all the orders that was made by ownerID from all the parks
+	 * returns all the {@link Order}s that were made by<br>
+	 * a specific owner from all the {@link Park}s
 	 * 
-	 * @param ID
-	 * @return Array of Orders
+	 * @param ID the owner's ID
+	 * @return array of {@link Order}s
 	 */
 	public Order[] GetOrdersByVisitorID(String ID) {
 		ResultSet res = dbController.sendQuery("SELECT * FROM orders WHERE ownerID =" + ID + "");
@@ -556,10 +568,11 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Set Order with this orderID to used status
+	 * sets an {@link Order} to "is used" status
 	 * 
-	 * @param orderID
-	 * @return true if order changed to used, false otherwise
+	 * @param orderID the {@link Order}'s ID
+	 * @return true if order changed to is used<br>
+	 *         false otherwise
 	 */
 	public boolean SetOrderToIsUsed(int orderID) {
 		PreparedStatement pstmt = dbController
@@ -576,11 +589,13 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Update the order with the same orderID DO NOT CAHNGE orderID
-	 * !!!!!!!!!!!!!!!!!!!!!
+	 * Update an {@link Order}
 	 * 
-	 * @param ord
-	 * @return true if the order was updated, false otherwise
+	 * @apiNote DO NOT CAHNGE orderID !
+	 * 
+	 * @param ord the {@link Order} to be updated
+	 * @return true if the order was updated<br>
+	 *         false otherwise
 	 */
 	public boolean UpdateOrder(Order ord) {
 		PreparedStatement ps = dbController.getPreparedStatement(
@@ -610,10 +625,11 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * delete the order from DB
+	 * delete an {@link Order} from DB
 	 * 
-	 * @param orderID
-	 * @return true if Order was found and deleted, false otherwise
+	 * @param orderID the {@link Order}'s ID
+	 * @return true if Order was found and deleted<br>
+	 *         false otherwise
 	 */
 	public boolean deleteOrder(int orderID) {
 		PreparedStatement pstmt = dbController.getPreparedStatement("DELETE FROM orders WHERE orderID = ?;");
@@ -629,11 +645,13 @@ public class OrderController implements IController {
 	}
 
 	/**
-	 * Change the Timestamp hour +/-
+	 * in case {@link Order} can't be made<br>
+	 * due to {@link Park} being full<br>
+	 * calculates the free possible time ranges to offer
 	 * 
-	 * @param stamp
-	 * @param hours
-	 * @return
+	 * @param order the {@link Order} to offer times to
+	 * @param prk   the {@link Park} to calculate time range for
+	 * @return the range of free time
 	 */
 	private Timestamp[] calcHoursRange(Order order, Park prk) {
 		Timestamp[] res = new Timestamp[2];

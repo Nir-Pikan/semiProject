@@ -130,6 +130,11 @@ public class CancelReportController implements GuiController, Report {
 		pieChartCancel.setData(pieChartData);
 	}
 
+	/**
+	 * update report counters according to the {@link Order}
+	 * 
+	 * @param order the order we update counters according to
+	 */
 	private void AnalyzeOrder(Order order) {
 		if (!order.visitTime.before(new Timestamp(System.currentTimeMillis())))
 			return;

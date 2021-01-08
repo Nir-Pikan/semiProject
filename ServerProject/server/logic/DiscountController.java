@@ -15,7 +15,7 @@ import entities.ParkEntry.EntryType;
 import modules.IController;
 import modules.ServerRequest;
 
-/**the discount controller class*/
+/** the discount controller class */
 public class DiscountController implements IController {
 
 	private final static float FullPriceForPerson = 100;
@@ -34,8 +34,7 @@ public class DiscountController implements IController {
 	}
 
 	/**
-	 * Create Discount Table if not exist
-	 * <p>
+	 * Create Discount Table if not exist <br>
 	 * table of {@link DiscountEntity}s
 	 */
 	private void createTable() {
@@ -59,22 +58,23 @@ public class DiscountController implements IController {
 			response = ServerRequest.gson.toJson(discounts, DiscountEntity[].class);
 			break;
 		case "CalculatePriceForEntryByOrder": // to orderController
-			 Order order =ServerRequest.gson.fromJson(request.data, Order.class);
-			 if(order==null) {
-				 response = "Failed to Calculate Price of Order got Null";
-			 }
-			 else {
-				float price = CalculatePriceForEntryByOrder(order.numberOfVisitors,order.numberOfSubscribers,order.type==IdType.GUIDE,order.timeOfOrder);
-				response=ServerRequest.gson.toJson(price, Float.class);
-			 }
+			Order order = ServerRequest.gson.fromJson(request.data, Order.class);
+			if (order == null) {
+				response = "Failed to Calculate Price of Order got Null";
+			} else {
+				float price = CalculatePriceForEntryByOrder(order.numberOfVisitors, order.numberOfSubscribers,
+						order.type == IdType.GUIDE, order.timeOfOrder);
+				response = ServerRequest.gson.toJson(price, Float.class);
+			}
 			break;
 		case "CalculatePriceForEntryCasual":// to entryController
 			ParkEntry entry = ServerRequest.gson.fromJson(request.data, ParkEntry.class);
-			if(entry == null)
+			if (entry == null)
 				response = "Failed to Calculate Price of Entry got Null";
 			else {
-				float price = CalculatePriceForEntryCasual(entry.numberOfVisitors,entry.numberOfSubscribers,entry.entryType == EntryType.Group ? true : false);
-				response=ServerRequest.gson.toJson(price, Float.class);
+				float price = CalculatePriceForEntryCasual(entry.numberOfVisitors, entry.numberOfSubscribers,
+						entry.entryType == EntryType.Group ? true : false);
+				response = ServerRequest.gson.toJson(price, Float.class);
 			}
 			break;
 
@@ -189,8 +189,9 @@ public class DiscountController implements IController {
 
 		if (isGroup) {
 			// first calculate the price for the group without the instructor
-		//	inovice = FullPriceForPerson * (TotalVisitors - 1) * orderGroupDiscount * inAdvancePayDiscount;
-			inovice = FullPriceForPerson * (TotalVisitors - 1) * orderGroupDiscount; // (Roman) no payment in advance 
+			// inovice = FullPriceForPerson * (TotalVisitors - 1) * orderGroupDiscount *
+			// inAdvancePayDiscount;
+			inovice = FullPriceForPerson * (TotalVisitors - 1) * orderGroupDiscount; // (Roman) no payment in advance
 			// add the price for the instructor
 			inovice += FullPriceForPerson * orderGroupDiscount * orderGroupDiscountInstructor;
 
@@ -314,7 +315,7 @@ public class DiscountController implements IController {
 	 */
 	private float ApplyDiscount(float currentPrice, Timestamp orderTime) {
 
-		float newPrice=0;
+		float newPrice = 0;
 
 		PreparedStatement pstmt = dbController.getPreparedStatement(
 				"SELECT MAX(discountValue) FROM " + tableName + "  where timestamp(startDate) <= timestamp(?)"
@@ -327,9 +328,9 @@ public class DiscountController implements IController {
 			if (res == null) {
 				return currentPrice;
 			}
-			float discountApply =0;
-			if(res.next()) {
-				discountApply = res.getFloat(1);// discountApply should be between 0.00 to 1.00				
+			float discountApply = 0;
+			if (res.next()) {
+				discountApply = res.getFloat(1);// discountApply should be between 0.00 to 1.00
 			}
 			if (discountApply < 0 || discountApply > 1)
 				return currentPrice;

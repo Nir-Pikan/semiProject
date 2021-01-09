@@ -6,7 +6,10 @@ import java.util.Stack;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /** (Singleton) class for navigation between windows */
 public class Navigator {
@@ -22,7 +25,7 @@ public class Navigator {
 		if (baseNode == null)
 			throw new RuntimeException("Navigator not initiated, run Navigator.init(Pane baseNode) first");
 		history = new Stack<>();
-		navigate("login");
+		navigate("logIn");
 	}
 
 	/**

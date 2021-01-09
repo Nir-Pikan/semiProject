@@ -14,6 +14,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import modules.ServerRequest;
@@ -39,6 +41,9 @@ public class MainScreenController {
 
 	@FXML
 	private Button Login;
+	
+	@FXML
+    private ImageView logo;
 
 	private static final List<MenuItem> VISITOR_MAP = createVisitorMap();
 	private static final Map<String, MenuItem> WORKER_MAP = createWorkerMap();
@@ -80,6 +85,8 @@ public class MainScreenController {
 	 * @return the body of the main screen for the navigator
 	 */
 	public Pane init() {
+		Image i = new Image(this.getClass().getResource("logo.png").toString());
+		logo.setImage(i);
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		todayDateLabel.setText("");
 		todayDateLabel.setText("Date: " + currentTime.toLocalDateTime().toLocalDate().toString());

@@ -25,9 +25,4 @@ public class CardReaderMock {
 		}
 	}
 
-	// ============================ main is only for demonstration
-	// ====================
-	// in the real this window will be opened with the main window at the beginning
-	// of the program
-
 }

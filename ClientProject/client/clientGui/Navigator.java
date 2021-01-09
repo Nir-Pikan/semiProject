@@ -16,7 +16,7 @@ public class Navigator {
 
 	private static Navigator instance = null;
 	private static Pane baseNode = null;
-	private static String defaultTab = "motd";
+	private static String defaultTab = "Motd";
 	private Tab current = null;
 
 	private Stack<Tab> history;

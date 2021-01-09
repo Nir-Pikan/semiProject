@@ -62,7 +62,7 @@ public class MainScreenController {
 		Login.setManaged(false);
 		greetingMsg.setText("");
 		menu.getChildren().clear();
-		Navigator.instance().clearHistory("login");
+		Navigator.instance().clearHistory("logIn");
 		if (clientController.client.logedInSubscriber.getVal() != null) {
 			clientController.client.logedInSubscriber.silentSet(null);
 			return;

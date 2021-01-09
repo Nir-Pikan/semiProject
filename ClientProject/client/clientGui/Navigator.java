@@ -87,6 +87,7 @@ public class Navigator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NavigationInterruption e) {
+			back();
 		}
 		return null;
 	}

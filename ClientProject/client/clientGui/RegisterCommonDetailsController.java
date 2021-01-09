@@ -14,7 +14,7 @@ import javafx.scene.control.TextField;
 /** the RegisterCommonDetails page controller */
 public class RegisterCommonDetailsController implements GuiController {
 
-	private static final int MAX_FAMILY_SIZE = 20;
+	private static final int MAX_FAMILY_SIZE = Integer.MAX_VALUE;
 
 	@FXML
 	private Label LastNameLabel;
@@ -117,18 +117,15 @@ public class RegisterCommonDetailsController implements GuiController {
 		if (CheckAllRequiredFields()) {
 			// create a SUBSCRIBER/GUIDE with input info
 			Subscriber.Type type = null;
-			int familySize = 1;
+			int familySize;
 
 			// in case of subscriber
 			if (SubscriberRadionBtn.isSelected()) {
 				type = Subscriber.Type.SUBSCRIBER;
-				familySize = FamilySizeSpinBox.getValue();
-			}
-
-			// in case of guide
-			else
+			}else { // in case of guide
 				type = Subscriber.Type.GUIDE;
-
+			}
+			familySize = FamilySizeSpinBox.getValue();
 			Subscriber s = new Subscriber("S" + IDTextField.getText(), IDTextField.getText(),
 					FirstNameTextField.getText(), LastNameTextField.getText(), PhoneNumberTextField.getText(),
 					EmailTextField.getText(), familySize, type);
@@ -145,24 +142,6 @@ public class RegisterCommonDetailsController implements GuiController {
 				((RegisterSummaryController) g).addSub(s);
 			}
 		}
-	}
-
-	/**
-	 * Shows the FamilySize fields if Subscriber type is chosen
-	 */
-	@FXML
-	void ShowFamilySize(ActionEvent event) {
-		FamilySizeLabel.setVisible(true);
-		FamilySizeSpinBox.setVisible(true);
-	}
-
-	/**
-	 * Hides the FamilySize fields if Guide type is chosen
-	 */
-	@FXML
-	void HideFamilySize(ActionEvent event) {
-		FamilySizeLabel.setVisible(false);
-		FamilySizeSpinBox.setVisible(false);
 	}
 
 	/**

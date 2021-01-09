@@ -447,11 +447,12 @@ public class OrderController implements IController {
 	 * @return the approval message
 	 */
 	private String genereteApprovalRequestMessage(Order order) {
+		int[] cancel = SystemConfig.configuration.SendNotificationCancelTime;
 		return "Please Approve or Cancel this order:\n" + "Order ID: " + order.orderID + "\n" + "visit time: "
 				+ order.visitTime.toLocalDateTime().toLocalDate() + " "
 				+ order.visitTime.toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + "\n"
 				+ "number of visitors: " + order.numberOfVisitors + "\n" + "Price: " + order.priceOfOrder + "\n"
-				+ "If not accepted until 12:00, the order will be cancelrd automaticly\n" + "Thank for using GoNature";
+				+ "If not accepted until "+cancel[0]+":"+cancel[1]+", the order will be cancelrd automaticly\n" + "Thank for using GoNature";
 	}
 
 	/**

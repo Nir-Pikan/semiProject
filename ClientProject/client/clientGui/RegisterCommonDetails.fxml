@@ -73,11 +73,11 @@
          </GridPane.margin>
       </Label>
       <CheckBox fx:id="CreditCardCheckBox" mnemonicParsing="false" selected="true" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-      <RadioButton fx:id="SubscriberRadionBtn" mnemonicParsing="false" onAction="#ShowFamilySize" selected="true" text="Subscriber" GridPane.columnIndex="1" GridPane.rowIndex="9">
+      <RadioButton fx:id="SubscriberRadionBtn" mnemonicParsing="false" selected="true" text="Subscriber" GridPane.columnIndex="1" GridPane.rowIndex="9">
          <toggleGroup>
             <ToggleGroup fx:id="typeGroup" />
          </toggleGroup></RadioButton>
-      <RadioButton fx:id="GuideRadioBtn" mnemonicParsing="false" onAction="#HideFamilySize" text="Guide" toggleGroup="$typeGroup" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+      <RadioButton fx:id="GuideRadioBtn" mnemonicParsing="false" text="Guide" toggleGroup="$typeGroup" GridPane.columnIndex="2" GridPane.rowIndex="9" />
       <Label fx:id="FamilySizeLabel" text="Family Size" GridPane.rowIndex="11" />
       <Spinner fx:id="FamilySizeSpinBox" GridPane.columnIndex="1" GridPane.rowIndex="11" />
       <Button fx:id="NextBtn" mnemonicParsing="false" onAction="#MoveToNextPage" text="Next" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="12">

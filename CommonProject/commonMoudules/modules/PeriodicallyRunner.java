@@ -9,8 +9,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Class that execute specific "job" at specific time, and run it every "delta"
- * time
+ * Class that execute specific "job" at specific time<br>
+ * runs it every "delta" time
  * 
  * @author Or Man
  * @version 1.1
@@ -21,8 +21,8 @@ public class PeriodicallyRunner {
 
 	/**
 	 * Creates {@link PeriodicallyRunner} that execute specific <b>"job"</b> at
-	 * specific <b>time(targetHour,targrtMin)</b>, and run it every <b>"delta"</b>
-	 * time
+	 * specific <b>time(targetHour,targrtMin)</b><br>
+	 * and runs it every <b>"delta"</b> time
 	 * 
 	 * @param targetHour starting hour
 	 * @param targetMin  starting minutes
@@ -47,7 +47,8 @@ public class PeriodicallyRunner {
 
 	/**
 	 * Creates {@link PeriodicallyRunner} that execute specific <b>"job"</b> at
-	 * specific <b>time(targetHour,targrtMin)</b>, and run it every 1 day
+	 * specific <b>time(targetHour,targrtMin)</b><br>
+	 * and runs it each day
 	 * 
 	 * @param targetHour starting hour
 	 * @param targetMin  starting minutes
@@ -59,8 +60,8 @@ public class PeriodicallyRunner {
 	}
 
 	/**
-	 * stop the execution of the job, waits to the execution to end, if already
-	 * started
+	 * stops the execution of the job<br>
+	 * waits for the execution to end if already started
 	 */
 	public void stop() {
 		scheduler.shutdown();

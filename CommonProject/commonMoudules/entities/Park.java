@@ -1,8 +1,6 @@
 package entities;
 
-/**
- * A class containing the data of a single park.
- */
+/** A class containing the data of a single park. */
 public class Park {
 
 	public String parkID;
@@ -54,8 +52,7 @@ public class Park {
 	}
 
 	/**
-	 * creates a new {@link Park}.
-	 * <p>
+	 * creates a new {@link Park}. <br>
 	 * (the Average VisitTime is 4 hours)
 	 * 
 	 * @param parkID               the park's ID

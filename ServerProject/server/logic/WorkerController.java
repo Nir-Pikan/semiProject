@@ -24,8 +24,7 @@ public class WorkerController implements IController {
 	}
 
 	/**
-	 * Create Worker table in DB if not exists
-	 * <p>
+	 * Create Worker table in DB if not exists <br>
 	 * table of {@link Worker}s
 	 */
 	private void createTable() {
@@ -34,11 +33,6 @@ public class WorkerController implements IController {
 				+ "isLogged varchar(4),permissions varchar(200)," + "primary key(userName));");
 	}
 
-	/**
-	 * Request: 1. (request.job = LogInWorker), (request.data = [userName ,
-	 * password])as String[] Request: 2. (request.job = LogOutWorker), (request.data
-	 * = userName)
-	 */
 	@Override
 	public String handleRequest(ServerRequest request) {
 		if (request.job.equals("LogInWorker")) {
@@ -46,13 +40,13 @@ public class WorkerController implements IController {
 			String userName = parameters[0];
 			String password = parameters[1];
 			try {
-			Worker worker = LogInWorker(userName, password);
-			return ServerRequest.gson.toJson(worker, Worker.class);
-			}catch(IllegalArgumentException ex) {
-				if(ex.getMessage().equals("logged"))
+				Worker worker = LogInWorker(userName, password);
+				return ServerRequest.gson.toJson(worker, Worker.class);
+			} catch (IllegalArgumentException ex) {
+				if (ex.getMessage().equals("logged"))
 					return "user already logged in";
 			}
-			
+
 		}
 		if (request.job.equals("LogOutWorker")) {
 			String userName = request.data;
@@ -63,10 +57,11 @@ public class WorkerController implements IController {
 	}
 
 	/**
-	 * add worker to DB
+	 * add {@link Worker} to DB
 	 * 
-	 * @param worker the worker we want to add
-	 * @return true if success, false otherwise
+	 * @param worker the {@link Worker} to be added
+	 * @return true if success<br>
+	 *         false otherwise
 	 */
 	public boolean AddWorker(Worker worker) {
 		worker.setIsLogged(false);
@@ -91,12 +86,14 @@ public class WorkerController implements IController {
 	}
 
 	/**
-	 * if this userName exist in DB and he has this password and he is not logged in
-	 * return this worker and update his logged in status, else return null
+	 * if this userName exist in DB and he has this password<br>
+	 * and he is not logged in<br>
+	 * return this {@link Worker} and update his logged in status
 	 * 
 	 * @param userName login user name
 	 * @param password login password
-	 * @return if successes return logged in worker, null otherwise
+	 * @return the logged in {@link Worker} if successes<br>
+	 *         null otherwise
 	 */
 	public Worker LogInWorker(String userName, String password) {
 		ResultSet result = dbController.sendQuery(
@@ -125,11 +122,12 @@ public class WorkerController implements IController {
 	}
 
 	/**
-	 * update the worker log in status in DB
+	 * update the {@link Worker}'s log in status in DB
 	 * 
-	 * @param workerUserName the worker we want update
+	 * @param workerUserName the {@link Worker} we want update
 	 * @param status         the new status we want to update to
-	 * @return true if success, false otherwise
+	 * @return true if success<br>
+	 *         false otherwise
 	 */
 	public boolean updateWorkerLogginDB(String workerUserName, boolean status) {
 		return dbController.sendUpdate("UPDATE workers SET isLogged=\"" + ParseIsLoginBoolToString(status)

@@ -5,8 +5,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * extends the Thread class to create Thread that you can wake.<br>
- * while asleep({@link #sleepUntillWoken()}) can be woken by
- * {@link #wake()}.<br>
+ * while asleep({@link #sleepUntillWoken()}) can be woken by<br>
+ * {@link #wake()}.
+ * <p>
  * the accuracy can be set by {@link #TIME_ACCURECY}
  * 
  * @author Or man
@@ -36,7 +37,7 @@ public class WakeableThread extends Thread {
 	}
 
 	/**
-	 * will sleep until someone call the {@link #wake()} methode
+	 * will sleep until someone call the {@link #wake()} method
 	 */
 	public void sleepUntillWoken() {
 		needToWake = false;

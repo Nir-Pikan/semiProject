@@ -8,7 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
-/** (singelton) class for navigation between windows */
+/** (Singleton) class for navigation between windows */
 public class Navigator {
 
 	private static Navigator instance = null;
@@ -27,7 +27,7 @@ public class Navigator {
 
 	/**
 	 * <pre>
-	 * (singelton) get an instance of navigator
+	 * (Singleton) get an instance of navigator
 	 * Navigator.init() need to be called before the call to this function
 	 * </pre>
 	 * 
@@ -42,7 +42,7 @@ public class Navigator {
 	}
 
 	/**
-	 * init the Navigator to change the content of the given Pane
+	 * initialize the Navigator to change the content of the given Pane
 	 * 
 	 * @param baseNode the node that the navigator need to change
 	 */
@@ -68,7 +68,7 @@ public class Navigator {
 		if (current != null)
 			history.push(current);
 		URL screen = MainScreenController.class.getResource(fxmlName);
-		if(screen == null) 
+		if (screen == null)
 			return navigate(null);
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(screen);
@@ -83,7 +83,8 @@ public class Navigator {
 			return current.controller;
 		} catch (IOException e) {
 			e.printStackTrace();
-		}catch(NavigationInterruption e) {}
+		} catch (NavigationInterruption e) {
+		}
 		return null;
 	}
 
@@ -103,9 +104,12 @@ public class Navigator {
 		current = null;
 		navigate(defaultTab);
 	}
-	
-	/** navigates to the given page and clear the history 
-	 * @param fxml the page to navigate*/
+
+	/**
+	 * navigates to the given page and clear the history
+	 * 
+	 * @param fxml the page to navigate
+	 */
 	public void clearHistory(String fxml) {
 		history = new Stack<>();
 		current = null;
@@ -130,13 +134,11 @@ public class Navigator {
 		}
 
 	}
-	
-	/**navigation Interruption*/
-	public static class NavigationInterruption extends RuntimeException{
+
+	/** navigation Interruption */
+	public static class NavigationInterruption extends RuntimeException {
 
 		private static final long serialVersionUID = 3626458317670172388L;
 
-		
-		
 	}
 }

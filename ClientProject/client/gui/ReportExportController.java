@@ -1,9 +1,5 @@
 package gui;
 
-/**
- * Sample Skeleton for 'ReportExportWindowBoundary.fxml' Controller Class
- */
-
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
@@ -41,8 +37,8 @@ public class ReportExportController implements GuiController {
 	@FXML
 	private ComboBox<String> monthSelction;
 
-    @FXML
-    private ComboBox<String> yearSelction;
+	@FXML
+	private ComboBox<String> yearSelction;
 
 	@FXML
 	private Label LabelParkId;
@@ -50,14 +46,15 @@ public class ReportExportController implements GuiController {
 	@FXML
 	private TextField textParkId;
 
+	/** create the asked report in a popup */
 	@FXML
 	void getReoprt_OnClick(ActionEvent event) {
 		if (!CheckAllRequiredFields())
 			return;
 
 		String selectedMonth = monthSelction.getValue();
-		LocalDate startOfMonthDay = LocalDate.of(Integer.parseInt(yearSelction.getValue()), Months.valueOf(selectedMonth).ordinal() + 1,
-				1);
+		LocalDate startOfMonthDay = LocalDate.of(Integer.parseInt(yearSelction.getValue()),
+				Months.valueOf(selectedMonth).ordinal() + 1, 1);
 		Timestamp startOfMonth = Timestamp.valueOf(startOfMonthDay.atStartOfDay());
 		Timestamp endOfMonth = Timestamp.valueOf(startOfMonthDay.plusMonths(1).atStartOfDay());
 
@@ -106,7 +103,7 @@ public class ReportExportController implements GuiController {
 		monthSelction.getItems().clear();
 		monthSelction.getItems().addAll(monthStrings);
 		yearSelction.getItems().clear();
-		yearSelction.getItems().addAll("2020","2021");
+		yearSelction.getItems().addAll("2020", "2021");
 		if (w.getWorkerType().equals("departmentManager")) {
 			ParkSelectionComboBox.getItems().addAll(clientController.client.parkNames);
 			ReportSelectionComboBox.getItems().addAll(ReportType.Entry, ReportType.Cancel);
@@ -118,9 +115,10 @@ public class ReportExportController implements GuiController {
 			textParkId.setText(w.getPermissions().GetParkID());
 			ReportSelectionComboBox.getItems().addAll(ReportType.Visitor, ReportType.Usage, ReportType.Income);
 		}
-		
+
 	}
 
+	/** checks if all required fields are filled */
 	private boolean CheckAllRequiredFields() {
 		boolean res = true;
 		res &= CheckParkName();
@@ -128,12 +126,18 @@ public class ReportExportController implements GuiController {
 		res &= CheckReportSelection();
 		res &= CheckMonthSelection();
 		res &= CheckYearSelection();
-		
+
 		return res;
 	}
 
+	/**
+	 * checks if a year was selected
+	 * 
+	 * @return true if year was selected<br>
+	 *         false otherwise
+	 */
 	private boolean CheckYearSelection() {
-		if(yearSelction.getValue()==null) {
+		if (yearSelction.getValue() == null) {
 			yearSelction.getStyleClass().add("error");
 			return false;
 		}
@@ -141,8 +145,14 @@ public class ReportExportController implements GuiController {
 		return true;
 	}
 
+	/**
+	 * checks if a month was selected
+	 * 
+	 * @return true if month was selected<br>
+	 *         false otherwise
+	 */
 	private boolean CheckMonthSelection() {
-		if(monthSelction.getValue()==null) {
+		if (monthSelction.getValue() == null) {
 			monthSelction.getStyleClass().add("error");
 			return false;
 		}
@@ -150,20 +160,32 @@ public class ReportExportController implements GuiController {
 		return true;
 	}
 
+	/**
+	 * checks if a type of report was selected
+	 * 
+	 * @return true if type was selected<br>
+	 *         false otherwise
+	 */
 	private boolean CheckReportSelection() {
-		
-		if(ReportSelectionComboBox.getValue()==null) {
+
+		if (ReportSelectionComboBox.getValue() == null) {
 			ReportSelectionComboBox.getStyleClass().add("error");
 			return false;
 		}
-		
+
 		ReportSelectionComboBox.getStyleClass().remove("error");
 		return true;
 	}
 
+	/**
+	 * checks if a park ID was selected
+	 * 
+	 * @return true if park ID was selected<br>
+	 *         false otherwise
+	 */
 	private boolean CheckParkId() {
-		
-		if (textParkId.getText()==null) {
+
+		if (textParkId.getText() == null) {
 			textParkId.getStyleClass().add("error");
 			return false;
 		}
@@ -175,8 +197,14 @@ public class ReportExportController implements GuiController {
 		return true;
 	}
 
+	/**
+	 * checks if a park name was entered
+	 * 
+	 * @return true if park name was entered<br>
+	 *         false otherwise
+	 */
 	private boolean CheckParkName() {
-		if(ParkSelectionComboBox.getValue()==null) {
+		if (ParkSelectionComboBox.getValue() == null) {
 			ParkSelectionComboBox.getStyleClass().add("error");
 			return false;
 		}

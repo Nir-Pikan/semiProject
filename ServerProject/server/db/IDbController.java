@@ -7,9 +7,9 @@ public interface IDbController {
 
 	/**
 	 * creates table in the dataBase only if not exists
-	 * <p>
+	 * <br>
 	 * it will take the crateStatement received and add prefix of:
-	 * <p>
+	 * <br>
 	 * \"CREATE TABLE IF NOT EXISTS \"
 	 * 
 	 * @param creatStatment the table to create

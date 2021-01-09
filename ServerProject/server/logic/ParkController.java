@@ -15,7 +15,7 @@ import entities.PendingValueChangeRequest.ParkAttribute;
 import modules.IController;
 import modules.ServerRequest;
 
-/**the park controller class*/
+/** the park controller class */
 public class ParkController implements IController {
 	IDbController db;
 
@@ -33,8 +33,7 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * Creates the Park table if not exist
-	 * <p>
+	 * Creates the Park table if not exist <br>
 	 * table of {@link Park}s
 	 */
 	private void createTable() {
@@ -50,10 +49,11 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * get MaxPreOrder from Park with the given id
+	 * get MaxPreOrder from {@link Park} with the given id
 	 * 
-	 * @param parkId the Id of the wanted Park
-	 * @return the value of the MaxPreOrder or -1 if failed
+	 * @param parkId the Id of the wanted {@link Park}
+	 * @return the value of the MaxPreOrder<br>
+	 *         -1 if failed
 	 */
 	public int getMaxPreOrder(String parkId) {
 		Park p = getPark(parkId);
@@ -64,10 +64,11 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * get MaxCapacity from Park with the given id
+	 * get MaxCapacity from {@link Park} with the given id
 	 * 
-	 * @param parkId the Id of the wanted Park
-	 * @return the value of the MaxCapacity or -1 if failed
+	 * @param parkId the Id of the wanted {@link Park}
+	 * @return the value of the MaxCapacity<br>
+	 *         -1 if failed
 	 */
 	public int getMaxCapacity(String parkId) {
 		Park p = getPark(parkId);
@@ -78,10 +79,11 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * get AVGvisitTime from Park with the given id
+	 * get AVGvisitTime from {@link Park} with the given id
 	 * 
-	 * @param parkId the Id of the wanted Park
-	 * @return the value of the AVGvisitTime or -1 if failed
+	 * @param parkId the Id of the wanted {@link Park}
+	 * @return the value of the AVGvisitTime<br>
+	 *         -1 if failed
 	 */
 	public double getAVGvisitTime(String parkId) {
 		Park p = getPark(parkId);
@@ -92,12 +94,13 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * Set Attribute value for given park
+	 * Set Attribute value for given {@link Park}
 	 * 
-	 * @param parkId    the Id of the wanted Park
+	 * @param parkId    the Id of the wanted {@link Park}
 	 * @param attribute the ParkAttribute To change
 	 * @param val       the new value to save
-	 * @return boolean - if the update worked successfully
+	 * @return true if the update worked successfully<br>
+	 *         false otherwise
 	 */
 	private boolean setValue(String parkId, ParkAttribute attribute, Number val) {
 		PreparedStatement setValue = db
@@ -124,7 +127,8 @@ public class ParkController implements IController {
 	 * Add Value ChangeRequest to the DB
 	 * 
 	 * @param request the request to add
-	 * @return boolean the outcome of the operation
+	 * @return true if succeeded to add<br>
+	 *         false otherwise
 	 */
 	private boolean addValueChangeRequest(PendingValueChangeRequest request) {
 		return db
@@ -138,7 +142,8 @@ public class ParkController implements IController {
 	 * delete Value ChangeRequest from the DB
 	 * 
 	 * @param request the request to delete
-	 * @return boolean the outcome of the operation
+	 * @return true if succeeded to add<br>
+	 *         false otherwise
 	 */
 	private boolean removeValueChangeRequest(PendingValueChangeRequest request) {
 		return db.sendUpdate("DELETE FROM valueChangeRequest WHERE parkId=\"" + request.parkId
@@ -147,13 +152,13 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * update the numberOfCurrentVisitor in park
+	 * update the numberOfCurrentVisitor in {@link Park}
 	 * 
-	 * @param parkId the Id of the wanted Park
+	 * @param parkId the Id of the wanted {@link Park}
 	 * @param delta  the number of visitor to increase or reduce
-	 * @return the number of new visitors in the park
-	 * @throws IllegalArgumentException if the newValue = oldValue + delta is lower
-	 *                                  than 0 or greater than the capacity
+	 * @return the number of new visitors in the {@link Park}
+	 * @throws IllegalArgumentException if the newValue = oldValue + delta is<br>
+	 *                                  lower than 0 or greater than the capacity
 	 */
 	public int updateNumberOfCurrentVisitor(String parkId, int delta) {
 		Park p = getPark(parkId);
@@ -178,11 +183,12 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * checks if number of visitors can get into the park
+	 * checks if number of visitors can get into the {@link Park}
 	 * 
-	 * @param parkId     the Id of the wanted Park
+	 * @param parkId     the Id of the wanted {@link Park}
 	 * @param numToCheck number of visitors that want to enter
-	 * @return boolean if adding this many visitors not exceeding the capacity
+	 * @return true if adding this many visitors not exceeding the capacity<br>
+	 *         false otherwise
 	 */
 	public boolean checkAvailabilityForNumberOfVisitors(String parkId, int numToCheck) {
 		Park p = getPark(parkId);
@@ -192,15 +198,16 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * Get the park entity of the given ParkID
+	 * Get the {@link Park} of the given ParkID
 	 * 
-	 * @param parkId the Id of the wanted Park
-	 * @return the park entity of the given ID or null if failed
+	 * @param parkId the Id of the wanted {@link Park}
+	 * @return the {@link Park} of the given ID<br>
+	 *         null if failed
 	 */
-	protected Park getPark(String parkId) { 
+	protected Park getPark(String parkId) {
 		try {
 
-			ResultSet rs = db.sendQuery("SELECT * FROM park WHERE parkId =\"" + parkId+"\";");
+			ResultSet rs = db.sendQuery("SELECT * FROM park WHERE parkId =\"" + parkId + "\";");
 			if (rs.next()) {
 				return new Park(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5),
 						rs.getDouble(6), rs.getInt(7), rs.getInt(8), rs.getInt(9));
@@ -288,9 +295,9 @@ public class ParkController implements IController {
 	}
 
 	/**
-	 * return Array with all of the parks(names and id) and their working hours
+	 * return Array with all of the {@link ParkNameAndTimes}s
 	 * 
-	 * @return ParkNameAndTimes[] with all the parks
+	 * @return a list of {@link ParkNameAndTimes}s of all the {@link Park}s
 	 */
 	private ParkNameAndTimes[] getParksData() {
 		List<ParkNameAndTimes> l = new ArrayList<>();

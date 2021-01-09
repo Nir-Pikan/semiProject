@@ -14,7 +14,7 @@ public class UIupdate {
 	 * 	});</code>
 	 * </pre>
 	 * 
-	 * @param toDo the code to run in form of Runnable(use labda for easier work)
+	 * @param toDo the code to run in form of Runnable(use lambda for easier work)
 	 */
 	public static void update(Runnable toDo) {
 		Platform.runLater(toDo);

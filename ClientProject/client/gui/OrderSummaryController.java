@@ -56,6 +56,7 @@ public class OrderSummaryController implements GuiController {
 	@FXML
 	private TextField noOfSubscribersTxt;
 
+	/** approves the observed {@link Order} */
 	@FXML
 	void ApproveOrder(ActionEvent event) {
 		if (entry == null) { // if entry = null its regular order
@@ -96,6 +97,13 @@ public class OrderSummaryController implements GuiController {
 		Navigator.instance().clearHistory(); // return to the main window
 	}
 
+	/**
+	 * puts data from {@link Order} into fields<br>
+	 * and {@link ParkEntry}<br>
+	 * using initFieldsByEntry() or initFieldsByOrder()
+	 * 
+	 * @param order the {@link Order} to get data from
+	 */
 	public void addOrderDataToFields(Order order, ParkEntry entry) {
 		this.order = order;
 		this.entry = entry;
@@ -105,6 +113,11 @@ public class OrderSummaryController implements GuiController {
 			initFieldsByOrder(order);
 	}
 
+	/**
+	 * initialize the window fields using the data from {@link Order}<br>
+	 * 
+	 * @param order the {@link Order} to get data from
+	 */
 	private void initFieldsByOrder(Order order) {
 		approveBtn.setDisable(false);
 		orderNoTxt.setText("Order #: " + String.valueOf(order.orderID));
@@ -120,13 +133,20 @@ public class OrderSummaryController implements GuiController {
 		priceTxt.setText(String.valueOf(order.priceOfOrder));
 	}
 
+	/**
+	 * initialize the window fields using the data from {@link Order}<br>
+	 * and {@link ParkEntry}
+	 * 
+	 * @param order the {@link Order} to get data from
+	 * @param entry the {@link ParkEntry} to get data from
+	 */
 	private void initFieldsByEntry(Order order, ParkEntry entry) {
 		approveBtn.setDisable(false);
 		personIdTxt.setText(entry.personID);
 		parkNameTxt.setText(entry.parkID);
 		timeTxt.setText(toTime(entry.arriveTime));
 		dateTxt.setText(toDate(entry.arriveTime.getTime()));
-		orderTypeTxt.setText(entry.entryType.toString()); 
+		orderTypeTxt.setText(entry.entryType.toString());
 		noOfVisitorsTxt.setText(String.valueOf(entry.numberOfVisitors));
 		noOfSubscribersTxt.setText(String.valueOf(entry.numberOfSubscribers));
 		emailTxt.setText(order.email);
@@ -134,11 +154,23 @@ public class OrderSummaryController implements GuiController {
 		priceTxt.setText(String.valueOf(entry.priceOfOrder));
 	}
 
+	/**
+	 * create a time String from Time stamp
+	 * 
+	 * @param stamp the Timestamp to get time from
+	 * @return the time String
+	 */
 	private String toTime(Timestamp stamp) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		return sdf.format(stamp);
 	}
 
+	/**
+	 * create a date String from Time stamp
+	 * 
+	 * @param stamp the Timestamp to get date from
+	 * @return the date String
+	 */
 	private String toDate(long timestamp) {
 		Date date = new Date(timestamp);
 		return new SimpleDateFormat("MM/dd/yyyy").format(date);

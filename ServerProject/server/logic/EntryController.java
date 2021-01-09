@@ -15,6 +15,7 @@ import entities.ParkEntry.EntryType;
 import modules.IController;
 import modules.ServerRequest;
 
+/** the ParkEntry controller class */
 public class EntryController implements IController {
 	private ParkController park;
 	private MessageController messageC;
@@ -22,6 +23,14 @@ public class EntryController implements IController {
 	private DiscountController discount;
 	private IDbController dbController;
 
+	/**
+	 * creates the {@link EntryController}
+	 * 
+	 * @param park       instance of {@link ParkController}
+	 * @param messageC   instance of {@link MessageController}
+	 * @param subscriber instance of {@link SubscriberController}
+	 * @param discount   instance of {@link DiscountController}
+	 */
 	public EntryController(ParkController park, MessageController messageC, SubscriberController subscriber,
 			DiscountController discount) {
 		this.park = park;
@@ -101,13 +110,15 @@ public class EntryController implements IController {
 	}
 
 	/**
+	 * adds new {@link ParkEntry} to the DB table
 	 * 
-	 * @param newEntry            - inculdes all newEntry object fields
+	 * @param newEntry            - includes all newEntry object fields
 	 *                            <b>without:</b> <b> { arriveTime, exitTime, price
 	 *                            }</b>
 	 * @param numberOfSubscribers - is the number of the total number of visitors
 	 *                            that is subscribers
-	 * @return true if succeeded to enter new
+	 * @return true if succeeded<br>
+	 *         false otherwise
 	 */
 	private boolean AddNewEntry(ParkEntry newEntry) {
 		if (dbController == null)
@@ -161,8 +172,9 @@ public class EntryController implements IController {
 	/**
 	 * update the time of the person exits
 	 * 
-	 * @param personID of the person left the park
-	 * @return true if succeed
+	 * @param personID ID of the person who left the park
+	 * @return true if succeed<br>
+	 *         false otherwise
 	 */
 	private boolean updateExit(String personID) {
 
@@ -198,11 +210,12 @@ public class EntryController implements IController {
 	}
 
 	/**
-	 * For given start date and finish date returns all the entries to the park
+	 * For given start date and finish date returns all the {@link ParkEntry} to the
+	 * park
 	 * 
 	 * @param fromTime date from which you want to get the entries
 	 * @param toTime   date till which you want to get the entries
-	 * @return array of ParkEntry in the given timeline
+	 * @return array of ParkEntry in the given time line
 	 */
 	private ParkEntry[] getEntitiesByDate(Timestamp fromTime, Timestamp toTime) {
 

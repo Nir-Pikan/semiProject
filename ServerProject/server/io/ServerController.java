@@ -147,8 +147,7 @@ public class ServerController extends AbstractServer {
 	}
 
 	/**
-	 * This method overrides the one in the superclass.
-	 * <p>
+	 * This method overrides the one in the superclass. <br>
 	 * Called when the server starts listening for connections.
 	 */
 	protected void serverStarted() {
@@ -156,8 +155,7 @@ public class ServerController extends AbstractServer {
 	}
 
 	/**
-	 * This method overrides the one in the superclass.
-	 * <p>
+	 * This method overrides the one in the superclass. <br>
 	 * Called when the server stops listening for connections.
 	 */
 	protected void serverStopped() {
@@ -182,17 +180,11 @@ public class ServerController extends AbstractServer {
 		order = new OrderController(park, messageC, subscriber, discount);
 		entry = new EntryController(park, messageC, subscriber, discount);
 		//
-		waitingList = new WaitingListController(order, messageC,park);
+		waitingList = new WaitingListController(order, messageC, park);
 	}
 
 	@Override
 	protected void serverClosed() {
 		System.out.println("Server has stopped");
-	}
-
-	@Override
-	protected synchronized void clientException(ConnectionToClient client, Throwable exception) {
-		System.out.println(client);
-		exception.printStackTrace();
 	}
 }

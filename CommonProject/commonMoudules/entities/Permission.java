@@ -1,9 +1,6 @@
 package entities;
 
-/**
- * A class representing a specific permission.
- * <p>
- */
+/** A class representing a specific permission. */
 public class Permission {
 	private String Name;
 

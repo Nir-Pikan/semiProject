@@ -154,8 +154,8 @@ public class RegisterAddCreditCardController implements GuiController {
 	}
 
 	/**
-	 * Checks if all required fields on the page are filled correctly. If not, marks
-	 * the problems with fields for the user
+	 * Checks if all required fields on the page are filled correctly.<br>
+	 * If not, marks the problems with fields for the user
 	 * 
 	 * @return true if all required fields are filled correctly, false otherwise
 	 */
@@ -170,8 +170,8 @@ public class RegisterAddCreditCardController implements GuiController {
 	}
 
 	/**
-	 * Check if NameOnCard field is field correctly. If not, marks the problem with
-	 * the field for the user
+	 * Check if NameOnCard field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -208,8 +208,8 @@ public class RegisterAddCreditCardController implements GuiController {
 	}
 
 	/**
-	 * Check if OwnerID field is field correctly. If not, marks the problem with the
-	 * field for the user
+	 * Check if OwnerID field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -246,8 +246,8 @@ public class RegisterAddCreditCardController implements GuiController {
 	}
 
 	/**
-	 * Check if CardNumber field is field correctly. If not, marks the problem with
-	 * the field for the user
+	 * Check if CardNumber field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -294,8 +294,8 @@ public class RegisterAddCreditCardController implements GuiController {
 	}
 
 	/**
-	 * Check if CVV field is field correctly. If not, marks the problem with the
-	 * field for the user
+	 * Check if CVV field is field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -342,8 +342,8 @@ public class RegisterAddCreditCardController implements GuiController {
 	}
 
 	/**
-	 * Check if ExpirationDate fields are field correctly. If not, marks the problem
-	 * with the field for the user
+	 * Check if ExpirationDate fields are field correctly.<br>
+	 * If not, marks the problem with the field for the user
 	 * 
 	 * @return true if filled correctly, false otherwise
 	 */
@@ -377,7 +377,9 @@ public class RegisterAddCreditCardController implements GuiController {
 	}
 
 	/**
-	 * Receive subscriber from previous page
+	 * Receive {@link Subscriber} from previous page
+	 * 
+	 * @param s the {@link Subscriber} to receive
 	 */
 	public void addSub(Subscriber s) {
 		this.s = s;

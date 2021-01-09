@@ -59,15 +59,12 @@ public class DbController implements IDbController {
 	}
 
 	/**
-	 * creates table in the DB only if not exists.
-	 * <p>
-	 * it will take the crateStatement received and add prefix of:
-	 * <p>
+	 * creates table in the DB only if not exists. <br>
+	 * it will take the crateStatement received and add prefix of: <br>
 	 * \"CREATE TABLE IF NOT EXISTS \"
 	 * 
 	 * @param creatStatment the table to create
-	 * @return true if query went through without errors
-	 *         <p>
+	 * @return true if query went through without errors <br>
 	 *         false otherwise
 	 */
 	@Override
@@ -86,8 +83,7 @@ public class DbController implements IDbController {
 	 * send update to the DB
 	 * 
 	 * @param statment update query to send
-	 * @return true if query went through without errors
-	 *         <p>
+	 * @return true if query went through without errors <br>
 	 *         false otherwise
 	 */
 	@Override
@@ -107,8 +103,7 @@ public class DbController implements IDbController {
 	 * send query to the DB
 	 * 
 	 * @param statment query to send
-	 * @return the ResultSet if succeeded
-	 *         <p>
+	 * @return the ResultSet if succeeded <br>
 	 *         null if failed
 	 */
 	@Override
@@ -127,8 +122,7 @@ public class DbController implements IDbController {
 	 * create PreparedStatment to the DB
 	 * 
 	 * @param query query to send
-	 * @return the PreparedStatement if succeeded
-	 *         <p>
+	 * @return the PreparedStatement if succeeded <br>
 	 *         null if failed
 	 */
 	@Override
@@ -150,11 +144,9 @@ public class DbController implements IDbController {
 	}
 
 	/**
-	 * get the instance of DbController, not like other singleton
-	 * <p>
+	 * get the instance of DbController, not like other singleton <br>
 	 * 
-	 * @apiNote DbController need to be initialized with DbController.Init()
-	 *          <p>
+	 * @apiNote DbController need to be initialized with DbController.Init() <br>
 	 *          before usage(only one time)
 	 * 
 	 */

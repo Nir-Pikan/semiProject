@@ -1,8 +1,9 @@
 package modules;
 
 /**
- * class for functional programming for value change action, for more details
- * see {@link Property}
+ * class for functional programming for value change action
+ * <P>
+ * for more details see {@link Property}
  * 
  * @author Or Man
  * @version 1.1

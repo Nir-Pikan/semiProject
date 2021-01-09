@@ -65,11 +65,6 @@ public class RegularOrderController implements GuiController {
 	@FXML
 	private Label PhoneNote;
 
-	/**  //TODO edit ~nir~
-	 * Initialize the GUI: limits the Date picker and set subscriber data if found //TODO
-	 * edit ~nir~
-	 * 
-	 */
 	@Override
 	public void init() {
 		Park_ComboBox.getItems().clear();
@@ -98,10 +93,12 @@ public class RegularOrderController implements GuiController {
 		Date_DatePicker.setDayCellFactory(callB);
 
 	}
-	/**  //TODO edit ~nir~
-	 * Creates and returns String array with working hours of the park
-	 * @param parkDetails
-	 * @return
+
+	/**
+	 * Creates and returns String array with working hours of the {@link Park}
+	 * 
+	 * @param parkDetails the {@link Park}'s {@link ParkNameAndTimes}
+	 * @return String array with working hours
 	 */
 	private String[] CreateWorkingHours(ParkNameAndTimes parkDetails) {
 		VisitHour_ComboBox.getItems().clear();
@@ -112,8 +109,11 @@ public class RegularOrderController implements GuiController {
 		}
 		return res;
 	}
-	/**  //TODO edit ~nir~
-	 * When park was chosen set the visit hour comboBox to park working hours 
+
+	/**
+	 * When park is chosen set the visit hour comboBox<br>
+	 * according to the {@link Park}'s working hours
+	 * 
 	 * @param event
 	 */
 	@FXML
@@ -125,10 +125,11 @@ public class RegularOrderController implements GuiController {
 		VisitHour_ComboBox.getItems().addAll(CreateWorkingHours(temp));
 	}
 
-	/**  //TODO edit ~nir~
-	 * Check if all the fields was filled correctly
+	/**
+	 * Check if all the fields are filled correctly
 	 * 
-	 * @return return true if all the fields are correct, false otherwise
+	 * @return true if all the fields are filled correctly<br>
+	 *         false otherwise
 	 */
 	private boolean CheckAllRequiredFields() {
 		boolean res = true;
@@ -140,10 +141,11 @@ public class RegularOrderController implements GuiController {
 		return res;
 	}
 
-	/**  //TODO edit ~nir~
+	/**
 	 * Check that park site was chosen
 	 * 
-	 * @return true if field is not empty, false otherwise
+	 * @return true if field is not empty<br>
+	 *         false otherwise
 	 */
 	private boolean CheckParkSelection() {
 		if (Park_ComboBox.getSelectionModel().isEmpty()) {
@@ -157,11 +159,12 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**  //TODO edit ~nir~
-	 * Check if date was selected Only relevant dates are can be chosen, no need to
-	 * check if the date is relevant
+	/**
+	 * Check if date was selected<br>
+	 * Only relevant dates can be chosen, no need to check if the date is relevant
 	 * 
-	 * @return return true if the field is not empty, false otherwise
+	 * @return true if the field is not empty<br>
+	 *         false otherwise
 	 */
 	private boolean CheckDateSelection() {
 		if (Date_DatePicker.getValue() == null) {
@@ -175,11 +178,12 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**  //TODO edit ~nir~
-	 * Check if hour of a visit was selected DONT CHECK IF THE HOUR IS NOT RELEVANT
-	 * IF TODAY WAS CHOSEN
+	/**
+	 * Check if hour of a visit was selected<br>
+	 * DONT CHECK IF THE HOUR IS NOT RELEVANT IF TODAY WAS CHOSEN
 	 * 
-	 * @return
+	 * @return true if the field is not empty<br>
+	 *         false otherwise
 	 */
 	private boolean CheckVisitorHour() {
 		if (VisitHour_ComboBox.getValue() == null) {
@@ -193,10 +197,11 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**  //TODO edit ~nir~
-	 * Check if the email address is filled in appropriate form
+	/**
+	 * Check if the email address is filled in appropriate format
 	 * 
-	 * @return true if email address was filled in appropriate form, false otherwise
+	 * @return true if email address is filled in appropriate format<br>
+	 *         false otherwise
 	 */
 	private boolean CheckEmail() {
 		String email = Email_textBox.getText();
@@ -224,11 +229,11 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**  //TODO edit ~nir~
-	 * Check if the phone number is filled in appropriate form
+	/**
+	 * Check if the phone number is filled in appropriate format
 	 * 
-	 * @return return true if id phone number filled in appropriate form, false
-	 *         otherwise
+	 * @return true if phone number is filled in appropriate format<br>
+	 *         false otherwise
 	 */
 	private boolean CheckPhoneNumber() {
 		String phoneNumber = Phone_textBox.getText();
@@ -266,10 +271,12 @@ public class RegularOrderController implements GuiController {
 		return true;
 	}
 
-	/**  //TODO edit ~nir~
-	 * when Place Order button clicked checks if this order  can be booked or check capacity of the park in case of casual entry
-	 * by connecting with the server. Get response from the server and show appropriate popUp window
-	 * @param event
+	/**
+	 * when Place Order button clicked checks if this {@link Order} can be
+	 * booked<br>
+	 * or check capacity of the park in case of casual entry by connecting with the
+	 * server.<br>
+	 * Get response from the server and show appropriate popUp window
 	 */
 	@FXML
 	void PlaceOrder_Button_Clicked(ActionEvent event) {
@@ -345,10 +352,13 @@ public class RegularOrderController implements GuiController {
 		}
 
 	}
-	/**  //TODO edit ~nir~
-	 * Check if park is not full
-	 * @param park
-	 * @return
+
+	/**
+	 * Check if {@link Park} is not full
+	 * 
+	 * @param park the {@link Park} to check
+	 * @return true if park IS NOT full<br>
+	 *         false if park IS full
 	 */
 	private boolean checkParkCapacity(String park) {
 		String response = clientController.client
@@ -358,11 +368,12 @@ public class RegularOrderController implements GuiController {
 			return false;
 		return true;
 	}
-	
-	/**  //TODO edit ~nir~
-	 * Send the Order and Entry Entities to OrderSummary window
-	 * @param ord (Order Entity)s
-	 * @param parkEntry	
+
+	/**
+	 * Send the {@link Order} and {@link ParkEntry} to OrderSummary window
+	 * 
+	 * @param ord   the {@link Order} to send
+	 * @param entry the {@link ParkEntry} to send
 	 */
 	private void MoveToTheNextPage(Order ord, ParkEntry entry) {
 		Navigator n = Navigator.instance();
@@ -370,10 +381,11 @@ public class RegularOrderController implements GuiController {
 		((OrderSummaryController) g).addOrderDataToFields(ord, entry);
 	}
 
-	/**  //TODO edit ~nir~
-	 * Create Order Entity from the fields that was filled by the user on a GUI
+	/**
+	 * Create {@link Order} using the fields that were filled<br>
+	 * by the user on the GUI
 	 * 
-	 * @return return the Order Entity that was created
+	 * @return the {@link Order} that was created
 	 */
 	private Order createOrderDetails() {
 		String parkName = Park_ComboBox.getValue();
@@ -395,9 +407,12 @@ public class RegularOrderController implements GuiController {
 		ord.priceOfOrder = calcOrderPrice(ord);
 		return ord;
 	}
-	/**  //TODO edit ~nir~
+
+	/**
 	 * Returns the ID String of a visitor from the clientController
-	 * @return
+	 * 
+	 * @return the visitor's ID if field is not empty<br>
+	 *         null otherwise
 	 */
 	private String getIdentificationString() {
 		if (clientController.client.visitorID.getVal() != null)
@@ -407,24 +422,28 @@ public class RegularOrderController implements GuiController {
 		return null;
 	}
 
-	/**  //TODO edit ~nir~
-	 * Check if subscriber by ID or by logged visitor in the ClientController (one of them)
-	 * and if subscriber found fill the email address and phone number in the GUI
-	 * @param ID
-	 * @return
+	/**
+	 * Check if {@link Subscriber} by ID or by logged visitor in the
+	 * ClientController<br>
+	 * (one of them) and if subscriber is found<br>
+	 * fill the email address and phone number in the GUI
+	 * 
+	 * @param id the ID to check
+	 * @return 1 if it is a subscriber<br>
+	 *         0 if not a subscriber
 	 */
-	private int isSubscriber(String ID) {
+	private int isSubscriber(String id) {
 		if (clientController.client.logedInSubscriber.getVal() != null) {
 			Email_textBox.setText(clientController.client.logedInSubscriber.getVal().email);
 			Phone_textBox.setText(clientController.client.logedInSubscriber.getVal().phone);
 			return 1;
 		}
-		if(ID == null)
+		if (id == null)
 			return 0;
-		if (!ID.contains("S"))
-			ID = "S" + ID;
+		if (!id.contains("S"))
+			id = "S" + id;
 		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", ID));
+				.sendRequestAndResponse(new ServerRequest(Manager.Subscriber, "GetSubscriberData", id));
 		if (!response.contains("was not found")) {
 			Subscriber sub = ServerRequest.gson.fromJson(response, Subscriber.class);
 			Email_textBox.setText(sub.email);
@@ -433,11 +452,14 @@ public class RegularOrderController implements GuiController {
 		}
 		return 0;
 	}
-	/**  //TODO edit ~nir~
-	 * This method called in a case of casual entry, disables park, visit time and date.
-	 * Set park, visit time to current values
-	 * @param ownerID
-	 * @param parkName
+
+	/**
+	 * This method called in case of casual entry.<br>
+	 * disables park, visit time and date fields.<br>
+	 * Set park and visit time fields to current values
+	 * 
+	 * @param ownerID  the{@link Order}'s owner ID
+	 * @param parkName the {@link Order}'s {@link Park} name
 	 */
 	public void setSpontaneous(String ownerID, String parkName) {
 		spontaneous = true;
@@ -450,12 +472,13 @@ public class RegularOrderController implements GuiController {
 		Date_DatePicker.setDisable(true);
 		parkEntry = createParkEntry(ownerID, parkName);
 	}
-	
-	/** //TODO edit ~nir~
-	 * Creates park entry ny ownerID and parkID
-	 * @param ownerID
-	 * @param parkID
-	 * @return
+
+	/**
+	 * Creates {@link ParkEntry} using ownerID and parkID
+	 * 
+	 * @param ownerID the {@link ParkEntry}'s owner ID
+	 * @param parkID  the {@link ParkEntry}'s {@link Park} ID
+	 * @return the created {@link ParkEntry}
 	 */
 	private ParkEntry createParkEntry(String ownerID, String parkID) {
 		Timestamp timeOfOrder = new Timestamp(System.currentTimeMillis());
@@ -465,31 +488,37 @@ public class RegularOrderController implements GuiController {
 		entry.priceOfOrder = calcEntryPrice(entry);
 		return entry;
 	}
-	/**  //TODO edit ~nir~
-	 * return the price of Order by prices in DiscountController
-	 * @param order
-	 * @return
+
+	/**
+	 * calculate the price of {@link Order}<br>
+	 * using prices in DiscountController
+	 * 
+	 * @param order the {@link Order} to calculate price for
+	 * @return the DiscountController's response
 	 */
 	protected static float calcOrderPrice(Order order) {
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
 				"CalculatePriceForEntryByOrder", ServerRequest.gson.toJson(order, Order.class)));
 		return ServerRequest.gson.fromJson(response, Float.class);
 	}
-	 
-	/**  //TODO edit ~nir~
-	 * return the price of Entry (casual) by prices in DiscountController
-	 * @param order
-	 * @return
+
+	/**
+	 * calculate the price of {@link ParkEntry} (casual)<br>
+	 * using prices in DiscountController
+	 * 
+	 * @param entry the {@link ParkEntry} to calculate price for
+	 * @return the DiscountController's response
 	 */
 	protected static float calcEntryPrice(ParkEntry entry) {
 		String response = clientController.client.sendRequestAndResponse(new ServerRequest(Manager.Discount,
 				"CalculatePriceForEntryCasual", ServerRequest.gson.toJson(entry, ParkEntry.class)));
 		return ServerRequest.gson.fromJson(response, Float.class);
 	}
-	
-	/**  //TODO edit ~nir~
-	 * Ask DB for next Order number 
-	 * @return
+
+	/**
+	 * Ask DB for next {@link Order} number
+	 * 
+	 * @return the server's response
 	 */
 	private int getNextOrderID() {
 		String response = clientController.client

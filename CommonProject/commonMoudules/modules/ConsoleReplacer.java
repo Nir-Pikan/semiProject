@@ -11,10 +11,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-/**
- * Class for replacing the console with {@link ScrollPane}
- *
- */
+/** Class for replacing the console with {@link ScrollPane} */
 public class ConsoleReplacer {
 
 	private TextFlow flow;
@@ -97,7 +94,6 @@ public class ConsoleReplacer {
 			this.isErr = isErr;
 		}
 
-		//do not add javadoc here
 		@Override
 		public void print(String s) {
 			if (isErr) {
@@ -114,7 +110,6 @@ public class ConsoleReplacer {
 				origin.print(s);
 		}
 
-		//do not add javadoc here
 		@Override
 		public void println(String s) {
 			Platform.runLater(() -> {
@@ -130,6 +125,7 @@ public class ConsoleReplacer {
 
 		/**
 		 * set the color of the text created by this
+		 * 
 		 * @param color {@link Color} for the text
 		 */
 		public void setColor(Paint color) {

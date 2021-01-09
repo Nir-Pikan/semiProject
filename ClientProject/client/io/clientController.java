@@ -29,17 +29,15 @@ public class clientController extends AbstractClient {
 	// instance of the connection for the client
 	public static clientController client = null;
 	private static Thread con;
-	
+
 	// common data
-	public Map<String,ParkNameAndTimes> openingTimes;
+	public Map<String, ParkNameAndTimes> openingTimes;
 	public String[] parkNames;
 	public Property<Worker> logedInWorker = new Property<>();
 	public Property<Subscriber> logedInSubscriber = new Property<>();
 	public Property<String> visitorID = new Property<>();
 	public EventNotifier observable = new EventNotifier();
-	
-	
-	
+
 	/**
 	 * creates a {@link clientController}
 	 * 
@@ -57,7 +55,7 @@ public class clientController extends AbstractClient {
 		String response = sendRequestAndResponse(new ServerRequest(Manager.Park, "get all parks data", ""));
 		ParkNameAndTimes[] tmp = ServerRequest.gson.fromJson(response, ParkNameAndTimes[].class);
 		openingTimes = new HashMap<String, ParkNameAndTimes>();
-		for(ParkNameAndTimes p : tmp)
+		for (ParkNameAndTimes p : tmp)
 			openingTimes.put(p.parkID, p);
 		parkNames = new String[tmp.length];
 		for (int i = 0; i < tmp.length; i++) {
@@ -73,36 +71,11 @@ public class clientController extends AbstractClient {
 	}
 
 	/**
-	 * Refactor - use sendRequestAndResponse instead, added the return value to the
-	 * request
-	 * 
-	 * @deprecated use {@link #sendRequestAndResponse(ServerRequest)}
-	 */// TODO delete
-	public void sendRequest(ServerRequest request) {
-		try {
-			openConnection();// in order to send more than one message
-			awaitResponse = true;
-			sendToServer(ServerRequest.toJson(request));
-			// wait for response
-			while (awaitResponse && this.isConnected()) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Could not send message to server: Terminating client." + e);
-		}
-	}
-
-	/**
-	 * when request sent the client will wait for response
-	 * <p>
+	 * when request is sent the client will wait for response <br>
 	 * and the response will be returned
 	 * 
 	 * @param request the {@link ServerRequest} to be sent to server
+	 * @return the response message
 	 */
 	public String sendRequestAndResponse(ServerRequest request) {
 		try {
@@ -127,39 +100,27 @@ public class clientController extends AbstractClient {
 	}
 
 	/**
-	 * get respone from server, reset to \"\" in the end
-	 * 
-	 * @return the response from the server
-	 * @deprecated the method {@link #sendRequestAndResponse(ServerRequest)} returns
-	 *             the response
-	 */// TODO delete
-
-	public static String consumeResponse() {
-		String msg = response;
-		response = "";
-		return msg;
-	}
-	
-	
-	/**
 	 * when connection closed, logOut
 	 */
 	@Override
 	protected void connectionEstablished() {
-		con= Thread.currentThread();
-		new Thread(()-> {
-			while(con.isAlive()) {
+		con = Thread.currentThread();
+		new Thread(() -> {
+			while (con.isAlive()) {
 				try {
 					con.join();
-				}catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 				}
 			}
-			Platform.runLater(()->{
-			observable.emit(SERVER_CLOSED);
+			Platform.runLater(() -> {
+				observable.emit(SERVER_CLOSED);
 			});
 		}).start();
 	}
-	
+
+	/**
+	*Event identifier for server close
+	*/
 	public static final String SERVER_CLOSED = "_SERVER_CLOSED";
-	
+
 }

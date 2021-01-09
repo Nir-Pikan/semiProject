@@ -17,7 +17,6 @@ public class ParkManagerParametersUpdateController implements GuiController {
 	private String[] currentParameters;
 	private String parkID;
 
-
 	@FXML
 	private Label labelParkManager;
 
@@ -162,15 +161,20 @@ public class ParkManagerParametersUpdateController implements GuiController {
 
 	@Override
 	public void init() {
-		
+
 		setPark(clientController.client.logedInWorker.getVal().getPermissions().GetParkID());
 	}
 
-	public void setPark(String ParkId) {
-		this.parkID = ParkId;
-		textParkName.setText(ParkId);
+	/**
+	 * get all data of wanted {@link Park}
+	 * 
+	 * @param parkId the wanted {@link Park}'s ID
+	 */
+	public void setPark(String parkId) {
+		this.parkID = parkId;
+		textParkName.setText(parkId);
 		String response = clientController.client
-				.sendRequestAndResponse(new ServerRequest(Manager.Park, "get current parameter", ParkId));
+				.sendRequestAndResponse(new ServerRequest(Manager.Park, "get current parameter", parkId));
 		if (response.equals("park not exists")) {
 			PopUp.showError("park not exists", "park not exists", "Park manager for non existing park");
 			return;

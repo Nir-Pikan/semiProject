@@ -10,44 +10,58 @@ import mail.MyMail;
 import modules.IController;
 import modules.ServerRequest;
 
-public class MessageController implements IController{
-	
+/** the Message controller class */
+public class MessageController implements IController {
+
 	MyMail mailService;
 	DbController db;
-	
+
+	/** creates the {@link MessageController} */
 	public MessageController() {
 		mailService = new MyMail();
-		db=DbController.getInstance();
+		db = DbController.getInstance();
 		createTable();
-		
+
 	}
+
+	/** creates the messages table in DB for motd */
 	private void createTable() {
 		db.createTable("motd(id int NOT NULL AUTO_INCREMENT, msg varchar(255),PRIMARY KEY (id))");
 		System.out.println("motd table created");
-		
+
 	}
-	/** Send Email Popup window for SMS**/
-	public void SendEmailAndSMS(String destinationMail,String cellPhoneNum, String messageContent, String subject) { // add also phone number! String
-		mailService.SendEmailAndSMS(destinationMail,cellPhoneNum, messageContent, subject);
+
+	/**
+	 * Send Email pop up window for SMS
+	 * 
+	 * @param destinationMail the email address to send mail to
+	 * @param cellPhoneNum    the phone number to send SMS to
+	 * @param messageContent  the content of the message
+	 * @param subject         the message's subject
+	 */
+	public void SendEmailAndSMS(String destinationMail, String cellPhoneNum, String messageContent, String subject) {
+		mailService.SendEmailAndSMS(destinationMail, cellPhoneNum, messageContent, subject);
 	}
-	
+
 	@Override
 	public String handleRequest(ServerRequest request) {
-		switch(request.job) {
+		switch (request.job) {
 		case "getMotd":
-			
-			return ServerRequest.gson.toJson(getMotd(),String[].class);
-			default:
-				return "No such job";
+
+			return ServerRequest.gson.toJson(getMotd(), String[].class);
+		default:
+			return "No such job";
 		}
 	}
+
+	/** gets all the messages from the motd table from DB */
 	private String[] getMotd() {
 		List<String> l = new ArrayList<>();
 		ResultSet rs = db.sendQuery("SELECT msg from motd;");
-		if(rs ==null)
+		if (rs == null)
 			return new String[] {};
 		try {
-			while(rs.next()) {
+			while (rs.next()) {
 				l.add(rs.getString(1));
 			}
 		} catch (SQLException e) {

@@ -1,0 +1,15 @@
+clientGui
+clientIO
+clientLogic
+clientMain
+clientMocks
+db
+entities
+mail
+modules
+serverGui
+serverIO
+serverLogic
+serverMain
+serverMocks
+util

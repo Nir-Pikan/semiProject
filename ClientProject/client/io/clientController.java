@@ -118,6 +118,9 @@ public class clientController extends AbstractClient {
 		}).start();
 	}
 
+	/**
+	*Event identifier for server close
+	*/
 	public static final String SERVER_CLOSED = "_SERVER_CLOSED";
 
 }

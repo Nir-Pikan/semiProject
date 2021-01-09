@@ -107,7 +107,6 @@ public class SmallGroupOrderController implements GuiController {
 					public void updateItem(LocalDate item, boolean empty) {
 						super.updateItem(item, empty);
 						LocalDate tomorrow = LocalDate.now().plusDays(1);
-						;
 						setDisable(empty || item.compareTo(tomorrow) < 0);
 					}
 

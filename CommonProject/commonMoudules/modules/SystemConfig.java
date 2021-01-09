@@ -3,6 +3,7 @@ package modules;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 /**
  * Class for configuration only for the presentation<br>
@@ -39,8 +40,10 @@ public class SystemConfig {
 			return getDefault();
 		}
 		try {
-			return ServerRequest.gson.fromJson(new InputStreamReader(new FileInputStream(ConfPath), "UTF-8"),
+			SystemConfig s = ServerRequest.gson.fromJson(new InputStreamReader(new FileInputStream(ConfPath), "UTF-8"),
 					SystemConfig.class);
+			System.out.println(s);//print config
+			return s;
 		} catch (Exception e) {
 			return getDefault();
 		}
@@ -60,5 +63,15 @@ public class SystemConfig {
 		return ret;
 
 	}
+
+	@Override
+	public String toString() {
+		return "SystemConfig [SendNotificationSendTime=" + Arrays.toString(SendNotificationSendTime)
+				+ ", SendNotificationCancelTime=" + Arrays.toString(SendNotificationCancelTime)
+				+ ", RemoveFromWatingListTime=" + Arrays.toString(RemoveFromWatingListTime) + ", WaitingListTimer="
+				+ WaitingListTimer + "]\n";
+	}
+	
+	
 
 }

@@ -5,8 +5,8 @@
 			<accessrule kind="accessible" pattern="javafx/**"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="client"/>
+	<classpathentry kind="src" path="unittests"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CommonProject"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OCSF"/>
 	<classpathentry kind="lib" path="/CommonProject/gson-2.8.6.jar">
@@ -14,5 +14,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/CommonProject/gson-2.8.6-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

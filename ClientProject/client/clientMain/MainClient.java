@@ -5,6 +5,7 @@ import java.io.IOException;
 import clientGui.LoginController;
 import clientGui.MainScreenController;
 import clientGui.Navigator;
+import clientIO.UserInterface;
 import clientIO.clientController;
 import clientMocks.CardReaderMock;
 import javafx.application.Application;

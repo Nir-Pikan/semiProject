@@ -107,7 +107,7 @@ public class RegisterAddCreditCardController implements GuiController {
 					ExpirationDateYearComboBox.getValue(),
 					Subscriber.CardType.valueOf(CardTypeComboBox.getValue().toUpperCase().replaceAll(" ", "")));
 
-			Navigator n = Navigator.instance();
+			NavigatorInterface n = Navigator.instance();
 			GuiController g = n.navigate("RegisterSummary");
 			((RegisterSummaryController) g).addSub(s);
 		}

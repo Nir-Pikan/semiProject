@@ -131,13 +131,13 @@ public class RegisterCommonDetailsController implements GuiController {
 					EmailTextField.getText(), familySize, type);
 
 			if (CreditCardCheckBox.isSelected()) {
-				Navigator n = Navigator.instance();
+				NavigatorInterface n = Navigator.instance();
 				GuiController g = n.navigate("RegisterAddCreditCard");
 				((RegisterAddCreditCardController) g).addSub(s);
 			}
 
 			else {
-				Navigator n = Navigator.instance();
+				NavigatorInterface n = Navigator.instance();
 				GuiController g = n.navigate("RegisterSummary");
 				((RegisterSummaryController) g).addSub(s);
 			}

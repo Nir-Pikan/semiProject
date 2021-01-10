@@ -462,7 +462,7 @@ public class SmallGroupOrderController implements GuiController {
 	 * @param entry the {@link ParkEntry} to send
 	 */
 	private void MoveToTheNextPage(Order ord, ParkEntry entry) {
-		Navigator n = Navigator.instance();
+		NavigatorInterface n = Navigator.instance();
 		GuiController g = n.navigate("OrderSummary");
 		((OrderSummaryController) g).addOrderDataToFields(ord, entry);
 	}

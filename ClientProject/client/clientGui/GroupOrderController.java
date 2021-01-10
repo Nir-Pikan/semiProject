@@ -576,7 +576,7 @@ public class GroupOrderController implements GuiController {
 	 * @param parkEntry the {@link ParkEntry} to send
 	 */
 	private void MoveToTheNextPage(Order ord, ParkEntry parkEntry) {
-		Navigator n = Navigator.instance();
+		NavigatorInterface n = Navigator.instance();
 		GuiController g = n.navigate("OrderSummary");
 		((OrderSummaryController) g).addOrderDataToFields(ord, parkEntry);
 	}

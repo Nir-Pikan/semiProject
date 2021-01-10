@@ -90,7 +90,7 @@ public class EntryReportController implements GuiController, Report {
 		// ---Getting entries by dates---//
 		String msgData = ServerRequest.gson.toJson(dates, Timestamp[].class);
 		ServerRequest sr = new ServerRequest(Manager.Entry, "getEntriesByDate", msgData);
-		String respons = clientController.client.sendRequestAndResponse(sr);
+		String respons = clientController.serverConnection.sendRequestAndResponse(sr);
 		ParkEntry[] entries = (ParkEntry[]) ServerRequest.gson.fromJson(respons, ParkEntry[].class);
 		if (entries == null) {
 			PopUp.showInformation("Server didnt found entries", "Server Failure:Server didnt found entries",

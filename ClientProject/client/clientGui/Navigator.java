@@ -12,9 +12,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /** (Singleton) class for navigation between windows */
-public class Navigator {
+public class Navigator implements NavigatorInterface {
 
-	private static Navigator instance = null;
+	private static NavigatorInterface instance = null;
 	private static Pane baseNode = null;
 	private static String defaultTab = "Motd";
 	private Tab current = null;
@@ -27,6 +27,10 @@ public class Navigator {
 		history = new Stack<>();
 		navigate("logIn");
 	}
+	
+	public static void setNavigator(NavigatorInterface nav) {
+		instance = nav;
+	}
 
 	/**
 	 * <pre>
@@ -38,7 +42,7 @@ public class Navigator {
 	 *                             call to this function
 	 * @return Navigator - the instance of this class
 	 */
-	public static Navigator instance() {
+	public static NavigatorInterface instance() {
 		if (instance == null)
 			instance = new Navigator();
 		return instance;
@@ -56,6 +60,7 @@ public class Navigator {
 	/**
 	 * navigate to the given file(window) and push the current view to the history
 	 */
+	@Override
 	public GuiController navigate(String destenation) {
 		String fxmlName = null;
 		if (destenation == null) {
@@ -93,6 +98,7 @@ public class Navigator {
 	}
 
 	/** navigates to the last page all the data from current page will be deleted */
+	@Override
 	public void back() {
 		if (history.isEmpty())
 			return;
@@ -103,6 +109,7 @@ public class Navigator {
 	}
 
 	/** navigates to the default page(empty Page) and clear the history */
+	@Override
 	public void clearHistory() {
 		history = new Stack<>();
 		current = null;
@@ -114,6 +121,7 @@ public class Navigator {
 	 * 
 	 * @param fxml the page to navigate
 	 */
+	@Override
 	public void clearHistory(String fxml) {
 		history = new Stack<>();
 		current = null;

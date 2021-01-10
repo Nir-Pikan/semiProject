@@ -15,7 +15,7 @@ import ocsf.client.AbstractClient;
 import util.EventNotifier;
 
 /** a class representing the client controller */
-public class clientController extends AbstractClient {
+public class clientController extends AbstractClient implements UserInterface, ConnectionInterface {
 
 	/** Default connection Port Number */
 	public static int DEFAULT_SERVER_PORT = 5555;
@@ -28,6 +28,8 @@ public class clientController extends AbstractClient {
 
 	// instance of the connection for the client
 	public static clientController client = null;
+	public static UserInterface users = null;
+	public static ConnectionInterface serverConnection = null;
 	private static Thread con;
 
 	// common data
@@ -49,7 +51,8 @@ public class clientController extends AbstractClient {
 
 		this.openConnection();
 		client = this;
-
+		users = this;
+		serverConnection = this;
 		// save the names and opening hours for all of the parks
 
 		String response = sendRequestAndResponse(new ServerRequest(Manager.Park, "get all parks data", ""));
@@ -77,6 +80,7 @@ public class clientController extends AbstractClient {
 	 * @param request the {@link ServerRequest} to be sent to server
 	 * @return the response message
 	 */
+	@Override
 	public String sendRequestAndResponse(ServerRequest request) {
 		try {
 			openConnection();// in order to send more than one message
@@ -122,5 +126,53 @@ public class clientController extends AbstractClient {
 	*Event identifier for server close
 	*/
 	public static final String SERVER_CLOSED = "_SERVER_CLOSED";
+
+	/**
+	 * @return the logedInWorker
+	 */
+	@Override
+	public Property<Worker> getLogedInWorker() {
+		return logedInWorker;
+	}
+
+	/**
+	 * @param logedInWorker the logedInWorker to set
+	 */
+	@Override
+	public void setLogedInWorker(Property<Worker> logedInWorker) {
+		this.logedInWorker = logedInWorker;
+	}
+
+	/**
+	 * @return the logedInSubscriber
+	 */
+	@Override
+	public Property<Subscriber> getLogedInSubscriber() {
+		return logedInSubscriber;
+	}
+
+	/**
+	 * @param logedInSubscriber the logedInSubscriber to set
+	 */
+	@Override
+	public void setLogedInSubscriber(Property<Subscriber> logedInSubscriber) {
+		this.logedInSubscriber = logedInSubscriber;
+	}
+
+	/**
+	 * @return the visitorID
+	 */
+	@Override
+	public Property<String> getVisitorID() {
+		return visitorID;
+	}
+
+	/**
+	 * @param visitorID the visitorID to set
+	 */
+	@Override
+	public void setVisitorID(Property<String> visitorID) {
+		this.visitorID = visitorID;
+	}
 
 }

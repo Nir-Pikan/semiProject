@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.DbController;
+import db.IDbController;
 import entities.Subscriber;
 import entities.Subscriber.CreditCard;
 import entities.Subscriber.Type;
@@ -14,12 +15,16 @@ import modules.ServerRequest;
 /** the subscriber controller class */
 public class SubscriberController implements IController {
 
-	DbController dbController;
+	IDbController dbController;
 
 	/** creates the {@link SubscriberController} */
 	public SubscriberController() {
 		dbController = DbController.getInstance();
 		createTable();
+	}
+
+	public SubscriberController(IDbController db) {
+		dbController = db;
 	}
 
 	/**

@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import org.junit.Rule;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -48,6 +49,7 @@ class ParkControllerTest {
 		parkC = new ParkController(db);
 		demo = new Park("id", "name", 100, "manId", 2, 3.0, 10, 8, 12);
 	}
+	
 
 	/**
 	 * <pre>

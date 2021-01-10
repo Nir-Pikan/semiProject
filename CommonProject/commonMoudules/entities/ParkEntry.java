@@ -87,7 +87,7 @@ public class ParkEntry {
 		flag&=isCasual==entry.isCasual;
 		flag&=priceOfOrder==entry.priceOfOrder;
 		flag&=priceOfEntry==entry.priceOfEntry;
-		
+	
 		return flag;
 		
 	}

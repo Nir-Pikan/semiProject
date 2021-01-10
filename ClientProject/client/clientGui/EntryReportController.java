@@ -123,10 +123,7 @@ public class EntryReportController implements GuiController, Report {
 	public ParkEntry[] entries ;
 	
 	
-	
-	
-	
-	
+
 	/** prints the report */
 	@FXML
 	void ExtractReport(ActionEvent event) {

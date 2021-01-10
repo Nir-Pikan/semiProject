@@ -4,11 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+
 
 import clientIO.ConnectionInterface;
 import entities.ParkEntry;
@@ -18,9 +16,6 @@ import javafx.fxml.FXMLLoader;
 import modules.ServerRequest;
 
 class EntryReportControllerTest {
-
-	@Rule
-	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	private EntryReportController entryReportController;
 

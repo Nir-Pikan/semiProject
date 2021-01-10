@@ -15,6 +15,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
-	<classpathentry kind="lib" path="/ServerProject/mockito-all-2.0.2-beta.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

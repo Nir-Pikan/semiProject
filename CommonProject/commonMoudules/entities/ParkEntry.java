@@ -73,5 +73,23 @@ public class ParkEntry {
 	public static enum EntryType {
 		Personal, Subscriber, Group, PrivateGroup
 	}
+	@Override
+	public boolean equals(Object obj) {
+		ParkEntry entry=(ParkEntry)obj;
+		boolean flag=true;
+		flag&=entryType==entry.entryType;
+		flag&=personID==entry.personID;
+		flag&=parkID==entry.parkID;
+		flag&=arriveTime==entry.arriveTime;
+		flag&=exitTime==entry.exitTime;
+		flag&=numberOfVisitors==entry.numberOfVisitors;
+		flag&=numberOfSubscribers==entry.numberOfSubscribers;
+		flag&=isCasual==entry.isCasual;
+		flag&=priceOfOrder==entry.priceOfOrder;
+		flag&=priceOfEntry==entry.priceOfEntry;
+		
+		return flag;
+		
+	}
 
 }

@@ -3,6 +3,7 @@ package clientGui;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
+import clientIO.ConnectionInterface;
 import clientIO.clientController;
 import entities.ParkEntry;
 import entities.ParkEntry.EntryType;
@@ -66,6 +67,63 @@ public class EntryReportController implements GuiController, Report {
 
 	private boolean isDataShown = false;
 
+
+
+	public void setTextDateToday(Label textDateToday) {
+		this.textDateToday = textDateToday;
+	}
+
+
+	public void setTextReportDate(Label textReportDate) {
+		this.textReportDate = textReportDate;
+	}
+
+	public void setTable1_AVGvisitStay(BarChart<String, Double> table1_AVGvisitStay) {
+		this.table1_AVGvisitStay = table1_AVGvisitStay;
+	}
+
+	public void setTable2_AVGentry(BarChart<String, Integer> table2_AVGentry) {
+		this.table2_AVGentry = table2_AVGentry;
+	}
+
+	public void setTable1_visitorTypeAxis(CategoryAxis table1_visitorTypeAxis) {
+		this.table1_visitorTypeAxis = table1_visitorTypeAxis;
+	}
+
+
+	public void setTable1_avgTimeOfVisitAxis(NumberAxis table1_avgTimeOfVisitAxis) {
+		this.table1_avgTimeOfVisitAxis = table1_avgTimeOfVisitAxis;
+	}
+
+
+	public void setTable2_TimeInDayAxis(CategoryAxis table2_TimeInDayAxis) {
+		this.table2_TimeInDayAxis = table2_TimeInDayAxis;
+	}
+
+
+	public void setTable2_NumOfVisitorsAxis(NumberAxis table2_NumOfVisitorsAxis) {
+		this.table2_NumOfVisitorsAxis = table2_NumOfVisitorsAxis;
+	}
+
+	
+	
+	
+	ConnectionInterface serverConnection=clientController.serverConnection;
+	
+	public void setServerConnection(ConnectionInterface connI) {
+		serverConnection=connI;
+	}
+	
+	public double[] avgStayArray;
+	public int[] totalPeopleType;
+
+	public int[][] sumPeople;
+	public 	int minimalHour;
+	public int maximalHour;
+	public ParkEntry[] entries ;
+	
+	
+
 	/** prints the report */
 	@FXML
 	void ExtractReport(ActionEvent event) {
@@ -90,8 +148,8 @@ public class EntryReportController implements GuiController, Report {
 		// ---Getting entries by dates---//
 		String msgData = ServerRequest.gson.toJson(dates, Timestamp[].class);
 		ServerRequest sr = new ServerRequest(Manager.Entry, "getEntriesByDate", msgData);
-		String respons = clientController.serverConnection.sendRequestAndResponse(sr);
-		ParkEntry[] entries = (ParkEntry[]) ServerRequest.gson.fromJson(respons, ParkEntry[].class);
+		String respons = serverConnection.sendRequestAndResponse(sr);
+		entries = (ParkEntry[]) ServerRequest.gson.fromJson(respons, ParkEntry[].class);
 		if (entries == null) {
 			PopUp.showInformation("Server didnt found entries", "Server Failure:Server didnt found entries",
 					"Server didnt found entries");
@@ -99,8 +157,8 @@ public class EntryReportController implements GuiController, Report {
 		}
 		// ---First Chart---//
 
-		double[] avgStayArray = new double[ParkEntry.EntryType.values().length];
-		int[] totalPeopleType = new int[ParkEntry.EntryType.values().length];
+		avgStayArray = new double[ParkEntry.EntryType.values().length];
+		totalPeopleType = new int[ParkEntry.EntryType.values().length];
 
 		for (int i = 0; i < ParkEntry.EntryType.values().length; i++) {
 			avgStayArray[i] = 0;
@@ -119,10 +177,14 @@ public class EntryReportController implements GuiController, Report {
 		for (EntryType entryType : ParkEntry.EntryType.values()) {
 			XYChart.Series<String, Double> addSeries = new XYChart.Series<String, Double>();
 			addSeries.setName(entryType.toString());
+			
+			
 			if (totalPeopleType[entryType.ordinal()] != 0) {
-				addSeries.getData().add(new XYChart.Data<String, Double>(entryType.toString(),
-						(avgStayArray[entryType.ordinal()] / totalPeopleType[entryType.ordinal()]) / 60));
+				avgStayArray[entryType.ordinal()]=	(avgStayArray[entryType.ordinal()] / totalPeopleType[entryType.ordinal()]) / 60;
+				
+				addSeries.getData().add(new XYChart.Data<String, Double>(entryType.toString(),avgStayArray[entryType.ordinal()]));
 			} else {
+				avgStayArray[entryType.ordinal()]=0;
 				addSeries.getData().add(new XYChart.Data<String, Double>(entryType.toString(), (double) 0));
 
 			}
@@ -132,15 +194,15 @@ public class EntryReportController implements GuiController, Report {
 
 		// --- Second Chart ---//
 
-		int[][] sumPeople = new int[ParkEntry.EntryType.values().length][24];
+		sumPeople = new int[ParkEntry.EntryType.values().length][24];
 		for (int i = 0; i < ParkEntry.EntryType.values().length; i++) {
 			for (int j = 0; j < 24; j++) {
 				sumPeople[i][j] = 0;
 			}
 		}
 
-		int minimalHour = 23;
-		int maximalHour = 0;
+		minimalHour = 23;
+		maximalHour = 0;
 
 		for (ParkEntry parkEntry : entries) {
 			if (parkEntry.parkID.equals(parkID)) {
@@ -172,5 +234,7 @@ public class EntryReportController implements GuiController, Report {
 	public void init() {
 
 	}
+
+
 
 }

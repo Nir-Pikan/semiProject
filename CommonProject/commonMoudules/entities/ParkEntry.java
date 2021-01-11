@@ -74,22 +74,64 @@ public class ParkEntry {
 		Personal, Subscriber, Group, PrivateGroup
 	}
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((arriveTime == null) ? 0 : arriveTime.hashCode());
+		result = prime * result + ((entryType == null) ? 0 : entryType.hashCode());
+		result = prime * result + ((exitTime == null) ? 0 : exitTime.hashCode());
+		result = prime * result + (isCasual ? 1231 : 1237);
+		result = prime * result + numberOfSubscribers;
+		result = prime * result + numberOfVisitors;
+		result = prime * result + ((parkID == null) ? 0 : parkID.hashCode());
+		result = prime * result + ((personID == null) ? 0 : personID.hashCode());
+		result = prime * result + Float.floatToIntBits(priceOfEntry);
+		result = prime * result + Float.floatToIntBits(priceOfOrder);
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		ParkEntry entry=(ParkEntry)obj;
-		boolean flag=true;
-		flag&=entryType==entry.entryType;
-		flag&=personID==entry.personID;
-		flag&=parkID==entry.parkID;
-		flag&=arriveTime==entry.arriveTime;
-		flag&=exitTime==entry.exitTime;
-		flag&=numberOfVisitors==entry.numberOfVisitors;
-		flag&=numberOfSubscribers==entry.numberOfSubscribers;
-		flag&=isCasual==entry.isCasual;
-		flag&=priceOfOrder==entry.priceOfOrder;
-		flag&=priceOfEntry==entry.priceOfEntry;
-	
-		return flag;
-		
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ParkEntry other = (ParkEntry) obj;
+		if (arriveTime == null) {
+			if (other.arriveTime != null)
+				return false;
+		} else if (!arriveTime.equals(other.arriveTime))
+			return false;
+		if (entryType != other.entryType)
+			return false;
+		if (exitTime == null) {
+			if (other.exitTime != null)
+				return false;
+		} else if (!exitTime.equals(other.exitTime))
+			return false;
+		if (isCasual != other.isCasual)
+			return false;
+		if (numberOfSubscribers != other.numberOfSubscribers)
+			return false;
+		if (numberOfVisitors != other.numberOfVisitors)
+			return false;
+		if (parkID == null) {
+			if (other.parkID != null)
+				return false;
+		} else if (!parkID.equals(other.parkID))
+			return false;
+		if (personID == null) {
+			if (other.personID != null)
+				return false;
+		} else if (!personID.equals(other.personID))
+			return false;
+		if (Float.floatToIntBits(priceOfEntry) != Float.floatToIntBits(other.priceOfEntry))
+			return false;
+		if (Float.floatToIntBits(priceOfOrder) != Float.floatToIntBits(other.priceOfOrder))
+			return false;
+		return true;
 	}
 
 }

@@ -11,18 +11,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Iterator;
-
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 import org.junit.Rule;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 
 import db.DbController;
@@ -54,6 +49,7 @@ class ParkControllerTest {
 		parkC = new ParkController(db);
 		demo = new Park("id", "name", 100, "manId", 2, 3.0, 10, 8, 12);
 	}
+	
 
 	/**
 	 * <pre>

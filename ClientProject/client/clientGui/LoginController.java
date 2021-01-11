@@ -68,12 +68,12 @@ public class LoginController implements GuiController {
 				ServerRequest.gson.toJson(data, String[].class));
 		String response = clientController.client.sendRequestAndResponse(serverRequest);
 		if (response.equals("user already logged in")) {
-			PopUp.showError("Sign up error", "Faild to log in", "User already logged in");
+			PopUp.myPop.showError("Sign up error", "Faild to log in", "User already logged in");
 			return;
 		}
 		Worker worker = ServerRequest.gson.fromJson(response, Worker.class);
 		if (worker == null) {
-			PopUp.showError("Sign up error", "Faild to log in", "Please check the user name and the password");
+			PopUp.myPop.showError("Sign up error", "Faild to log in", "Please check the user name and the password");
 			return;
 		}
 		clientController.client.logedInWorker.setVal(worker);
@@ -95,7 +95,7 @@ public class LoginController implements GuiController {
 			Navigator.instance().clearHistory();
 			return;
 		}
-		PopUp.showError("Error", "Faild to identify",
+		PopUp.myPop.showError("Error", "Faild to identify",
 				"Please check the input:\nID: 9 digit number\nSubscriber ID: need to start with 'S'");
 	}
 
@@ -113,13 +113,13 @@ public class LoginController implements GuiController {
 		String response = clientController.client.sendRequestAndResponse(serverRequest);
 		if (response.endsWith("not found")) {
 			if (needPopUpForFail)
-				PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
+				PopUp.myPop.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
 			return false;
 		}
 		Subscriber subscriber = ServerRequest.gson.fromJson(response, Subscriber.class);
 		if (subscriber == null) {
 			if (needPopUpForFail)
-				PopUp.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
+				PopUp.myPop.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
 			return false;
 		}
 		clientController.client.logedInSubscriber.setVal(subscriber);

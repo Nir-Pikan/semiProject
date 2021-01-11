@@ -18,6 +18,30 @@ import javafx.stage.StageStyle;
 /** class for popups with our css */
 public class PopUp extends Alert {
 
+	public static IPopUp myPop = new IPopUp() {
+		@Override
+		public void showInformation(String title, String header, String body) {
+			PopUp.showInformation(title, header, body);
+		}
+		
+		@Override
+		public void showError(String title, String header, String body) {
+			PopUp.showError(title, header, body);
+		}
+		
+		@Override
+		public boolean ask(String title, String header, String body) {
+			return PopUp.ask(title, header, body);
+		}
+	};
+	
+	public static interface IPopUp{
+		boolean ask(String title, String header, String body);
+		void showInformation(String title, String header, String body);
+		void showError(String title, String header, String body);
+	}
+	
+	
 	/**
 	 * create default Alert with styling
 	 * 

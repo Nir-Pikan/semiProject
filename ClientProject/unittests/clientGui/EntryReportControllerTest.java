@@ -4,10 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import com.sun.xml.internal.bind.v2.TODO;
 
 import clientIO.ConnectionInterface;
 import entities.ParkEntry;
@@ -23,17 +22,17 @@ class EntryReportControllerTest {
 	private ParkEntry[] checkEntries;
 	private ParkEntry[] entries;
 	private Timestamp[] dates;
-	private ConnectionInterface connection;// TODO need to be local?
+	private ConnectionInterface connection;
 	private Timestamp fromDate;
 	private Timestamp toDate;
-
+	private static String titlePopUp = null;
+	private static String headerPopUp = null;
+	private static String bodyPopUp = null;
 	private JFXPanel panel = new JFXPanel();
-
-	public double[] expectedAvgStayArray;
-	public int[] expectedTotalPeopleType;
-
-	public int[][] expectedSumPeople;
-
+	private double[] expectedAvgStayArray;
+	private int[] expectedTotalPeopleType;
+	private int[][] expectedSumPeople;
+	
 	private class ConnectionSutb implements ConnectionInterface {
 
 		@Override
@@ -41,6 +40,27 @@ class EntryReportControllerTest {
 			return ServerRequest.gson.toJson(checkEntries, ParkEntry[].class);
 		}
 
+	}
+
+	private static void setPopUp() {
+		PopUp.myPop = new PopUp.IPopUp() {
+
+			@Override
+			public void showInformation(String title, String header, String body) {
+				titlePopUp = title;
+				headerPopUp = header;
+				bodyPopUp = body;
+			}
+
+			@Override
+			public void showError(String title, String header, String body) {
+			}
+
+			@Override
+			public boolean ask(String title, String header, String body) {
+				return false;
+			}
+		};
 	}
 
 	@BeforeEach
@@ -54,7 +74,7 @@ class EntryReportControllerTest {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(EntryReportController.class.getResource("EntryReport.fxml"));
 		loader.load();
-
+		setPopUp();
 		entryReportController = loader.getController();
 		entryReportController.setServerConnection(connection);
 
@@ -101,7 +121,6 @@ class EntryReportControllerTest {
 	 */
 	@Test
 	void testAvgStayCurrectParkEntries() {
-
 		expectedAvgStayArray[0] = 1;
 		expectedAvgStayArray[1] = 2;
 		expectedAvgStayArray[2] = 3;
@@ -109,7 +128,6 @@ class EntryReportControllerTest {
 		checkEntries = entries;
 		entryReportController.initReport("Gold", "park1", dates);
 		assertArrayEquals(expectedAvgStayArray, entryReportController.avgStayArray);
-
 	}
 
 	/**
@@ -128,7 +146,6 @@ class EntryReportControllerTest {
 		checkEntries = entries;
 		entryReportController.initReport("Gold", "park1", dates);
 		assertArrayEquals(expectedTotalPeopleType, entryReportController.totalPeopleType);
-
 	}
 
 	/**
@@ -157,7 +174,6 @@ class EntryReportControllerTest {
 	void testNoEntriesInDates() {
 		checkEntries = new ParkEntry[0];
 		entryReportController.initReport("Gold", "park1", dates);
-
 		assertEquals(0, entryReportController.entries.length);
 		assertArrayEquals(expectedTotalPeopleType, entryReportController.totalPeopleType);
 		assertArrayEquals(expectedAvgStayArray, entryReportController.avgStayArray);
@@ -175,20 +191,17 @@ class EntryReportControllerTest {
 	@Test
 	void testOnlyOneTypeEnters() {
 		checkEntries = new ParkEntry[1];
-
 		checkEntries[0] = new ParkEntry(EntryType.Personal, "1", "park1", fromDate,
 				Timestamp.valueOf(fromDate.toLocalDateTime().plusHours(1)), 100, 0, false, 10);
 		entryReportController.initReport("Gold", "park1", dates);
-
-		expectedTotalPeopleType[0]=100;
-		expectedAvgStayArray[0]=1;
+		expectedTotalPeopleType[0] = 100;
+		expectedAvgStayArray[0] = 1;
 		assertEquals(1, entryReportController.entries.length);
 		assertArrayEquals(expectedTotalPeopleType, entryReportController.totalPeopleType);
 		assertArrayEquals(expectedAvgStayArray, entryReportController.avgStayArray);
 		assertArrayEquals(checkEntries, entryReportController.entries);
 	}
-	
-	
+
 	/**
 	 * <pre>
 	 * test entries return from server are null
@@ -199,16 +212,37 @@ class EntryReportControllerTest {
 	@Test
 	void testEnriesEqualsNull() {
 		checkEntries = null;
-
 		entryReportController.initReport("Gold", "park1", dates);
-	
-	//	TODO  to finish
+		assertEquals("Server didnt found entries", titlePopUp);
+		assertEquals("Server Failure:Server didnt found entries", headerPopUp);
+		assertEquals("Server didnt found entries", bodyPopUp);
 	}
-	
-	
-	
-	
 
+	
+	/**
+	 * <pre>
+	 * sum of people devided by hours are equal
+	 * input: parkName:Gold, parkID:park1, dates:{1.1.2021,2.1.2021}
+	 * expected: expectedSumPeople array equals SumPeople in controller
+	 * </pre>
+	 */
+	@Test
+	void testValidSum() {
+		int[][] expectedSumPeople = new int[ParkEntry.EntryType.values().length][24];
+		for (int i = 0; i < ParkEntry.EntryType.values().length; i++) {
+			for (int j = 0; j < 24; j++) {
+				expectedSumPeople[i][j] = 0;
+			}
+		}
+		checkEntries = entries;
+		entryReportController.initReport("Gold", "park1", dates);
+		expectedSumPeople[0][fromDate.toLocalDateTime().getHour()] = 1;
+		expectedSumPeople[1][fromDate.toLocalDateTime().getHour()] = 1;
+		expectedSumPeople[2][fromDate.toLocalDateTime().getHour()] = 10;
+		expectedSumPeople[3][fromDate.toLocalDateTime().getHour()] = 10;
+
+		assertArrayEquals(expectedSumPeople, entryReportController.sumPeople);
+	}
 	
 
 }

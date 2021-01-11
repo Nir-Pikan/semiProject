@@ -91,7 +91,7 @@ public class LoginController implements GuiController {
 		if (isID(userID)) {
 			if (LoginSubscriber("S" + userID, "", false))
 				return;
-			clientController.client.visitorID.setVal(userID);
+			clientController.users.getVisitorID().setVal(userID);
 			Navigator.instance().clearHistory();
 			return;
 		}
@@ -110,7 +110,7 @@ public class LoginController implements GuiController {
 	 */
 	private boolean LoginSubscriber(String subscriberID, String ErrorMessageForPopUp, boolean needPopUpForFail) {
 		ServerRequest serverRequest = new ServerRequest(Manager.Subscriber, "GetSubscriberData", subscriberID);
-		String response = clientController.client.sendRequestAndResponse(serverRequest);
+		String response = clientController.serverConnection.sendRequestAndResponse(serverRequest);
 		if (response.endsWith("not found")) {
 			if (needPopUpForFail)
 				PopUp.myPop.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);

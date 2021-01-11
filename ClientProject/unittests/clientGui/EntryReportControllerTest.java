@@ -201,7 +201,7 @@ class EntryReportControllerTest {
 		checkEntries = null;
 
 		entryReportController.initReport("Gold", "park1", dates);
-		
+	
 	//	TODO  to finish
 	}
 	

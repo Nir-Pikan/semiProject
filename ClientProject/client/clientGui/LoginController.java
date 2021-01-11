@@ -66,7 +66,7 @@ public class LoginController implements GuiController {
 		data[1] = txtPassword.getText();
 		ServerRequest serverRequest = new ServerRequest(Manager.Worker, "LogInWorker",
 				ServerRequest.gson.toJson(data, String[].class));
-		String response = clientController.client.sendRequestAndResponse(serverRequest);
+		String response = clientController.serverConnection.sendRequestAndResponse(serverRequest);
 		if (response.equals("user already logged in")) {
 			PopUp.myPop.showError("Sign up error", "Faild to log in", "User already logged in");
 			return;
@@ -76,7 +76,7 @@ public class LoginController implements GuiController {
 			PopUp.myPop.showError("Sign up error", "Faild to log in", "Please check the user name and the password");
 			return;
 		}
-		clientController.client.logedInWorker.setVal(worker);
+		clientController.users.getLogedInWorker().setVal(worker);
 		Navigator.instance().clearHistory();
 	}
 
@@ -122,7 +122,7 @@ public class LoginController implements GuiController {
 				PopUp.myPop.showError("Sign up error", "Faild to identify", ErrorMessageForPopUp);
 			return false;
 		}
-		clientController.client.logedInSubscriber.setVal(subscriber);
+		clientController.users.getLogedInSubscriber().setVal(subscriber);
 		Navigator.instance().clearHistory();
 		return true;
 	}

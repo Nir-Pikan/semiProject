@@ -20,7 +20,7 @@ import modules.ServerRequest;
 class LoginControllerTest {
 	static String errMsg = null;
 	static String response = null;
-	
+	static boolean historyCleaned = false;
 	private JFXPanel panel = new JFXPanel();
 	
 	LoginController cont;
@@ -90,6 +90,28 @@ class LoginControllerTest {
 			return null;
 		}
 	};
+	
+	Navigator.setNavigator(new NavigatorInterface() {
+		
+		@Override
+		public GuiController navigate(String destenation) {
+			return null;
+		}
+		
+		@Override
+		public void clearHistory(String fxml) {
+			historyCleaned = true;
+		}
+		
+		@Override
+		public void clearHistory() {
+			historyCleaned = true;
+		}
+		
+		@Override
+		public void back() {
+		}
+	});
 	}
 	
 	@BeforeEach
@@ -101,7 +123,8 @@ class LoginControllerTest {
 		loader.load();
 
 		cont = loader.getController();
-	
+		
+		historyCleaned = false;
 	}
 
 	@Test

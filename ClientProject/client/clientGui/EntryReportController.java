@@ -151,7 +151,7 @@ public class EntryReportController implements GuiController, Report {
 		String respons = serverConnection.sendRequestAndResponse(sr);
 		entries = (ParkEntry[]) ServerRequest.gson.fromJson(respons, ParkEntry[].class);
 		if (entries == null) {
-			PopUp.showInformation("Server didnt found entries", "Server Failure:Server didnt found entries",
+			PopUp.myPop.showInformation("Server didnt found entries", "Server Failure:Server didnt found entries",
 					"Server didnt found entries");
 			return;
 		}

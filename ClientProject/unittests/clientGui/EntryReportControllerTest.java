@@ -19,20 +19,24 @@ class EntryReportControllerTest {
 
 	private EntryReportController entryReportController;
 
-	private ParkEntry[] checkEntries;
-	private ParkEntry[] entries;
-	private Timestamp[] dates;
-	private ConnectionInterface connection;
-	private Timestamp fromDate;
-	private Timestamp toDate;
+	private ParkEntry[] checkEntries=null;
+	private ParkEntry[] entries=null;
+	private Timestamp[] dates=null;
+	private ConnectionInterface connection=null;
+	private Timestamp fromDate=null;
+	private Timestamp toDate=null;
 	private static String titlePopUp = null;
 	private static String headerPopUp = null;
 	private static String bodyPopUp = null;
-	private JFXPanel panel = new JFXPanel();
+	private JFXPanel panel = new JFXPanel(); // for javaFX thread creation 
 	private double[] expectedAvgStayArray;
 	private int[] expectedTotalPeopleType;
 	private int[][] expectedSumPeople;
 	
+	/**
+	 * creating stub connection for reciving fixed results
+	 *
+	 */
 	private class ConnectionSutb implements ConnectionInterface {
 
 		@Override
@@ -42,6 +46,9 @@ class EntryReportControllerTest {
 
 	}
 
+	/**
+	 * seting stub for pop up 
+	 */
 	private static void setPopUp() {
 		PopUp.myPop = new PopUp.IPopUp() {
 
@@ -69,12 +76,12 @@ class EntryReportControllerTest {
 		// set stub server connection
 		connection = new ConnectionSutb();
 
-		// entryReportController = new EntryReportController();
-
+		//getting my window to test fow fxml entities
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(EntryReportController.class.getResource("EntryReport.fxml"));
 		loader.load();
-		setPopUp();
+
+		//initiliaze stub connection
 		entryReportController = loader.getController();
 		entryReportController.setServerConnection(connection);
 
@@ -86,7 +93,8 @@ class EntryReportControllerTest {
 		dates[0] = fromDate;
 		dates[1] = toDate;
 		entries = new ParkEntry[4];
-		// set parkentries for checking
+		
+		// set parkeEteries for checking
 		entries[0] = new ParkEntry(EntryType.Personal, "1", "park1", fromDate,
 				Timestamp.valueOf(fromDate.toLocalDateTime().plusHours(1)), 1, 0, false, 10);
 		entries[1] = new ParkEntry(EntryType.Subscriber, "2", "park1", fromDate,
@@ -97,6 +105,7 @@ class EntryReportControllerTest {
 		entries[3] = new ParkEntry(EntryType.PrivateGroup, "4", "park1", fromDate,
 				Timestamp.valueOf(fromDate.toLocalDateTime().plusHours(4)), 10, 5, false, 200);
 
+		//initiliaze relevent arrays
 		expectedAvgStayArray = new double[ParkEntry.EntryType.values().length];
 		expectedTotalPeopleType = new int[ParkEntry.EntryType.values().length];
 		for (int i = 0; i < 4; i++) {
@@ -206,18 +215,18 @@ class EntryReportControllerTest {
 	 * <pre>
 	 * test entries return from server are null
 	 * input: parkName:Gold, parkID:park1, dates:{1.1.2021,2.1.2021}
-	 * expected: should throw popup
+	 * expected: should show popup
 	 * </pre>
 	 */
 	@Test
 	void testEnriesEqualsNull() {
+		setPopUp();
 		checkEntries = null;
 		entryReportController.initReport("Gold", "park1", dates);
 		assertEquals("Server didnt found entries", titlePopUp);
 		assertEquals("Server Failure:Server didnt found entries", headerPopUp);
 		assertEquals("Server didnt found entries", bodyPopUp);
 	}
-
 	
 	/**
 	 * <pre>

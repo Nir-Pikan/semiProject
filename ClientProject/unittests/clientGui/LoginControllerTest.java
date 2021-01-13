@@ -130,6 +130,8 @@ class LoginControllerTest {
 	@Test
 	void test() {
 		response = ServerRequest.gson.toJson(new Subscriber("", "", "", "", "", "", 1, Type.SUBSCRIBER));
+		
+		cont.UserLogin(null);
 		fail("Not yet implemented");
 	}
 

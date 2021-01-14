@@ -23,6 +23,10 @@ public class WorkerController implements IController {
 		dbController.sendUpdate("UPDATE workers SET isLogged=\"NO\" WHERE username<>\"\"");// disconnect all clients
 	}
 
+	public WorkerController(DbController db) {
+		dbController = db;
+	}
+
 	/**
 	 * Create Worker table in DB if not exists <br>
 	 * table of {@link Worker}s
@@ -141,7 +145,7 @@ public class WorkerController implements IController {
 	 * @return the output String
 	 */
 
-	private String ParsePermissionsToString(Permissions permissions) {
+	public static String ParsePermissionsToString(Permissions permissions) {
 		String output = permissions.GetParkID();
 		for (Permission permission : permissions.GetPermissions()) {
 
@@ -187,7 +191,7 @@ public class WorkerController implements IController {
 	 * @param loginBool the boolean we want to convert
 	 * @return YES if true, NO if false
 	 */
-	private String ParseIsLoginBoolToString(Boolean loginBool) {
+	public static String ParseIsLoginBoolToString(Boolean loginBool) {
 		if (loginBool)
 			return "YES";
 		return "NO";

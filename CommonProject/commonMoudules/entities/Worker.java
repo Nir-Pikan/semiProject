@@ -123,4 +123,72 @@ public class Worker {
 		this.isLogged = isLogged;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((Email == null) ? 0 : Email.hashCode());
+		result = prime * result + ((FirstName == null) ? 0 : FirstName.hashCode());
+		result = prime * result + ((LastName == null) ? 0 : LastName.hashCode());
+		result = prime * result + ((Password == null) ? 0 : Password.hashCode());
+		result = prime * result + ((UserName == null) ? 0 : UserName.hashCode());
+		result = prime * result + ((WorkerID == null) ? 0 : WorkerID.hashCode());
+		result = prime * result + ((WorkerType == null) ? 0 : WorkerType.hashCode());
+		result = prime * result + ((permissions == null) ? 0 : permissions.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Worker other = (Worker) obj;
+		if (Email == null) {
+			if (other.Email != null)
+				return false;
+		} else if (!Email.equals(other.Email))
+			return false;
+		if (FirstName == null) {
+			if (other.FirstName != null)
+				return false;
+		} else if (!FirstName.equals(other.FirstName))
+			return false;
+		if (LastName == null) {
+			if (other.LastName != null)
+				return false;
+		} else if (!LastName.equals(other.LastName))
+			return false;
+		if (Password == null) {
+			if (other.Password != null)
+				return false;
+		} else if (!Password.equals(other.Password))
+			return false;
+		if (UserName == null) {
+			if (other.UserName != null)
+				return false;
+		} else if (!UserName.equals(other.UserName))
+			return false;
+		if (WorkerID == null) {
+			if (other.WorkerID != null)
+				return false;
+		} else if (!WorkerID.equals(other.WorkerID))
+			return false;
+		if (WorkerType == null) {
+			if (other.WorkerType != null)
+				return false;
+		} else if (!WorkerType.equals(other.WorkerType))
+			return false;
+		if (permissions == null) {
+			if (other.permissions != null)
+				return false;
+		} else if (!permissions.equals(other.permissions))
+			return false;
+		return true;
+	}
+
+	
 }

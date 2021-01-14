@@ -70,4 +70,37 @@ public class Permissions {
 			PermissionsList.add(permission);
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ParkID == null) ? 0 : ParkID.hashCode());
+		result = prime * result + ((PermissionsList == null) ? 0 : PermissionsList.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Permissions other = (Permissions) obj;
+		if (ParkID == null) {
+			if (other.ParkID != null)
+				return false;
+		} else if (!ParkID.equals(other.ParkID))
+			return false;
+		if (PermissionsList == null) {
+			if (other.PermissionsList != null)
+				return false;
+		} else if (!PermissionsList.equals(other.PermissionsList))
+			return false;
+		return true;
+	}
+	
+	
 }

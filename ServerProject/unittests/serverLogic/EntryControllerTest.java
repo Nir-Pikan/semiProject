@@ -119,8 +119,8 @@ class EntryControllerTest {
 		String expected = ServerRequest.gson.toJson(list.toArray(new ParkEntry[0]),ParkEntry[].class);
 		assertEquals(expected, actual);
 		try {
-			verify(preStmt,times(1)).setTimestamp(1, Timestamp.valueOf(now.withNano(0)));
-			verify(preStmt,times(1)).setTimestamp(2, Timestamp.valueOf(now.plusDays(1).withNano(0)));
+			verify(preStmt,times(1)).setTimestamp(1, Timestamp.valueOf(now.withNano(0)));//JSON remove nano from timestamp
+			verify(preStmt,times(1)).setTimestamp(2, Timestamp.valueOf(now.plusDays(1).withNano(0)));//JSON remove nano from timestamp
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

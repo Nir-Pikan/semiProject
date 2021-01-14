@@ -22,10 +22,12 @@ import junit.framework.Assert;
 import entities.Subscriber.Type;
 import modules.Property;
 import modules.ServerRequest;
+import modules.ServerRequest.Manager;
 
 class LoginControllerTest {
 	static String errMsg = null;
 	static String response = null;
+	static ServerRequest expectedRequest = null;
 	static boolean historyCleaned = false;
 	private JFXPanel panel = new JFXPanel();
 	
@@ -75,7 +77,12 @@ class LoginControllerTest {
 		@Override
 		public String sendRequestAndResponse(ServerRequest request) 
 		{
-			return response;
+			if(expectedRequest.data.equals(request.data) && expectedRequest.job.equals(request.job) &&
+					expectedRequest.manager.equals(request.manager))
+			{
+			    return response;
+			}
+			return "";		
 		}
 	};
 	
@@ -152,14 +159,16 @@ class LoginControllerTest {
 	}
 
 	/**
-	 * check if the input is valid ID that not match to any subscriber
-       is loged in as ID
+	 * check if the input is valid ID that not match to any subscriber is loged in as ID
+       input: valid ID
+       expected: loged in as ID
 	 */
 	@Test
 	void IDCorrectFormat_NotBelongsToSubscriber_EnterAsID_success() 
 	{
 		String correctID = "123456789";
 		cont.txtId.setText(correctID);
+		expectedRequest = new ServerRequest(Manager.Subscriber, "GetSubscriberData", "S" + correctID);
 		response = "not found";
 		
 		cont.btnUserLogin.fire(); 
@@ -169,7 +178,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 * too short number to ID, excpect to not log in and pop with appropriet message
+	 * wrong ID login
+	 * input: too short number to ID
+	 * expected: to not log in and pop with appropriet message
 	 */
 	@Test
 	void IDWrongFormat_lessThan9NumbersDigits_Fail()
@@ -184,7 +195,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 * too long number to ID, excpect to not log in and pop with appropriet message
+	 *  wrong ID login
+	 *  input: too long number to ID
+        excpect: to not log in and pop with appropriet message
 	 */
 	@Test
 	void IDWrongFormat_MoreThan9NumbersDigits_Fail() 
@@ -199,7 +212,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 * not valid ID, excpect to not log in and pop with appropriet message
+	 * wrong ID login
+	 * input: not valid ID
+       excpect: to not log in and pop with appropriet message
 	 */
 	@Test
 	void IDWrongFormat_9DigitsButAllNumbers_Fail() 
@@ -214,7 +229,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 * valid ID {@link OfDouble} subscriber excpect to log in as subscriber
+	 * success login ID of subscriber
+	 * input: valid ID of subscriber
+	 * excpect: to log in as subscriber
 	 */
 	@Test
 	void IDCorrectFormat_BelongsToSubscriber_EnterAsSubscriber_success() 
@@ -222,6 +239,7 @@ class LoginControllerTest {
 		String IDBelongToSubscriber = "123456789";
 		Subscriber subscriber = new Subscriber("S"+IDBelongToSubscriber, IDBelongToSubscriber, "Aviv", "Or", "0541234567", "nir@gmail.com", 1, Type.SUBSCRIBER);
 		cont.txtId.setText(IDBelongToSubscriber);
+		expectedRequest = new ServerRequest(Manager.Subscriber, "GetSubscriberData", "S" + IDBelongToSubscriber);
 		response = ServerRequest.gson.toJson(subscriber, Subscriber.class);
 		
 		cont.btnUserLogin.fire(); 
@@ -231,7 +249,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 * valid subscriberID,excpect to log in as subscriber
+	 * success login of subscriber
+	 * input: valid subscriberID
+       excpect: to log in as subscriber
 	 */
 	@Test
 	void SubscriberIDCorrectThatExist_Success() 
@@ -239,6 +259,7 @@ class LoginControllerTest {
 		String SubscriberID = "S123456789";
 		Subscriber subscriber = new Subscriber(SubscriberID, "123456789", "Aviv", "Or", "0541234567", "nir@gmail.com", 1, Type.SUBSCRIBER);
 		cont.txtId.setText(SubscriberID);
+		expectedRequest = new ServerRequest(Manager.Subscriber, "GetSubscriberData", SubscriberID);
 		response = ServerRequest.gson.toJson(subscriber, Subscriber.class);
 		
 		cont.btnUserLogin.fire(); 
@@ -248,7 +269,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 * valid subscriberID, id is diffrent but still excpect to log in as subscriber
+	 * success login of subscriber
+	 * input: valid subscriberID id is diffrent but still
+	 * excpect: to log in as subscriber
 	 */
 	@Test
 	void SubscriberIDCorrectThatExistWithDifrrentID_Success() 
@@ -257,6 +280,7 @@ class LoginControllerTest {
 		String DiffID = "000000000";
 		Subscriber subscriber = new Subscriber(SubscriberID, DiffID, "Aviv", "Or", "0541234567", "nir@gmail.com", 1, Type.SUBSCRIBER);
 		cont.txtId.setText(SubscriberID);
+		expectedRequest = new ServerRequest(Manager.Subscriber, "GetSubscriberData", SubscriberID);
 		response = ServerRequest.gson.toJson(subscriber, Subscriber.class);
 		
 		cont.btnUserLogin.fire(); 
@@ -266,7 +290,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 * not existing subscriberID, excpect to not log in and pop with appropriet message
+	 * wrong subscriber login
+	 * input: not existing subscriberID
+	 * excpect: to not log in and pop with appropriet message
 	 */
 	@Test
 	void SubscriberNotExist_Fail() 
@@ -274,6 +300,7 @@ class LoginControllerTest {
 		String SubscriberID = "S123456789";
 		Subscriber subscriber = null;
 		cont.txtId.setText(SubscriberID);
+		expectedRequest = new ServerRequest(Manager.Subscriber, "GetSubscriberData", SubscriberID);
 		response = ServerRequest.gson.toJson(subscriber, Subscriber.class);
 		
 		cont.btnUserLogin.fire(); 
@@ -283,7 +310,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 * not valid subscriberID, excpect to not log in and pop with appropriet message
+	 * wrong subscriber login
+	 * input: not existing subscriberID
+	 * excpect: to not log in and pop with appropriet message
 	 */
 	@Test
 	void SubscriberWrongFormat_Fail() 
@@ -298,7 +327,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 *  valid worker UserName and Password, excpect to not log in and pop with appropriet message
+	 *  success login of Worker
+	 *  input: valid worker UserName and Password
+	 *  excpect: to log in as Worker
 	 */
 	@Test
 	void WorkerCorrectExist_Success() 
@@ -309,6 +340,11 @@ class LoginControllerTest {
 				WorkerPassword, false, null);
 		cont.txtUsername.setText(WorkerUserName);
 		cont.txtPassword.setText(WorkerPassword);
+		String[] data = new String[2];
+		data[0] = WorkerUserName;
+		data[1] = WorkerPassword;
+		expectedRequest = new ServerRequest(Manager.Worker, "LogInWorker",
+				ServerRequest.gson.toJson(data, String[].class));
 		response = ServerRequest.gson.toJson(worker, Worker.class);
 		
 		cont.btnWorkerLogin.fire(); 
@@ -318,7 +354,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 *  not existing worker UserName and Password, excpect to not log in and pop with appropriet message
+	 *  wrong login of Worker
+	 *  input: not existing worker UserName and Password
+	 *  excpect: to not log in and pop with appropriet message
 	 */
 	@Test
 	void WorkerNotExist_Fail() 
@@ -328,6 +366,11 @@ class LoginControllerTest {
 		cont.txtUsername.setText(WorkerUserName);
 		cont.txtPassword.setText(WorkerPassword);
 		Worker worker = null;
+		String[] data = new String[2];
+		data[0] = WorkerUserName;
+		data[1] = WorkerPassword;
+		expectedRequest = new ServerRequest(Manager.Worker, "LogInWorker",
+				ServerRequest.gson.toJson(data, String[].class));
 		response = ServerRequest.gson.toJson(worker, Worker.class);
 		
 		cont.btnWorkerLogin.fire(); 
@@ -337,7 +380,9 @@ class LoginControllerTest {
 	}
 	
 	/**
-	 *  already loged in worker UserName and Password, excpect to not log in and pop with appropriet message
+	 *  wrong login of Worker
+	 *  input: already loged in worker UserName and Password
+        excpect: to not log in and pop with appropriet message
 	 */
 	@Test
 	void WorkerCorrectButAlreadyLogedIn_Fail() 
@@ -346,6 +391,11 @@ class LoginControllerTest {
 		String WorkerPassword = "1234";
 		cont.txtUsername.setText(WorkerUserName);
 		cont.txtPassword.setText(WorkerPassword);
+		String[] data = new String[2];
+		data[0] = WorkerUserName;
+		data[1] = WorkerPassword;
+		expectedRequest = new ServerRequest(Manager.Worker, "LogInWorker",
+				ServerRequest.gson.toJson(data, String[].class));
 		response = "user already logged in";
 		
 		cont.btnWorkerLogin.fire(); 

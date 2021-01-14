@@ -42,6 +42,10 @@ public class EntryController implements IController {
 
 	}
 
+	public EntryController(DbController db) {
+		dbController =db;
+	}
+
 	/**
 	 * Creates the DB table
 	 */

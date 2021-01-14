@@ -332,7 +332,6 @@ Park p;
 			when(rsPark.getInt(7)).thenAnswer((b)->{return p.currentNumOfVisitors;});
 			when(rsPark.getInt(8)).thenAnswer((b)->{return p.openTime;});
 			 when(rsPark.getInt(9)).thenAnswer((b)->{return p.closeTime;});
-			// then=======
 		} catch (SQLException e) {
 		}
 		when(db.sendQuery("SELECT * FROM park ")).thenReturn(rsPark);

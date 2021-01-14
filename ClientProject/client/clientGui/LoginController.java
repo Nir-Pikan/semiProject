@@ -18,28 +18,28 @@ import modules.ServerRequest.Manager;
 public class LoginController implements GuiController {
 
 	@FXML
-	private GridPane visitorLoginForm;
+	public GridPane visitorLoginForm;
 
 	@FXML
-	private Button btnUserLogin;
+	public Button btnUserLogin;
 
 	@FXML
-	private TextField txtId;
+	public TextField txtId;
 
 	@FXML
-	private GridPane workerLoginForm;
+	public GridPane workerLoginForm;
 
 	@FXML
-	private Button btnWorkerLogin;
+	public Button btnWorkerLogin;
 
 	@FXML
-	private TextField txtUsername;
+	public TextField txtUsername;
 
 	@FXML
-	private PasswordField txtPassword;
+	public PasswordField txtPassword;
 
 	@FXML
-	private CheckBox cbUserWorker;
+	public CheckBox cbUserWorker;
 
 	/** when clicking on the user/worker check box hide/reveal wanted fields */
 	@FXML

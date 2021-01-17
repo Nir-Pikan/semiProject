@@ -105,8 +105,8 @@ public class SubscriberController implements IController {
 						res.getString(5), res.getString(6), res.getInt(8), Type.valueOf(res.getString(9)));
 
 				// if subscriber has a credit card get him from creditcards table as well
-				if (s.creditCardNumber != null) {
-					String statment2 = "SELECT * FROM creditcards WHERE creditCardNumber = " + s.creditCardNumber + ";";
+				if (res.getString(7) != null) {
+					String statment2 = "SELECT * FROM creditcards WHERE creditCardNumber = " + res.getString(7) + ";";
 					ResultSet res2 = dbController.sendQuery(statment2);
 
 					if (res2 != null)
